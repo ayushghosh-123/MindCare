@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { useUser } from '@clerk/nextjs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -18,6 +19,8 @@ import {
   MessageSquare
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { dbHelpers } from '@/lib/supabase';
+import { useToast } from '@/components/hooks/use-toast';
 
 interface Message {
   id: string;
@@ -30,6 +33,7 @@ interface Message {
 interface HealthChatbotProps {
   entries: any[];
   className?: string;
+  userId?: string;
 }
 
 const healthInsights = [
@@ -55,7 +59,9 @@ const healthInsights = [
   }
 ];
 
-export function HealthChatbot({ entries, className }: HealthChatbotProps) {
+export function HealthChatbot({ entries, className, userId }: HealthChatbotProps) {
+  const { user } = useUser();
+  const { toast } = useToast();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -72,7 +78,56 @@ export function HealthChatbot({ entries, className }: HealthChatbotProps) {
   ]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [sessionId] = useState(() => `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [isLoadingHistory, setIsLoadingHistory] = useState(true);
+
+  // Get the actual user ID from props or Clerk
+  const currentUserId = userId || user?.id;
+
+  // Load chat history from Supabase on mount
+  useEffect(() => {
+    if (currentUserId) {
+      loadChatHistory();
+    } else {
+      setIsLoadingHistory(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentUserId]);
+
+  const loadChatHistory = async () => {
+    if (!currentUserId) return;
+
+    try {
+      setIsLoadingHistory(true);
+      const { data, error } = await dbHelpers.getChatHistory(currentUserId, sessionId);
+
+      if (error) {
+        console.warn('Failed to load chat history:', error);
+        setIsLoadingHistory(false);
+        return;
+      }
+
+      if (data && data.length > 0) {
+        // Convert Supabase chat messages to Message format
+        const loadedMessages: Message[] = data.map((chat: any) => ({
+          id: chat.id,
+          type: chat.is_user_message ? 'user' : 'bot',
+          content: chat.message,
+          timestamp: new Date(chat.created_at),
+        }));
+
+        // If we have loaded messages, replace the default welcome message
+        if (loadedMessages.length > 0) {
+          setMessages(loadedMessages);
+        }
+      }
+    } catch (err) {
+      console.error('Error loading chat history:', err);
+    } finally {
+      setIsLoadingHistory(false);
+    }
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -148,7 +203,7 @@ export function HealthChatbot({ entries, className }: HealthChatbotProps) {
   };
 
   const handleSendMessage = async () => {
-    if (!input.trim()) return;
+    if (!input.trim() || !currentUserId) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -158,12 +213,34 @@ export function HealthChatbot({ entries, className }: HealthChatbotProps) {
     };
 
     setMessages(prev => [...prev, userMessage]);
+    const userInput = input;
     setInput('');
     setIsTyping(true);
 
+    // Save user message to Supabase
+    try {
+      await dbHelpers.saveChatMessage({
+        user_id: currentUserId,
+        session_id: sessionId,
+        message: userInput,
+        is_user_message: true,
+        context_data: {
+          entries_count: entries.length,
+          recent_entries: entries.slice(0, 5),
+        },
+      });
+    } catch (err) {
+      console.error('Failed to save user message:', err);
+      toast({
+        title: 'Warning',
+        description: 'Message saved locally but may not be synced to database.',
+        variant: 'error',
+      });
+    }
+
     // Simulate AI processing
-    setTimeout(() => {
-      const insight = generateInsight(input);
+    setTimeout(async () => {
+      const insight = generateInsight(userInput);
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
         type: 'bot',
@@ -174,6 +251,27 @@ export function HealthChatbot({ entries, className }: HealthChatbotProps) {
 
       setMessages(prev => [...prev, botMessage]);
       setIsTyping(false);
+
+      // Save bot response to Supabase
+      try {
+        await dbHelpers.saveChatMessage({
+          user_id: currentUserId,
+          session_id: sessionId,
+          message: insight.response,
+          is_user_message: false,
+          context_data: {
+            user_message: userInput,
+            suggestions: insight.suggestions,
+          },
+        });
+      } catch (err) {
+        console.error('Failed to save bot message:', err);
+        toast({
+          title: 'Warning',
+          description: 'Response saved locally but may not be synced to database.',
+          variant: 'error',
+        });
+      }
     }, 1500);
   };
 
@@ -203,8 +301,16 @@ export function HealthChatbot({ entries, className }: HealthChatbotProps) {
       </CardHeader>
       
       <CardContent className="flex-1 flex flex-col p-0">
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
-          {messages.map((message) => (
+        {isLoadingHistory ? (
+          <div className="flex-1 flex items-center justify-center">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-rose-600 mx-auto mb-4"></div>
+              <p className="text-sm text-slate-600">Loading chat history...</p>
+            </div>
+          </div>
+        ) : (
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            {messages.map((message) => (
             <div
               key={message.id}
               className={cn(
@@ -254,9 +360,9 @@ export function HealthChatbot({ entries, className }: HealthChatbotProps) {
                 </Avatar>
               )}
             </div>
-          ))}
-          
-          {isTyping && (
+            ))}
+            
+            {isTyping && (
             <div className="flex gap-3 justify-start">
               <Avatar className="h-8 w-8">
                 <AvatarFallback className="bg-rose-100 text-rose-600">
@@ -271,10 +377,11 @@ export function HealthChatbot({ entries, className }: HealthChatbotProps) {
                 </div>
               </div>
             </div>
-          )}
-          
-          <div ref={messagesEndRef} />
-        </div>
+            )}
+            
+            <div ref={messagesEndRef} />
+          </div>
+        )}
 
         <div className="border-t p-4">
           <div className="flex gap-2">

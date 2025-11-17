@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { UserProfile as UserProfileComponent } from '@/components/user-profile';
+import { SupabaseConnectionTest } from '@/components/supabase-connection-test';
 import { dbHelpers, type HealthEntry } from '@/lib/supabase';
 import { useToast } from '@/components/hooks/use-toast';
 import { ArrowLeft } from 'lucide-react';
@@ -78,7 +79,10 @@ export default function ProfilePage() {
       </div>
 
       <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-4xl mx-auto space-y-6">
+          {/* Connection Test Component */}
+          <SupabaseConnectionTest />
+          
           {loading ? (
             <div className="flex items-center justify-center py-12">
               <div className="text-center">

@@ -87,7 +87,7 @@ export default function ChatbotPage() {
               </div>
             </div>
           ) : (
-            <HealthChatbot entries={entries} />
+            <HealthChatbot entries={entries} userId={user.id} />
           )}
         </div>
       </div>
