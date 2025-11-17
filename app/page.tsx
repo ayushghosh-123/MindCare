@@ -1,7 +1,7 @@
 'use client';
 
 import { useUser } from '@clerk/nextjs';
-import { Heart, LogIn, UserPlus, Brain, Activity, CheckCircle, Smile, Calendar, TrendingUp, Zap, Clock, Utensils, Moon } from 'lucide-react';
+import { LogIn, UserPlus, Activity, CheckCircle, Smile, Calendar, TrendingUp, Zap, Clock, Utensils, Moon , Brain } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
@@ -9,11 +9,7 @@ import { supabase, dbHelpers } from '@/lib/supabase';
 import type { HealthEntry } from '@/lib/supabase';
 import { useToast } from '@/components/hooks/use-toast';
 import { MainNavbar } from '@/components/main-navbar';
-import { UnifiedDashboard } from '@/components/unified-dashboard';
-import { StatsOverview } from '@/components/stats-overview';
-import { EntryList } from '@/components/entry-list';
-import { EntryDialog } from '@/components/entry-dialog';
-import { ConfigCheck } from '@/components/config-check';
+import { UnifiedDashboardToday } from '@/components/unified-dashboard';
 import { LoadingSkeleton } from '@/components/loading-skeleton';
 import { motion } from 'framer-motion';
 
@@ -85,8 +81,8 @@ export default function Home() {
     <nav className="border-b border-slate-200 bg-white/80 backdrop-blur-md sticky top-0 z-20 shadow-sm">
       <div className="container mx-auto px-6 py-4 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
-          <Heart className="h-7 w-7 text-rose-600" />
-          <span className="font-extrabold text-xl text-slate-800 tracking-tight">Reflect & Connect</span>
+          <Brain className="h-7 w-7 text-rose-600" />
+          <span className="font-extrabold text-xl text-slate-800 tracking-tight">MindCare</span>
         </Link>
 
         {user ? (
@@ -227,7 +223,7 @@ export default function Home() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3, duration: 0.6 }}
           >
-            Stress, sleep, or nutrition — Reflect & Connect helps you connect the dots between your daily actions and your long-term health, building a truly balanced life.
+            Stress, sleep, or nutrition — Mind Care helps you connect the dots between your daily actions and your long-term health, building a truly balanced life.
           </motion.p>
 
           <motion.div
@@ -421,7 +417,7 @@ export default function Home() {
         </main>
       ) : (
         <main className="container mx-auto px-4 py-8">
-          <UnifiedDashboard userId={user?.id || ''} />
+          <UnifiedDashboardToday userId={user?.id || ''} />
         </main>
       )}
     </div>

@@ -5,24 +5,7 @@ import { useUser, UserButton } from '@clerk/nextjs';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Heart, 
-  LogIn, 
-  UserPlus, 
-  Home, 
-  BookOpen, 
-  MessageSquare, 
-  BarChart3, 
-  User, 
-  Menu, 
-  X,
-  Plus,
-  Activity,
-  Brain,
-  Calendar,
-  Settings,
-  HelpCircle
-} from 'lucide-react';
+import { Heart, LogIn, UserPlus, Home, BookOpen, MessageSquare, BarChart3, User, Menu, X, Plus, Activity ,  Brain} from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface MainNavbarProps {
@@ -86,12 +69,6 @@ export function MainNavbar({ currentPath = '/', entriesCount = 0, className }: M
       href: '/analytics',
       icon: Activity,
       color: 'bg-blue-600 hover:bg-blue-700'
-    },
-    {
-      label: 'AI Chat',
-      href: '/chatbot',
-      icon: Brain,
-      color: 'bg-green-600 hover:bg-green-700'
     }
   ];
 
@@ -115,10 +92,10 @@ export function MainNavbar({ currentPath = '/', entriesCount = 0, className }: M
             {/* Logo & Brand */}
             <Link href="/" className="flex items-center gap-3">
               <div className="p-2 bg-rose-100 rounded-lg">
-                <Heart className="h-6 w-6 text-rose-600" />
+                <Brain className="h-6 w-6 text-rose-600" />
               </div>
               <div className="hidden sm:block">
-                <h1 className="text-xl font-bold text-slate-800">Reflect & Connect</h1>
+                <h1 className="text-xl font-bold text-slate-800">MindCare</h1>
                 <p className="text-xs text-slate-600">Health Journal</p>
               </div>
             </Link>

@@ -1,143 +1,297 @@
-/**
- * Supabase Connection Test Utility
- * Tests the connection to Supabase and verifies data storage per user
- */
+import { createClient } from '@supabase/supabase-js';
 
-import { supabase } from './supabase';
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-export interface ConnectionTestResult {
-  connected: boolean;
-  tablesAccessible: {
-    health_entries: boolean;
-    chats: boolean;
-    journal_entries: boolean;
-    users: boolean;
-  };
-  error?: string;
-  details?: {
-    healthEntriesCount?: number;
-    chatsCount?: number;
-    journalEntriesCount?: number;
-  };
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error(
+    'Missing Supabase environment variables. Please check your .env.local file and ensure NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY are set.'
+  );
 }
 
-export async function testSupabaseConnection(userId?: string): Promise<ConnectionTestResult> {
-  const result: ConnectionTestResult = {
-    connected: false,
-    tablesAccessible: {
-      health_entries: false,
-      chats: false,
-      journal_entries: false,
-      users: false,
-    },
-  };
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-  try {
-    // Test basic connection by querying users table
-    const { data: usersData, error: usersError } = await supabase
+// Enhanced types for Reflect & Connect Journaling System
+export type User = {
+  id: string;
+  username?: string;
+  email: string;
+  full_name?: string;
+  avatar_url?: string;
+  created_at: string;
+  updated_at: string;
+};
+
+export type Journal = {
+  id: string;
+  user_id: string;
+  title: string;
+  description?: string;
+  color: string;
+  is_public: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
+export type JournalEntry = {
+  id: string;
+  journal_id: string;
+  user_id: string;
+  title?: string;
+  content: string;
+  mood?: 'excellent' | 'good' | 'neutral' | 'poor' | 'terrible';
+  tags?: string[];
+  is_private: boolean;
+  word_count: number;
+  reading_time: number;
+  created_at: string;
+  updated_at: string;
+};
+
+export type Chat = {
+  id: string;
+  user_id: string;
+  session_id: string;
+  message: string;
+  is_user_message: boolean;
+  context_data?: any;
+  created_at: string;
+};
+
+export type Avatar = {
+  id: string;
+  user_id: string;
+  mood: 'happy' | 'sad' | 'excited' | 'calm' | 'anxious' | 'grateful' | 'frustrated' | 'peaceful';
+  mood_intensity: number;
+  notes?: string;
+  created_at: string;
+};
+
+export type HealthEntry = {
+  id: string;
+  user_id: string;
+  entry_date: string;
+  mood?: 'excellent' | 'good' | 'neutral' | 'poor' | 'terrible';
+  symptoms?: string;
+  notes?: string;
+  sleep_hours: number;
+  water_intake: number;
+  exercise_minutes: number;
+  energy_level?: number;
+  stress_level?: number;
+  health_score?: number; // Added health_score field
+  created_at: string;
+  updated_at: string;
+};
+
+export type UserProfile = {
+  id: string;
+  user_id: string;
+  age?: number;
+  height?: number;
+  weight?: number;
+  health_goals?: string[];
+  medical_conditions?: string[];
+  medications?: string[];
+  emergency_contact?: string;
+  doctor_info?: string;
+  additional_notes?: string;
+  created_at: string;
+  updated_at: string;
+};
+
+// Database helper functions
+export const dbHelpers = {
+  // User management
+  async createUser(userData: Partial<User>) {
+    try {
+      const { data, error } = await supabase
+        .from('users')
+        .insert([userData])
+        .select()
+        .single();
+      
+      if (error && error.code !== '23505') { // 23505 = unique violation
+        throw error;
+      }
+      
+      return { data, error: null };
+    } catch (err) {
+      return { data: null, error: err };
+    }
+  },
+
+  async getUser(userId: string) {
+    const { data, error } = await supabase
       .from('users')
-      .select('id')
-      .limit(1);
+      .select('*')
+      .eq('id', userId)
+      .single();
+    return { data, error };
+  },
 
-    if (usersError) {
-      result.error = `Database connection failed: ${usersError.message}`;
-      return result;
+  // Journal management
+  async createJournal(journalData: Partial<Journal>) {
+    const { data, error } = await supabase
+      .from('journals')
+      .insert([journalData])
+      .select()
+      .single();
+    return { data, error };
+  },
+
+  async getUserJournals(userId: string) {
+    const { data, error } = await supabase
+      .from('journals')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false });
+    return { data, error };
+  },
+
+  // Journal entries
+  async createJournalEntry(entryData: Partial<JournalEntry>) {
+    const { data, error } = await supabase
+      .from('journal_entries')
+      .insert([entryData])
+      .select()
+      .single();
+    return { data, error };
+  },
+
+  async getJournalEntries(journalId: string) {
+    const { data, error } = await supabase
+      .from('journal_entries')
+      .select('*')
+      .eq('journal_id', journalId)
+      .order('created_at', { ascending: false });
+    return { data, error };
+  },
+
+  // Chat management
+  async saveChatMessage(chatData: Partial<Chat>) {
+    const { data, error } = await supabase
+      .from('chats')
+      .insert([chatData])
+      .select()
+      .single();
+    return { data, error };
+  },
+
+  async getChatHistory(userId: string, sessionId?: string) {
+    let query = supabase
+      .from('chats')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: true });
+
+    if (sessionId) {
+      query = query.eq('session_id', sessionId);
     }
 
-    result.connected = true;
-    result.tablesAccessible.users = true;
+    const { data, error } = await query;
+    return { data, error };
+  },
 
-    // Test health_entries table
-    let healthQuery = supabase.from('health_entries').select('id', { count: 'exact' });
-    if (userId) {
-      healthQuery = healthQuery.eq('user_id', userId);
-    }
-    const { error: healthError, count: healthCount } = await healthQuery;
+  // Avatar mood tracking
+  async saveAvatarMood(avatarData: Partial<Avatar>) {
+    const { data, error } = await supabase
+      .from('avatar')
+      .insert([avatarData])
+      .select()
+      .single();
+    return { data, error };
+  },
 
-    if (!healthError) {
-      result.tablesAccessible.health_entries = true;
-      result.details = {
-        ...result.details,
-        healthEntriesCount: healthCount || 0,
-      };
-    }
+  async getUserMoodHistory(userId: string) {
+    const { data, error } = await supabase
+      .from('avatar')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false });
+    return { data, error };
+  },
 
-    // Test chats table
-    let chatsQuery = supabase.from('chats').select('id', { count: 'exact' });
-    if (userId) {
-      chatsQuery = chatsQuery.eq('user_id', userId);
-    }
-    const { error: chatsError, count: chatsCount } = await chatsQuery;
+  // Health entries - FIXED FUNCTIONS
+  async createHealthEntry(entryData: Partial<HealthEntry>) {
+    const { data, error } = await supabase
+      .from('health_entries')
+      .insert([entryData])
+      .select()
+      .single();
+    return { data, error };
+  },
 
-    if (!chatsError) {
-      result.tablesAccessible.chats = true;
-      result.details = {
-        ...result.details,
-        chatsCount: chatsCount || 0,
-      };
-    }
+  async getUserHealthEntries(userId: string) {
+    const { data, error } = await supabase
+      .from('health_entries')
+      .select('*')
+      .eq('user_id', userId)
+      .order('entry_date', { ascending: false });
+    return { data, error };
+  },
 
-    // Test journal_entries table
-    let journalQuery = supabase.from('journal_entries').select('id', { count: 'exact' });
-    if (userId) {
-      journalQuery = journalQuery.eq('user_id', userId);
-    }
-    const { error: journalError, count: journalCount } = await journalQuery;
+  async deleteHealthEntry(id: string) {
+    const { error } = await supabase
+      .from('health_entries')
+      .delete()
+      .eq('id', id);
 
-    if (!journalError) {
-      result.tablesAccessible.journal_entries = true;
-      result.details = {
-        ...result.details,
-        journalEntriesCount: journalCount || 0,
-      };
-    }
+    return { success: !error, error };
+  },
 
-    return result;
-  } catch (error: any) {
-    result.error = `Connection test failed: ${error.message}`;
-    return result;
+  
+  // FIXED: updateHealthEntry now accepts id and payload
+  async updateHealthEntry(id: string, payload: Partial<HealthEntry>) {
+    const { data, error } = await supabase
+      .from('health_entries')
+      .update(payload)
+      .eq('id', id)
+      .select()
+      .single();
+
+    return { data, error };
+  },
+
+  // User profiles
+  async createUserProfile(profileData: Partial<UserProfile>) {
+    const { data, error } = await supabase
+      .from('user_profiles')
+      .insert([profileData])
+      .select()
+      .single();
+    return { data, error };
+  },
+
+  async getUserProfile(userId: string) {
+    const { data, error } = await supabase
+      .from('user_profiles')
+      .select('*')
+      .eq('user_id', userId)
+      .single();
+    return { data, error };
+  },
+
+  async updateUserProfile(userId: string, profileData: Partial<UserProfile>) {
+    const { data, error } = await supabase
+      .from('user_profiles')
+      .update(profileData)
+      .eq('user_id', userId)
+      .select()
+      .single();
+    return { data, error };
+  },
+
+  // Statistics
+  async getUserStats(userId: string) {
+    const { data, error } = await supabase
+      .rpc('get_user_stats', { user_id_param: userId });
+    return { data, error };
+  },
+
+  async getJournalInsights(journalId: string) {
+    const { data, error } = await supabase
+      .rpc('get_journal_insights', { journal_id_param: journalId });
+    return { data, error };
   }
-}
-
-/**
- * Verify that data is stored per user correctly
- */
-export async function verifyUserDataIsolation(userId: string): Promise<{
-  healthEntries: { count: number; allHaveUserId: boolean };
-  chats: { count: number; allHaveUserId: boolean };
-  journalEntries: { count: number; allHaveUserId: boolean };
-}> {
-  // Check health entries
-  const { data: healthEntries, error: healthError } = await supabase
-    .from('health_entries')
-    .select('user_id')
-    .eq('user_id', userId);
-
-  // Check chats
-  const { data: chats, error: chatsError } = await supabase
-    .from('chats')
-    .select('user_id')
-    .eq('user_id', userId);
-
-  // Check journal entries
-  const { data: journalEntries, error: journalError } = await supabase
-    .from('journal_entries')
-    .select('user_id')
-    .eq('user_id', userId);
-
-  return {
-    healthEntries: {
-      count: healthEntries?.length || 0,
-      allHaveUserId: !healthError && healthEntries?.every((e) => e.user_id === userId) || false,
-    },
-    chats: {
-      count: chats?.length || 0,
-      allHaveUserId: !chatsError && chats?.every((c) => c.user_id === userId) || false,
-    },
-    journalEntries: {
-      count: journalEntries?.length || 0,
-      allHaveUserId: !journalError && journalEntries?.every((e) => e.user_id === userId) || false,
-    },
-  };
-}
-
+};

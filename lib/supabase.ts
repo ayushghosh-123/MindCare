@@ -230,6 +230,27 @@ export const dbHelpers = {
     return { data, error };
   },
 
+    async deleteHealthEntry(id: string) {
+    const { error } = await supabase
+      .from('health_entries')
+      .delete()
+      .eq('id', id);
+
+    return { success: !error, error };
+  },
+
+  // FIXED: updateHealthEntry now accepts id and payload
+  async updateHealthEntry(id: string, payload: Partial<HealthEntry>) {
+    const { data, error } = await supabase
+      .from('health_entries')
+      .update(payload)
+      .eq('id', id)
+      .select()
+      .single();
+
+    return { data, error };
+  },
+
   // User profiles
   async createUserProfile(profileData: Partial<UserProfile>) {
     const { data, error } = await supabase
