@@ -1,4 +1,4 @@
-# Reflect & Connect Journaling System
+# MindCare Health caring app
 
 A comprehensive health and wellness journaling platform with AI-powered insights, data visualization, and personal health tracking.
 
