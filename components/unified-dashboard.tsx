@@ -166,8 +166,8 @@ export function UnifiedDashboardToday({ userId, className }: UnifiedDashboardTod
       // Calculate the health score
       const healthScore = computeHealthScore();
 
-      // Prepare payload
-      const payload = {
+      // Prepare payload (health_score is calculated but not stored in DB schema)
+      const payload: Partial<HealthEntry> = {
         user_id: userId,
         entry_date: todayIsoDate,
         mood: form.mood ? (form.mood as HealthEntry['mood']) : undefined,
@@ -178,7 +178,6 @@ export function UnifiedDashboardToday({ userId, className }: UnifiedDashboardTod
         exercise_minutes: form.exercise_minutes ? parseInt(form.exercise_minutes) : 0,
         energy_level: form.energy_level ? parseInt(form.energy_level) : undefined,
         stress_level: form.stress_level ? parseInt(form.stress_level) : undefined,
-        health_score: healthScore
       };
 
       if (todayEntry && todayEntry.id) {
@@ -235,8 +234,13 @@ export function UnifiedDashboardToday({ userId, className }: UnifiedDashboardTod
   // Compute current score from form (live preview)
   const currentScore = computeHealthScore();
   
-  // Get stored score from database (health_score may not be declared on HealthEntry type)
-  const storedScore = (todayEntry as Partial<HealthEntry> & { health_score?: number })?.health_score;
+  // Calculate stored score from database entry (health_score is not stored, calculate from saved data)
+  const storedScore = todayEntry ? computeHealthScore({
+    mood: todayEntry.mood,
+    sleep_hours: todayEntry.sleep_hours,
+    exercise_minutes: todayEntry.exercise_minutes,
+    water_intake: todayEntry.water_intake,
+  }) : 0;
 
   return (
     <div className={cn('space-y-6', className)}>
