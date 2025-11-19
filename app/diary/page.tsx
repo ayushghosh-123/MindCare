@@ -319,7 +319,7 @@ export default function DiaryPage() {
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div>
-                    <Label htmlFor="entry-title">Entry Title (Optional)</Label>
+                    <Label htmlFor="entry-title">Entry Title </Label>
                     <Input
                       id="entry-title"
                       value={entryTitle}

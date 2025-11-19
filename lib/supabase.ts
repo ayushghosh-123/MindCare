@@ -5,16 +5,13 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error(
-    'Missing Supabase environment variables. Please check NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in your .env'
+    'Missing Supabase environment variables. Please check your .env.local file and ensure NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY are set.'
   );
 }
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-/* ================================
-   Types
-================================ */
-
+// Enhanced types for Reflect & Connect Journaling System
 export type User = {
   id: string;
   username?: string;
@@ -64,15 +61,7 @@ export type Chat = {
 export type Avatar = {
   id: string;
   user_id: string;
-  mood:
-    | 'happy'
-    | 'sad'
-    | 'excited'
-    | 'calm'
-    | 'anxious'
-    | 'grateful'
-    | 'frustrated'
-    | 'peaceful';
+  mood: 'happy' | 'sad' | 'excited' | 'calm' | 'anxious' | 'grateful' | 'frustrated' | 'peaceful';
   mood_intensity: number;
   notes?: string;
   created_at: string;
@@ -110,27 +99,84 @@ export type UserProfile = {
   updated_at: string;
 };
 
-/* ================================
-   Database Helpers
-================================ */
-
+// Database helper functions
 export const dbHelpers = {
-  /* ---------- USERS ---------- */
-
-  // FIXED: No 409 error — using UPSERT
+  // User management
   async createUser(userData: Partial<User>) {
     try {
       const { data, error } = await supabase
         .from('users')
-        .upsert(userData, { onConflict: 'id' }) // prevents duplicate conflict
+        .insert([userData])
         .select()
         .single();
-
-      if (error) throw error;
-
+      
+      // Handle duplicate user (409 Conflict or 23505 unique violation)
+      // Both indicate the user already exists, which is fine
+      if (error) {
+        const isDuplicateError = 
+          error.code === '23505' || // PostgreSQL unique violation
+          error.code === 'PGRST116' || // PostgREST no rows returned (sometimes used for conflicts)
+          error.message?.includes('duplicate') ||
+          error.message?.includes('already exists') ||
+          error.message?.includes('unique constraint');
+        
+        if (isDuplicateError) {
+          // User already exists - try to get the existing user
+          if (userData.id) {
+            const { data: existingUser } = await supabase
+              .from('users')
+              .select('*')
+              .eq('id', userData.id)
+              .single();
+            
+            if (existingUser) {
+              return { data: existingUser, error: null };
+            }
+          }
+          // If we can't get the user, return success anyway (user exists)
+          return { data: null, error: null };
+        }
+        
+        // For other errors, return the error
+        throw error;
+      }
+      
       return { data, error: null };
-    } catch (err) {
-      console.error('createUser error:', err);
+    } catch (err: any) {
+      // Check if it's a 409 HTTP status (Conflict) or related error
+      const isConflictError = 
+        err?.status === 409 || 
+        err?.statusCode === 409 ||
+        err?.code === '23505' ||
+        err?.code === 'PGRST116' ||
+        err?.message?.includes('409') ||
+        err?.message?.includes('Conflict') ||
+        err?.message?.includes('duplicate') ||
+        err?.message?.includes('already exists') ||
+        err?.message?.includes('unique constraint');
+      
+      if (isConflictError) {
+        // User already exists - try to get the existing user
+        if (userData.id) {
+          try {
+            const { data: existingUser } = await supabase
+              .from('users')
+              .select('*')
+              .eq('id', userData.id)
+              .single();
+            
+            if (existingUser) {
+              return { data: existingUser, error: null };
+            }
+          } catch (getError) {
+            // Ignore get error, user exists but we can't fetch it
+            console.log('User already exists, but could not fetch:', getError);
+          }
+        }
+        // User exists, return success (no error)
+        return { data: null, error: null };
+      }
+      
       return { data: null, error: err };
     }
   },
@@ -141,19 +187,16 @@ export const dbHelpers = {
       .select('*')
       .eq('id', userId)
       .single();
-
     return { data, error };
   },
 
-  /* ---------- JOURNALS ---------- */
-
+  // Journal management
   async createJournal(journalData: Partial<Journal>) {
     const { data, error } = await supabase
       .from('journals')
       .insert([journalData])
       .select()
       .single();
-
     return { data, error };
   },
 
@@ -163,19 +206,16 @@ export const dbHelpers = {
       .select('*')
       .eq('user_id', userId)
       .order('created_at', { ascending: false });
-
     return { data, error };
   },
 
-  /* ---------- JOURNAL ENTRIES ---------- */
-
+  // Journal entries
   async createJournalEntry(entryData: Partial<JournalEntry>) {
     const { data, error } = await supabase
       .from('journal_entries')
       .insert([entryData])
       .select()
       .single();
-
     return { data, error };
   },
 
@@ -185,19 +225,16 @@ export const dbHelpers = {
       .select('*')
       .eq('journal_id', journalId)
       .order('created_at', { ascending: false });
-
     return { data, error };
   },
 
-  /* ---------- CHAT ---------- */
-
+  // Chat management
   async saveChatMessage(chatData: Partial<Chat>) {
     const { data, error } = await supabase
       .from('chats')
       .insert([chatData])
       .select()
       .single();
-
     return { data, error };
   },
 
@@ -208,21 +245,21 @@ export const dbHelpers = {
       .eq('user_id', userId)
       .order('created_at', { ascending: true });
 
-    if (sessionId) query = query.eq('session_id', sessionId);
+    if (sessionId) {
+      query = query.eq('session_id', sessionId);
+    }
 
     const { data, error } = await query;
     return { data, error };
   },
 
-  /* ---------- AVATAR / MOOD ---------- */
-
+  // Avatar mood tracking
   async saveAvatarMood(avatarData: Partial<Avatar>) {
     const { data, error } = await supabase
       .from('avatar')
       .insert([avatarData])
       .select()
       .single();
-
     return { data, error };
   },
 
@@ -232,19 +269,16 @@ export const dbHelpers = {
       .select('*')
       .eq('user_id', userId)
       .order('created_at', { ascending: false });
-
     return { data, error };
   },
 
-  /* ---------- HEALTH ENTRIES ---------- */
-
+  // Health entries
   async createHealthEntry(entryData: Partial<HealthEntry>) {
     const { data, error } = await supabase
       .from('health_entries')
       .insert([entryData])
       .select()
       .single();
-
     return { data, error };
   },
 
@@ -254,11 +288,10 @@ export const dbHelpers = {
       .select('*')
       .eq('user_id', userId)
       .order('entry_date', { ascending: false });
-
     return { data, error };
   },
 
-  async deleteHealthEntry(id: string) {
+    async deleteHealthEntry(id: string) {
     const { error } = await supabase
       .from('health_entries')
       .delete()
@@ -267,6 +300,7 @@ export const dbHelpers = {
     return { success: !error, error };
   },
 
+  // FIXED: updateHealthEntry now accepts id and payload
   async updateHealthEntry(id: string, payload: Partial<HealthEntry>) {
     const { data, error } = await supabase
       .from('health_entries')
@@ -278,15 +312,13 @@ export const dbHelpers = {
     return { data, error };
   },
 
-  /* ---------- USER PROFILE ---------- */
-
+  // User profiles
   async createUserProfile(profileData: Partial<UserProfile>) {
     const { data, error } = await supabase
       .from('user_profiles')
       .insert([profileData])
       .select()
       .single();
-
     return { data, error };
   },
 
@@ -296,7 +328,6 @@ export const dbHelpers = {
       .select('*')
       .eq('user_id', userId)
       .single();
-
     return { data, error };
   },
 
@@ -307,23 +338,19 @@ export const dbHelpers = {
       .eq('user_id', userId)
       .select()
       .single();
-
     return { data, error };
   },
 
-  /* ---------- STATS ---------- */
-
+  // Statistics
   async getUserStats(userId: string) {
-    const { data, error } = await supabase.rpc('get_user_stats', {
-      user_id_param: userId,
-    });
+    const { data, error } = await supabase
+      .rpc('get_user_stats', { user_id_param: userId });
     return { data, error };
   },
 
   async getJournalInsights(journalId: string) {
-    const { data, error } = await supabase.rpc('get_journal_insights', {
-      journal_id_param: journalId,
-    });
+    const { data, error } = await supabase
+      .rpc('get_journal_insights', { journal_id_param: journalId });
     return { data, error };
-  },
+  }
 };

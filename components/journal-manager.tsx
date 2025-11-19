@@ -230,7 +230,7 @@ export function JournalManager({
               />
             </div>
             <div>
-              <Label htmlFor="journal-description">Description (Optional)</Label>
+              <Label htmlFor="journal-description">Description </Label>
               <Textarea
                 id="journal-description"
                 value={journalDescription}
