@@ -8,26 +8,74 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { 
-  User, 
-  Edit, 
-  Save, 
-  X, 
-  Heart, 
-  Target, 
-  Calendar,
-  TrendingUp,
-  Award,
-  Activity,
-  Moon,
-  Brain,
-  Droplets
-} from 'lucide-react';
+import { User, Edit, Save, X, Heart, Target, Calendar, Activity, Moon, Brain,  Droplets } from 'lucide-react';
 import { useUser } from '@clerk/nextjs';
-import type { HealthEntry } from '@/lib/supabase';
+import { dbHelpers, type HealthEntry, type UserProfile as UserProfileType } from '@/lib/supabase';
+import { useToast } from '@/components/hooks/use-toast';
 
 interface UserProfileProps {
   entries: HealthEntry[];
+  userProfile?: UserProfileType | null;
+  onProfileUpdate?: () => void;
+}
+
+// Helper function to calculate day streak
+export function calculateDayStreak(entries: HealthEntry[]): number {
+  if (entries.length === 0) return 0;
+  
+  // Get unique dates (one entry per day) and sort by date (most recent first)
+  const uniqueDates = new Set<string>();
+  const dateEntries: Date[] = [];
+  
+  for (const entry of entries) {
+    const entryDate = new Date(entry.entry_date);
+    entryDate.setHours(0, 0, 0, 0);
+    const dateKey = entryDate.toISOString().split('T')[0];
+    
+    if (!uniqueDates.has(dateKey)) {
+      uniqueDates.add(dateKey);
+      dateEntries.push(entryDate);
+    }
+  }
+  
+  // Sort by date descending (most recent first)
+  dateEntries.sort((a, b) => b.getTime() - a.getTime());
+  
+  if (dateEntries.length === 0) return 0;
+  
+  // Calculate streak from most recent entry backwards
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  
+  // Check if the most recent entry is today or yesterday
+  const mostRecentDate = dateEntries[0];
+  const daysDiff = Math.floor((today.getTime() - mostRecentDate.getTime()) / (1000 * 60 * 60 * 24));
+  
+  // If the most recent entry is more than 1 day ago, streak is broken
+  if (daysDiff > 1) return 0;
+  
+  // Start counting from the most recent entry date
+  let streak = 0;
+  let checkDate = new Date(mostRecentDate);
+  
+  // Count consecutive days backwards from the most recent entry
+  for (const entryDate of dateEntries) {
+    const entryDateNormalized = new Date(entryDate);
+    entryDateNormalized.setHours(0, 0, 0, 0);
+    
+    const checkDateNormalized = new Date(checkDate);
+    checkDateNormalized.setHours(0, 0, 0, 0);
+    
+    if (entryDateNormalized.getTime() === checkDateNormalized.getTime()) {
+      streak++;
+      checkDate.setDate(checkDate.getDate() - 1);
+    } else {
+      // If dates don't match, streak is broken
+      break;
+    }
+  }
+  
+  return streak;
 }
 
 interface UserHealthProfile {
@@ -47,25 +95,67 @@ interface UserHealthProfile {
   updatedAt: string;
 }
 
-export function UserProfile({ entries }: UserProfileProps) {
+export function UserProfile({ entries, userProfile: dbUserProfile, onProfileUpdate }: UserProfileProps) {
   const { user } = useUser();
+  const { toast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
-  const [profile, setProfile] = useState<UserHealthProfile>({
-    id: user?.id || '',
-    name: user?.firstName || '',
-    email: user?.emailAddresses[0]?.emailAddress || '',
-    age: undefined,
-    height: undefined,
-    weight: undefined,
-    healthGoals: [],
-    medicalConditions: [],
-    medications: [],
-    emergencyContact: '',
-    doctorInfo: '',
-    notes: '',
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+  const [saving, setSaving] = useState(false);
+  
+  // Initialize profile from database or Clerk user data
+  const [profile, setProfile] = useState<UserHealthProfile>(() => {
+    if (dbUserProfile) {
+      return {
+        id: dbUserProfile.id || user?.id || '',
+        name: user?.fullName || user?.firstName || '',
+        email: user?.emailAddresses[0]?.emailAddress || '',
+        age: dbUserProfile.age,
+        height: dbUserProfile.height,
+        weight: dbUserProfile.weight,
+        healthGoals: dbUserProfile.health_goals || [],
+        medicalConditions: dbUserProfile.medical_conditions || [],
+        medications: dbUserProfile.medications || [],
+        emergencyContact: dbUserProfile.emergency_contact || '',
+        doctorInfo: dbUserProfile.doctor_info || '',
+        notes: dbUserProfile.additional_notes || '',
+        createdAt: dbUserProfile.created_at || new Date().toISOString(),
+        updatedAt: dbUserProfile.updated_at || new Date().toISOString()
+      };
+    }
+    return {
+      id: user?.id || '',
+      name: user?.fullName || user?.firstName || '',
+      email: user?.emailAddresses[0]?.emailAddress || '',
+      age: undefined,
+      height: undefined,
+      weight: undefined,
+      healthGoals: [],
+      medicalConditions: [],
+      medications: [],
+      emergencyContact: '',
+      doctorInfo: '',
+      notes: '',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
   });
+
+  // Update profile when dbUserProfile changes
+  useEffect(() => {
+    if (dbUserProfile) {
+      setProfile(prev => ({
+        ...prev,
+        age: dbUserProfile.age,
+        height: dbUserProfile.height,
+        weight: dbUserProfile.weight,
+        healthGoals: dbUserProfile.health_goals || [],
+        medicalConditions: dbUserProfile.medical_conditions || [],
+        medications: dbUserProfile.medications || [],
+        emergencyContact: dbUserProfile.emergency_contact || '',
+        doctorInfo: dbUserProfile.doctor_info || '',
+        notes: dbUserProfile.additional_notes || ''
+      }));
+    }
+  }, [dbUserProfile]);
 
   const [newGoal, setNewGoal] = useState('');
   const [newCondition, setNewCondition] = useState('');
@@ -94,36 +184,82 @@ export function UserProfile({ entries }: UserProfileProps) {
     };
   };
 
-  const calculateStreak = () => {
-    if (entries.length === 0) return 0;
-    
-    let streak = 0;
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    
-    for (let i = 0; i < entries.length; i++) {
-      const entryDate = new Date(entries[i].entry_date);
-      entryDate.setHours(0, 0, 0, 0);
-      
-      const expectedDate = new Date(today);
-      expectedDate.setDate(today.getDate() - i);
-      
-      if (entryDate.getTime() === expectedDate.getTime()) {
-        streak++;
-      } else {
-        break;
-      }
-    }
-    
-    return streak;
-  };
+  // Use the helper function for streak calculation
+  const calculateStreak = () => calculateDayStreak(entries);
 
   const healthMetrics = calculateHealthMetrics();
 
-  const handleSave = () => {
-    // Here you would save to your database
-    console.log('Saving profile:', profile);
-    setIsEditing(false);
+  const handleSave = async () => {
+    if (!user?.id) {
+      toast({
+        title: 'Error',
+        description: 'User not authenticated.',
+        variant: 'error'
+      });
+      return;
+    }
+
+    try {
+      setSaving(true);
+      
+      // Prepare profile data for database
+      const profileData = {
+        user_id: user.id,
+        age: profile.age,
+        height: profile.height,
+        weight: profile.weight,
+        health_goals: profile.healthGoals,
+        medical_conditions: profile.medicalConditions,
+        medications: profile.medications,
+        emergency_contact: profile.emergencyContact,
+        doctor_info: profile.doctorInfo,
+        additional_notes: profile.notes
+      };
+
+      // Check if profile exists
+      const { data: existingProfile, error: fetchError } = await dbHelpers.getUserProfile(user.id);
+      
+      let result;
+      if (existingProfile && !fetchError) {
+        // Update existing profile
+        result = await dbHelpers.updateUserProfile(user.id, profileData);
+      } else {
+        // Create new profile
+        result = await dbHelpers.createUserProfile(profileData);
+      }
+
+      if (result.error) {
+        throw result.error;
+      }
+
+      // Update local state immediately with saved data
+      if (result.data) {
+        // The onProfileUpdate callback will reload from database, but we can also update locally
+        // This ensures the UI updates immediately
+      }
+
+      toast({
+        title: 'Success',
+        description: 'Profile saved successfully.',
+        variant: 'default'
+      });
+
+      setIsEditing(false);
+      
+      // Refresh profile data from database to ensure consistency
+      if (onProfileUpdate) {
+        await onProfileUpdate();
+      }
+    } catch (err: any) {
+      console.error('Save error:', err);
+      toast({
+        title: 'Error',
+        description: err.message || 'Failed to save profile.',
+        variant: 'error'
+      });
+    } finally {
+      setSaving(false);
+    }
   };
 
   const addGoal = () => {
@@ -209,10 +345,20 @@ export function UserProfile({ entries }: UserProfileProps) {
             </div>
             <Button
               variant={isEditing ? "default" : "outline"}
-              onClick={() => setIsEditing(!isEditing)}
+              onClick={() => isEditing ? handleSave() : setIsEditing(true)}
+              disabled={saving}
             >
-              {isEditing ? <Save className="h-4 w-4 mr-2" /> : <Edit className="h-4 w-4 mr-2" />}
-              {isEditing ? 'Save' : 'Edit Profile'}
+              {isEditing ? (
+                <>
+                  <Save className="h-4 w-4 mr-2" />
+                  {saving ? 'Saving...' : 'Save'}
+                </>
+              ) : (
+                <>
+                  <Edit className="h-4 w-4 mr-2" />
+                  Edit Profile
+                </>
+              )}
             </Button>
           </div>
         </CardHeader>
@@ -528,11 +674,19 @@ export function UserProfile({ entries }: UserProfileProps) {
 
       {isEditing && (
         <div className="flex gap-3 justify-end">
-          <Button variant="outline" onClick={() => setIsEditing(false)}>
+          <Button 
+            variant="outline" 
+            onClick={() => setIsEditing(false)}
+            disabled={saving}
+          >
             Cancel
           </Button>
-          <Button onClick={handleSave} className="bg-rose-600 hover:bg-rose-700">
-            Save Changes
+          <Button 
+            onClick={handleSave} 
+            className="bg-rose-600 hover:bg-rose-700"
+            disabled={saving}
+          >
+            {saving ? 'Saving...' : 'Save Changes'}
           </Button>
         </div>
       )}

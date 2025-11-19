@@ -3,20 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { 
-  Bold, 
-  Italic, 
-  Underline, 
-  List, 
-  ListOrdered, 
-  Quote, 
-  Save, 
-  Eye,
-  Type,
-  AlignLeft,
-  AlignCenter,
-  AlignRight
-} from 'lucide-react';
+import { Bold, Italic, Underline, List, ListOrdered, Quote, Save, Eye,Type, AlignLeft, AlignCenter, AlignRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface RichTextEditorProps {

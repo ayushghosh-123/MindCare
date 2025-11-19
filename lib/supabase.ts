@@ -5,13 +5,16 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error(
-    'Missing Supabase environment variables. Please check your .env.local file and ensure NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY are set.'
+    'Missing Supabase environment variables. Please check NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in your .env'
   );
 }
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-// Enhanced types for Reflect & Connect Journaling System
+/* ================================
+   Types
+================================ */
+
 export type User = {
   id: string;
   username?: string;
@@ -61,7 +64,15 @@ export type Chat = {
 export type Avatar = {
   id: string;
   user_id: string;
-  mood: 'happy' | 'sad' | 'excited' | 'calm' | 'anxious' | 'grateful' | 'frustrated' | 'peaceful';
+  mood:
+    | 'happy'
+    | 'sad'
+    | 'excited'
+    | 'calm'
+    | 'anxious'
+    | 'grateful'
+    | 'frustrated'
+    | 'peaceful';
   mood_intensity: number;
   notes?: string;
   created_at: string;
@@ -99,23 +110,27 @@ export type UserProfile = {
   updated_at: string;
 };
 
-// Database helper functions
+/* ================================
+   Database Helpers
+================================ */
+
 export const dbHelpers = {
-  // User management
+  /* ---------- USERS ---------- */
+
+  // FIXED: No 409 error — using UPSERT
   async createUser(userData: Partial<User>) {
     try {
       const { data, error } = await supabase
         .from('users')
-        .insert([userData])
+        .upsert(userData, { onConflict: 'id' }) // prevents duplicate conflict
         .select()
         .single();
-      
-      if (error && error.code !== '23505') { // 23505 = unique violation
-        throw error;
-      }
-      
+
+      if (error) throw error;
+
       return { data, error: null };
     } catch (err) {
+      console.error('createUser error:', err);
       return { data: null, error: err };
     }
   },
@@ -126,16 +141,19 @@ export const dbHelpers = {
       .select('*')
       .eq('id', userId)
       .single();
+
     return { data, error };
   },
 
-  // Journal management
+  /* ---------- JOURNALS ---------- */
+
   async createJournal(journalData: Partial<Journal>) {
     const { data, error } = await supabase
       .from('journals')
       .insert([journalData])
       .select()
       .single();
+
     return { data, error };
   },
 
@@ -145,16 +163,19 @@ export const dbHelpers = {
       .select('*')
       .eq('user_id', userId)
       .order('created_at', { ascending: false });
+
     return { data, error };
   },
 
-  // Journal entries
+  /* ---------- JOURNAL ENTRIES ---------- */
+
   async createJournalEntry(entryData: Partial<JournalEntry>) {
     const { data, error } = await supabase
       .from('journal_entries')
       .insert([entryData])
       .select()
       .single();
+
     return { data, error };
   },
 
@@ -164,16 +185,19 @@ export const dbHelpers = {
       .select('*')
       .eq('journal_id', journalId)
       .order('created_at', { ascending: false });
+
     return { data, error };
   },
 
-  // Chat management
+  /* ---------- CHAT ---------- */
+
   async saveChatMessage(chatData: Partial<Chat>) {
     const { data, error } = await supabase
       .from('chats')
       .insert([chatData])
       .select()
       .single();
+
     return { data, error };
   },
 
@@ -184,21 +208,21 @@ export const dbHelpers = {
       .eq('user_id', userId)
       .order('created_at', { ascending: true });
 
-    if (sessionId) {
-      query = query.eq('session_id', sessionId);
-    }
+    if (sessionId) query = query.eq('session_id', sessionId);
 
     const { data, error } = await query;
     return { data, error };
   },
 
-  // Avatar mood tracking
+  /* ---------- AVATAR / MOOD ---------- */
+
   async saveAvatarMood(avatarData: Partial<Avatar>) {
     const { data, error } = await supabase
       .from('avatar')
       .insert([avatarData])
       .select()
       .single();
+
     return { data, error };
   },
 
@@ -208,16 +232,19 @@ export const dbHelpers = {
       .select('*')
       .eq('user_id', userId)
       .order('created_at', { ascending: false });
+
     return { data, error };
   },
 
-  // Health entries
+  /* ---------- HEALTH ENTRIES ---------- */
+
   async createHealthEntry(entryData: Partial<HealthEntry>) {
     const { data, error } = await supabase
       .from('health_entries')
       .insert([entryData])
       .select()
       .single();
+
     return { data, error };
   },
 
@@ -227,10 +254,11 @@ export const dbHelpers = {
       .select('*')
       .eq('user_id', userId)
       .order('entry_date', { ascending: false });
+
     return { data, error };
   },
 
-    async deleteHealthEntry(id: string) {
+  async deleteHealthEntry(id: string) {
     const { error } = await supabase
       .from('health_entries')
       .delete()
@@ -239,7 +267,6 @@ export const dbHelpers = {
     return { success: !error, error };
   },
 
-  // FIXED: updateHealthEntry now accepts id and payload
   async updateHealthEntry(id: string, payload: Partial<HealthEntry>) {
     const { data, error } = await supabase
       .from('health_entries')
@@ -251,13 +278,15 @@ export const dbHelpers = {
     return { data, error };
   },
 
-  // User profiles
+  /* ---------- USER PROFILE ---------- */
+
   async createUserProfile(profileData: Partial<UserProfile>) {
     const { data, error } = await supabase
       .from('user_profiles')
       .insert([profileData])
       .select()
       .single();
+
     return { data, error };
   },
 
@@ -267,6 +296,7 @@ export const dbHelpers = {
       .select('*')
       .eq('user_id', userId)
       .single();
+
     return { data, error };
   },
 
@@ -277,19 +307,23 @@ export const dbHelpers = {
       .eq('user_id', userId)
       .select()
       .single();
+
     return { data, error };
   },
 
-  // Statistics
+  /* ---------- STATS ---------- */
+
   async getUserStats(userId: string) {
-    const { data, error } = await supabase
-      .rpc('get_user_stats', { user_id_param: userId });
+    const { data, error } = await supabase.rpc('get_user_stats', {
+      user_id_param: userId,
+    });
     return { data, error };
   },
 
   async getJournalInsights(journalId: string) {
-    const { data, error } = await supabase
-      .rpc('get_journal_insights', { journal_id_param: journalId });
+    const { data, error } = await supabase.rpc('get_journal_insights', {
+      journal_id_param: journalId,
+    });
     return { data, error };
-  }
+  },
 };

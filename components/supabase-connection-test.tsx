@@ -25,6 +25,8 @@ export function SupabaseConnectionTest() {
   const runTests = async () => {
     setTesting(true);
     setLoading(true);
+    setTestResult(null);
+    setIsolationResult(null);
 
     try {
       // Test basic connection
@@ -33,11 +35,33 @@ export function SupabaseConnectionTest() {
 
       // If connected and user is logged in, test data isolation
       if (connectionTest.connected && user?.id) {
-        const isolation = await verifyUserDataIsolation(user.id);
-        setIsolationResult(isolation);
+        try {
+          const isolation = await verifyUserDataIsolation(user.id);
+          setIsolationResult(isolation);
+        } catch (isolationError) {
+          console.error('Isolation test failed:', isolationError);
+          // Set a default isolation result on error
+          setIsolationResult({
+            healthEntries: { count: 0, allHaveUserId: false },
+            chats: { count: 0, allHaveUserId: false },
+            journalEntries: { count: 0, allHaveUserId: false }
+          });
+        }
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Test failed:', error);
+      // Set error result
+      setTestResult({
+        connected: false,
+        error: error?.message || 'Failed to run connection test',
+        tablesAccessible: {
+          health_entries: false,
+          chats: false,
+          journal_entries: false,
+          users: false,
+          user_profiles: false
+        }
+      });
     } finally {
       setLoading(false);
       setTesting(false);
@@ -104,14 +128,15 @@ export function SupabaseConnectionTest() {
 
               {testResult.error && (
                 <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-                  <p className="text-sm text-red-800">{testResult.error}</p>
+                  <p className="text-sm font-medium text-red-800 mb-1">Error:</p>
+                  <p className="text-sm text-red-700">{testResult.error}</p>
                 </div>
               )}
 
               {/* Table Access */}
               <div className="space-y-2">
                 <h4 className="font-medium text-sm">Table Accessibility</h4>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                   <div className="flex items-center justify-between p-2 bg-slate-50 rounded">
                     <span className="text-sm">health_entries</span>
                     <Badge variant={testResult.tablesAccessible.health_entries ? 'default' : 'destructive'}>
@@ -134,6 +159,12 @@ export function SupabaseConnectionTest() {
                     <span className="text-sm">users</span>
                     <Badge variant={testResult.tablesAccessible.users ? 'default' : 'destructive'}>
                       {testResult.tablesAccessible.users ? '✓' : '✗'}
+                    </Badge>
+                  </div>
+                  <div className="flex items-center justify-between p-2 bg-slate-50 rounded">
+                    <span className="text-sm">user_profiles</span>
+                    <Badge variant={testResult.tablesAccessible.user_profiles ? 'default' : 'destructive'}>
+                      {testResult.tablesAccessible.user_profiles ? '✓' : '✗'}
                     </Badge>
                   </div>
                 </div>
@@ -165,6 +196,14 @@ export function SupabaseConnectionTest() {
                         <div className="font-medium text-green-800">Journal Entries</div>
                         <div className="text-2xl font-bold text-green-600">
                           {testResult.details.journalEntriesCount}
+                        </div>
+                      </div>
+                    )}
+                    {testResult.details.userProfileCount !== undefined && (
+                      <div className="p-2 bg-orange-50 rounded">
+                        <div className="font-medium text-orange-800">User Profiles</div>
+                        <div className="text-2xl font-bold text-orange-600">
+                          {testResult.details.userProfileCount}
                         </div>
                       </div>
                     )}

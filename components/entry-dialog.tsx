@@ -33,9 +33,9 @@ export function EntryDialog({ open, onOpenChange, entry, onSave }: EntryDialogPr
   useEffect(() => {
     if (entry) {
       setDate(new Date(entry.entry_date));
-      setMood(entry.mood);
-      setSymptoms(entry.symptoms);
-      setNotes(entry.notes);
+      setMood(entry.mood || '');
+      setSymptoms(entry.symptoms || '');
+      setNotes(entry.notes || '');
       setSleepHours(entry.sleep_hours.toString());
       setWaterIntake(entry.water_intake.toString());
       setExerciseMinutes(entry.exercise_minutes.toString());
@@ -80,7 +80,6 @@ export function EntryDialog({ open, onOpenChange, entry, onSave }: EntryDialogPr
     
     onSave({
       entry_date: format(date, 'yyyy-MM-dd'),
-      mood,
       symptoms: symptoms.trim(),
       notes: notes.trim(),
       sleep_hours: parseFloat(sleepHours) || 0,

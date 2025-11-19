@@ -1,23 +1,9 @@
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { 
-  TrendingUp, 
-  TrendingDown, 
-  Activity, 
-  Moon, 
-  Droplets, 
-  Brain, 
-  Heart,
-  Calendar,
-  BarChart3,
-  PieChart,
-  LineChart,
-  Target
-} from 'lucide-react';
+import { TrendingUp, TrendingDown, Activity, Moon, Droplets, Brain, Heart, Calendar, BarChart3, Target, Flame} from 'lucide-react';
 import type { HealthEntry } from '@/lib/supabase';
+import { calculateDayStreak } from '@/components/user-profile';
 
 interface AdvancedStatsProps {
   entries: HealthEntry[];
@@ -38,6 +24,9 @@ export function AdvancedStats({ entries }: AdvancedStatsProps) {
 
   const last30Days = entries.slice(0, 30);
   const last7Days = entries.slice(0, 7);
+  
+  // Calculate day streak
+  const dayStreak = calculateDayStreak(entries);
 
   // Calculate trends
   const calculateTrend = (values: number[]) => {
@@ -128,9 +117,18 @@ export function AdvancedStats({ entries }: AdvancedStatsProps) {
                 </div>
               </div>
             </div>
-            <div className="text-right">
-              <div className="text-2xl font-bold text-slate-800">{entries.length}</div>
-              <div className="text-sm text-slate-600">Total Entries</div>
+            <div className="text-right space-y-2">
+              <div>
+                <div className="text-2xl font-bold text-slate-800">{entries.length}</div>
+                <div className="text-sm text-slate-600">Total Entries</div>
+              </div>
+              <div className="pt-2 border-t border-slate-200">
+                <div className="flex items-center gap-2 justify-end">
+                  <Flame className="h-5 w-5 text-orange-500" />
+                  <div className="text-2xl font-bold text-orange-600">{dayStreak}</div>
+                </div>
+                <div className="text-sm text-slate-600">Day Streak</div>
+              </div>
             </div>
           </div>
         </CardContent>

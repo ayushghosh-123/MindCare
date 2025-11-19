@@ -5,7 +5,7 @@ import { LogIn, UserPlus, Activity, CheckCircle, Smile, Calendar, TrendingUp, Za
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
-import { supabase, dbHelpers } from '@/lib/supabase';
+import { dbHelpers } from '@/lib/supabase';
 import type { HealthEntry } from '@/lib/supabase';
 import { useToast } from '@/components/hooks/use-toast';
 import { MainNavbar } from '@/components/main-navbar';
@@ -17,8 +17,6 @@ export default function Home() {
   const { user, isLoaded } = useUser();
   const [entries, setEntries] = useState<HealthEntry[]>([]);
   const [loading, setLoading] = useState(true);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedEntry, setSelectedEntry] = useState<HealthEntry | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -42,9 +40,53 @@ export default function Home() {
         avatar_url: user.imageUrl
       });
       
-      if (userResult.error) {
-        console.log('User creation result:', userResult.error);
-        // Continue anyway - user might already exist
+      // Only log actual errors (not 409 conflicts which are handled gracefully)
+            if (userResult.error) {
+              // Narrow the error type safely to check properties
+              const err = userResult.error as { code?: string; message?: string } | undefined;
+      
+              const isConflict =
+                err?.code === '23505' ||
+                err?.message?.includes('409') ||
+                err?.message?.includes('Conflict') ||
+                err?.message?.includes('duplicate');
+      
+              if (!isConflict) {
+                console.warn('User creation error:', userResult.error);
+              }
+              // Continue anyway - user might already exist or conflict is handled
+            }
+
+      // Create user profile if it doesn't exist (automatic after sign-in)
+      try {
+        const { data: existingProfile, error: profileError } = await dbHelpers.getUserProfile(user.id);
+        
+        // If profile doesn't exist, create a default one
+        if (profileError && profileError.code === 'PGRST116') {
+          const defaultProfileData = {
+            user_id: user.id,
+            age: undefined,
+            height: undefined,
+            weight: undefined,
+            health_goals: [],
+            medical_conditions: [],
+            medications: [],
+            emergency_contact: '',
+            doctor_info: '',
+            additional_notes: ''
+          };
+          
+          const { error: createProfileError } = await dbHelpers.createUserProfile(defaultProfileData);
+          
+          if (createProfileError) {
+            console.log('Profile creation skipped (may already exist):', createProfileError);
+          } else {
+            console.log('User profile created successfully');
+          }
+        }
+      } catch (profileErr) {
+        // Silently ignore profile creation errors - profile will be created when user visits profile page
+        console.log('Profile initialization:', profileErr);
       }
 
       // Load health entries
@@ -298,7 +340,7 @@ export default function Home() {
             <p className="text-sm font-semibold text-rose-600 uppercase tracking-widest mb-2">The Foundation</p>
             <h2 className="text-4xl font-bold text-slate-800 mb-4">Why Tracking Your Wellness Works</h2>
             <p className="text-slate-600 max-w-4xl mx-auto text-lg">
-              Reflect & Connect moves beyond simple notes. It turns reflection into actionable insight, helping you preempt stress and cultivate lasting well-being.
+              MindCare moves beyond simple notes. It turns reflection into actionable insight, helping you preempt stress and cultivate lasting well-being.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
@@ -410,7 +452,7 @@ export default function Home() {
   // Authenticated Dashboard
   const Dashboard = () => (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
-      <MainNavbar currentPath="/" entriesCount={entries.length} />
+      <MainNavbar  />
       {loading ? (
         <main className="container mx-auto px-4 py-8">
           <LoadingSkeleton />

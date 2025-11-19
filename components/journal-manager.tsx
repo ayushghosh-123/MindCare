@@ -7,19 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Plus, 
-  BookOpen, 
-  Edit, 
-  Trash2, 
-  Eye, 
-  Calendar,
-  FileText,
-  Tag,
-  Heart,
-  Lock,
-  Globe
-} from 'lucide-react';
+import { Plus, BookOpen, Calendar, FileText, Lock, Globe } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { dbHelpers, type Journal, type JournalEntry } from '@/lib/supabase';

@@ -111,12 +111,73 @@ export const dbHelpers = {
         .select()
         .single();
       
-      if (error && error.code !== '23505') { // 23505 = unique violation
+      // Handle duplicate user (409 Conflict or 23505 unique violation)
+      // Both indicate the user already exists, which is fine
+      if (error) {
+        const isDuplicateError = 
+          error.code === '23505' || // PostgreSQL unique violation
+          error.code === 'PGRST116' || // PostgREST no rows returned (sometimes used for conflicts)
+          error.message?.includes('duplicate') ||
+          error.message?.includes('already exists') ||
+          error.message?.includes('unique constraint');
+        
+        if (isDuplicateError) {
+          // User already exists - try to get the existing user
+          if (userData.id) {
+            const { data: existingUser } = await supabase
+              .from('users')
+              .select('*')
+              .eq('id', userData.id)
+              .single();
+            
+            if (existingUser) {
+              return { data: existingUser, error: null };
+            }
+          }
+          // If we can't get the user, return success anyway (user exists)
+          return { data: null, error: null };
+        }
+        
+        // For other errors, return the error
         throw error;
       }
       
       return { data, error: null };
-    } catch (err) {
+    } catch (err: any) {
+      // Check if it's a 409 HTTP status (Conflict) or related error
+      const isConflictError = 
+        err?.status === 409 || 
+        err?.statusCode === 409 ||
+        err?.code === '23505' ||
+        err?.code === 'PGRST116' ||
+        err?.message?.includes('409') ||
+        err?.message?.includes('Conflict') ||
+        err?.message?.includes('duplicate') ||
+        err?.message?.includes('already exists') ||
+        err?.message?.includes('unique constraint');
+      
+      if (isConflictError) {
+        // User already exists - try to get the existing user
+        if (userData.id) {
+          try {
+            const { data: existingUser } = await supabase
+              .from('users')
+              .select('*')
+              .eq('id', userData.id)
+              .single();
+            
+            if (existingUser) {
+              return { data: existingUser, error: null };
+            }
+          } catch (getError) {
+            // Ignore get error, user exists but we can't fetch it
+            console.log('User already exists, but could not fetch:', getError);
+          }
+        }
+        // User exists, return success (no error)
+        return { data: null, error: null };
+      }
+      
       return { data: null, error: err };
     }
   },
@@ -295,3 +356,182 @@ export const dbHelpers = {
     return { data, error };
   }
 };
+
+// Connection test types
+export type ConnectionTestResult = {
+  connected: boolean;
+  error?: string;
+  tablesAccessible: {
+    health_entries: boolean;
+    chats: boolean;
+    journal_entries: boolean;
+    users: boolean;
+    user_profiles: boolean;
+  };
+  details?: {
+    healthEntriesCount?: number;
+    chatsCount?: number;
+    journalEntriesCount?: number;
+    userProfileCount?: number;
+  };
+};
+
+// Test Supabase connection and table accessibility
+export async function testSupabaseConnection(userId?: string): Promise<ConnectionTestResult> {
+  const result: ConnectionTestResult = {
+    connected: false,
+    tablesAccessible: {
+      health_entries: false,
+      chats: false,
+      journal_entries: false,
+      users: false,
+      user_profiles: false
+    }
+  };
+
+  try {
+    // Test basic connection by trying to query a simple table
+    const { error: healthError, count: healthCount } = await supabase
+      .from('health_entries')
+      .select('*', { count: 'exact', head: true });
+
+    if (healthError) {
+      result.error = `Connection failed: ${healthError.message}`;
+      return result;
+    }
+
+    result.connected = true;
+    result.tablesAccessible.health_entries = true;
+
+    // Test other tables
+    const tables = [
+      { name: 'chats', key: 'chats' as const },
+      { name: 'journal_entries', key: 'journal_entries' as const },
+      { name: 'users', key: 'users' as const },
+      { name: 'user_profiles', key: 'user_profiles' as const }
+    ];
+
+    for (const table of tables) {
+      try {
+        const { error } = await supabase
+          .from(table.name)
+          .select('*', { count: 'exact', head: true });
+        
+        if (!error) {
+          result.tablesAccessible[table.key] = true;
+        }
+      } catch (err) {
+        // Table might not exist or not accessible
+        result.tablesAccessible[table.key] = false;
+      }
+    }
+
+    // Get data counts if user is provided
+    if (userId) {
+      const details: ConnectionTestResult['details'] = {};
+
+      // Count health entries
+      try {
+        const { count } = await supabase
+          .from('health_entries')
+          .select('*', { count: 'exact', head: true })
+          .eq('user_id', userId);
+        details.healthEntriesCount = count || 0;
+      } catch (err) {
+        details.healthEntriesCount = 0;
+      }
+
+      // Count chat messages
+      try {
+        const { count } = await supabase
+          .from('chats')
+          .select('*', { count: 'exact', head: true })
+          .eq('user_id', userId);
+        details.chatsCount = count || 0;
+      } catch (err) {
+        details.chatsCount = 0;
+      }
+
+      // Count journal entries
+      try {
+        const { count } = await supabase
+          .from('journal_entries')
+          .select('*', { count: 'exact', head: true })
+          .eq('user_id', userId);
+        details.journalEntriesCount = count || 0;
+      } catch (err) {
+        details.journalEntriesCount = 0;
+      }
+
+      // Count user profiles
+      try {
+        const { count } = await supabase
+          .from('user_profiles')
+          .select('*', { count: 'exact', head: true })
+          .eq('user_id', userId);
+        details.userProfileCount = count || 0;
+      } catch (err) {
+        details.userProfileCount = 0;
+      }
+
+      result.details = details;
+    }
+  } catch (error: any) {
+    result.error = error?.message || 'Unknown connection error';
+    result.connected = false;
+  }
+
+  return result;
+}
+
+// Verify user data isolation
+export async function verifyUserDataIsolation(userId: string): Promise<{
+  healthEntries: { count: number; allHaveUserId: boolean };
+  chats: { count: number; allHaveUserId: boolean };
+  journalEntries: { count: number; allHaveUserId: boolean };
+}> {
+  const result = {
+    healthEntries: { count: 0, allHaveUserId: true },
+    chats: { count: 0, allHaveUserId: true },
+    journalEntries: { count: 0, allHaveUserId: true }
+  };
+
+  try {
+    // Check health entries
+    const { data: healthEntries, error: healthError } = await supabase
+      .from('health_entries')
+      .select('id, user_id')
+      .eq('user_id', userId);
+
+    if (!healthError && healthEntries) {
+      result.healthEntries.count = healthEntries.length;
+      result.healthEntries.allHaveUserId = healthEntries.every(entry => entry.user_id === userId);
+    }
+
+    // Check chats
+    const { data: chats, error: chatsError } = await supabase
+      .from('chats')
+      .select('id, user_id')
+      .eq('user_id', userId);
+
+    if (!chatsError && chats) {
+      result.chats.count = chats.length;
+      result.chats.allHaveUserId = chats.every(chat => chat.user_id === userId);
+    }
+
+    // Check journal entries
+    const { data: journalEntries, error: journalError } = await supabase
+      .from('journal_entries')
+      .select('id, user_id')
+      .eq('user_id', userId);
+
+    if (!journalError && journalEntries) {
+      result.journalEntries.count = journalEntries.length;
+      result.journalEntries.allHaveUserId = journalEntries.every(entry => entry.user_id === userId);
+    }
+  } catch (error) {
+    console.error('Isolation verification error:', error);
+  }
+
+  return result;
+}

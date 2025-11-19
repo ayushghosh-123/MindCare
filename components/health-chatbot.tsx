@@ -7,17 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Bot, 
-  Send, 
-  User, 
-  Brain, 
-  Heart, 
-  Activity,
-  TrendingUp,
-  Lightbulb,
-  MessageSquare
-} from 'lucide-react';
+import { Bot, Send, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { dbHelpers } from '@/lib/supabase';
 import { useToast } from '@/components/hooks/use-toast';

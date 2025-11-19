@@ -4,17 +4,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Home, 
-  BookOpen, 
-  MessageSquare, 
-  BarChart3, 
-  User, 
-  Plus,
-  Menu,
-  X,
-  Heart
-} from 'lucide-react';
+import { Home, BookOpen, MessageSquare, BarChart3, User, Plus, Menu, X, Heart } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 
@@ -42,7 +32,7 @@ const navigationItems = [
   },
   {
     id: 'chatbot',
-    label: 'AI Assistant',
+    label: 'AI Chatbot',
     icon: MessageSquare,
     description: 'Get health insights',
     href: '/chatbot'
