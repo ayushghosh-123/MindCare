@@ -65,7 +65,7 @@ export function JournalManager({
       const { data, error } = await dbHelpers.getUserJournals(userId);
       if (error) throw error;
       setJournals(data || []);
-    } catch (err) {
+    } catch (_err) {
       toast({
         title: 'Error',
         description: 'Failed to load journals.',
@@ -81,7 +81,7 @@ export function JournalManager({
       const { data, error } = await dbHelpers.getJournalEntries(journalId);
       if (error) throw error;
       setEntries(data || []);
-    } catch (err) {
+    } catch (_err) {
       toast({
         title: 'Error',
         description: 'Failed to load journal entries.',
@@ -115,7 +115,7 @@ export function JournalManager({
         description: 'Journal created successfully!',
         variant: 'default'
       });
-    } catch (err) {
+    } catch (_err) {
       toast({
         title: 'Error',
         description: 'Failed to create journal.',
@@ -152,7 +152,7 @@ export function JournalManager({
         description: 'Journal entry created successfully!',
         variant: 'default'
       });
-    } catch (err) {
+    } catch (_err) {
       toast({
         title: 'Error',
         description: 'Failed to create journal entry.',
@@ -434,7 +434,7 @@ export function JournalManager({
                 <select
                   id="entry-mood"
                   value={entryMood}
-                  onChange={(e) => setEntryMood(e.target.value as any)}
+                  onChange={(e) => setEntryMood(e.target.value as 'excellent' | 'good' | 'neutral' | 'poor' | 'terrible')}
                   className="w-full p-2 border border-slate-300 rounded-md"
                 >
                   <option value="excellent">Excellent</option>

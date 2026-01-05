@@ -54,7 +54,7 @@ export type Chat = {
   session_id: string;
   message: string;
   is_user_message: boolean;
-  context_data?: any;
+  context_data?: Record<string, unknown>;
   created_at: string;
 };
 
@@ -143,18 +143,19 @@ export const dbHelpers = {
       }
       
       return { data, error: null };
-    } catch (err: any) {
+    } catch (err: unknown) {
       // Check if it's a 409 HTTP status (Conflict) or related error
+      const errorObj = err as { status?: number; statusCode?: number; code?: string; message?: string } | null;
       const isConflictError = 
-        err?.status === 409 || 
-        err?.statusCode === 409 ||
-        err?.code === '23505' ||
-        err?.code === 'PGRST116' ||
-        err?.message?.includes('409') ||
-        err?.message?.includes('Conflict') ||
-        err?.message?.includes('duplicate') ||
-        err?.message?.includes('already exists') ||
-        err?.message?.includes('unique constraint');
+        errorObj?.status === 409 || 
+        errorObj?.statusCode === 409 ||
+        errorObj?.code === '23505' ||
+        errorObj?.code === 'PGRST116' ||
+        errorObj?.message?.includes('409') ||
+        errorObj?.message?.includes('Conflict') ||
+        errorObj?.message?.includes('duplicate') ||
+        errorObj?.message?.includes('already exists') ||
+        errorObj?.message?.includes('unique constraint');
       
       if (isConflictError) {
         // User already exists - try to get the existing user
@@ -391,7 +392,7 @@ export async function testSupabaseConnection(userId?: string): Promise<Connectio
 
   try {
     // Test basic connection by trying to query a simple table
-    const { error: healthError, count: healthCount } = await supabase
+    const { error: healthError } = await supabase
       .from('health_entries')
       .select('*', { count: 'exact', head: true });
 
@@ -420,7 +421,7 @@ export async function testSupabaseConnection(userId?: string): Promise<Connectio
         if (!error) {
           result.tablesAccessible[table.key] = true;
         }
-      } catch (err) {
+      } catch (_err) {
         // Table might not exist or not accessible
         result.tablesAccessible[table.key] = false;
       }
@@ -437,7 +438,7 @@ export async function testSupabaseConnection(userId?: string): Promise<Connectio
           .select('*', { count: 'exact', head: true })
           .eq('user_id', userId);
         details.healthEntriesCount = count || 0;
-      } catch (err) {
+      } catch (_err) {
         details.healthEntriesCount = 0;
       }
 
@@ -448,7 +449,7 @@ export async function testSupabaseConnection(userId?: string): Promise<Connectio
           .select('*', { count: 'exact', head: true })
           .eq('user_id', userId);
         details.chatsCount = count || 0;
-      } catch (err) {
+      } catch (_err) {
         details.chatsCount = 0;
       }
 
@@ -459,7 +460,7 @@ export async function testSupabaseConnection(userId?: string): Promise<Connectio
           .select('*', { count: 'exact', head: true })
           .eq('user_id', userId);
         details.journalEntriesCount = count || 0;
-      } catch (err) {
+      } catch (_err) {
         details.journalEntriesCount = 0;
       }
 
@@ -470,14 +471,14 @@ export async function testSupabaseConnection(userId?: string): Promise<Connectio
           .select('*', { count: 'exact', head: true })
           .eq('user_id', userId);
         details.userProfileCount = count || 0;
-      } catch (err) {
+      } catch (_err) {
         details.userProfileCount = 0;
       }
 
       result.details = details;
     }
-  } catch (error: any) {
-    result.error = error?.message || 'Unknown connection error';
+  } catch (error: unknown) {
+    result.error = error instanceof Error ? error.message : 'Unknown connection error';
     result.connected = false;
   }
 

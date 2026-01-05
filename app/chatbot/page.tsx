@@ -29,7 +29,7 @@ export default function ChatbotPage() {
       const { data, error } = await dbHelpers.getUserHealthEntries(user.id);
       if (error) throw error;
       setEntries(data || []);
-    } catch (err) {
+    } catch (_err) {
       toast({
         title: 'Error',
         description: 'Failed to load health entries.',

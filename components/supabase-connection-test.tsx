@@ -9,10 +9,16 @@ import { CheckCircle, XCircle, AlertCircle, RefreshCw } from 'lucide-react';
 import { testSupabaseConnection, verifyUserDataIsolation } from '@/lib/supabase-connection-test';
 import type { ConnectionTestResult } from '@/lib/supabase-connection-test';
 
+type IsolationResult = {
+  healthEntries: { count: number; allHaveUserId: boolean };
+  chats: { count: number; allHaveUserId: boolean };
+  journalEntries: { count: number; allHaveUserId: boolean };
+};
+
 export function SupabaseConnectionTest() {
   const { user, isLoaded } = useUser();
   const [testResult, setTestResult] = useState<ConnectionTestResult | null>(null);
-  const [isolationResult, setIsolationResult] = useState<any>(null);
+  const [isolationResult, setIsolationResult] = useState<IsolationResult | null>(null);
   const [loading, setLoading] = useState(true);
   const [testing, setTesting] = useState(false);
 
@@ -48,12 +54,13 @@ export function SupabaseConnectionTest() {
           });
         }
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Test failed:', error);
       // Set error result
+      const errorMessage = error instanceof Error ? error.message : 'Failed to run connection test';
       setTestResult({
         connected: false,
-        error: error?.message || 'Failed to run connection test',
+        error: errorMessage,
         tablesAccessible: {
           health_entries: false,
           chats: false,

@@ -249,7 +249,7 @@ export function UnifiedDashboardToday({ userId, className }: UnifiedDashboardTod
       <Card>
         <CardContent className="p-6 flex items-center justify-between">
           <div>
-            <h2 className="text-xl font-semibold text-slate-800">Today's Health</h2>
+            <h2 className="text-xl font-semibold text-slate-800">Today&apos;s Health</h2>
             <p className="text-sm text-slate-500">Log your sleep, water, exercise & mood for today.</p>
           </div>
 
@@ -554,7 +554,7 @@ export function UnifiedDashboardToday({ userId, className }: UnifiedDashboardTod
                 <div className="text-center py-8 text-slate-400">
                   <Activity className="h-12 w-12 mx-auto mb-3 opacity-30" />
                   <p className="text-sm">No data saved yet</p>
-                  <p className="text-xs mt-1">Fill in the form and click "Save Today"</p>
+                  <p className="text-xs mt-1">Fill in the form and click &ldquo;Save Today&rdquo;</p>
                 </div>
               )}
             </CardContent>

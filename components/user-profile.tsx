@@ -56,7 +56,7 @@ export function calculateDayStreak(entries: HealthEntry[]): number {
   
   // Start counting from the most recent entry date
   let streak = 0;
-  let checkDate = new Date(mostRecentDate);
+  const checkDate = new Date(mostRecentDate);
   
   // Count consecutive days backwards from the most recent entry
   for (const entryDate of dateEntries) {
@@ -250,11 +250,12 @@ export function UserProfile({ entries, userProfile: dbUserProfile, onProfileUpda
       if (onProfileUpdate) {
         await onProfileUpdate();
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Save error:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Failed to save profile.';
       toast({
         title: 'Error',
-        description: err.message || 'Failed to save profile.',
+        description: errorMessage,
         variant: 'error'
       });
     } finally {

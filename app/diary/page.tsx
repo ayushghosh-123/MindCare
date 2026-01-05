@@ -6,18 +6,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { 
   Save, 
   BookOpen, 
   Plus, 
-  Edit, 
-  Trash2, 
   Calendar,
-  Tag,
-  Heart,
   FileText,
   ArrowLeft
 } from 'lucide-react';
@@ -36,7 +31,7 @@ export default function DiaryPage() {
   const [journals, setJournals] = useState<Journal[]>([]);
   const [selectedJournal, setSelectedJournal] = useState<Journal | null>(null);
   const [entries, setEntries] = useState<JournalEntry[]>([]);
-  const [selectedEntry, setSelectedEntry] = useState<JournalEntry | null>(null);
+  const [_selectedEntry, setSelectedEntry] = useState<JournalEntry | null>(null);
   const [loading, setLoading] = useState(true);
   const [isWriting, setIsWriting] = useState(false);
   
@@ -66,7 +61,7 @@ export default function DiaryPage() {
       const { data, error } = await dbHelpers.getUserJournals(user.id);
       if (error) throw error;
       setJournals(data || []);
-    } catch (err) {
+    } catch (_err) {
       toast({
         title: 'Error',
         description: 'Failed to load journals.',
@@ -82,7 +77,7 @@ export default function DiaryPage() {
       const { data, error } = await dbHelpers.getJournalEntries(journalId);
       if (error) throw error;
       setEntries(data || []);
-    } catch (err) {
+    } catch (_err) {
       toast({
         title: 'Error',
         description: 'Failed to load journal entries.',
@@ -112,7 +107,7 @@ export default function DiaryPage() {
         description: 'Journal created successfully!',
         variant: 'default'
       });
-    } catch (err) {
+    } catch (_err) {
       toast({
         title: 'Error',
         description: 'Failed to create journal.',
@@ -151,7 +146,7 @@ export default function DiaryPage() {
         description: 'Entry saved successfully!',
         variant: 'default'
       });
-    } catch (err) {
+    } catch (_err) {
       toast({
         title: 'Error',
         description: 'Failed to save entry.',
@@ -342,7 +337,7 @@ export default function DiaryPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="entry-mood">Mood</Label>
-                      <Select value={entryMood} onValueChange={(value: any) => setEntryMood(value)}>
+                      <Select value={entryMood} onValueChange={(value: 'excellent' | 'good' | 'neutral' | 'poor' | 'terrible') => setEntryMood(value)}>
                         <SelectTrigger className="mt-1">
                           <SelectValue />
                         </SelectTrigger>

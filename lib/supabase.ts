@@ -54,7 +54,7 @@ export type Chat = {
   session_id: string;
   message: string;
   is_user_message: boolean;
-  context_data?: any;
+  context_data?: Record<string, unknown>;
   created_at: string;
 };
 
@@ -142,18 +142,19 @@ export const dbHelpers = {
       }
       
       return { data, error: null };
-    } catch (err: any) {
+    } catch (err: unknown) {
       // Check if it's a 409 HTTP status (Conflict) or related error
+      const errorObj = err as { status?: number; statusCode?: number; code?: string; message?: string } | null;
       const isConflictError = 
-        err?.status === 409 || 
-        err?.statusCode === 409 ||
-        err?.code === '23505' ||
-        err?.code === 'PGRST116' ||
-        err?.message?.includes('409') ||
-        err?.message?.includes('Conflict') ||
-        err?.message?.includes('duplicate') ||
-        err?.message?.includes('already exists') ||
-        err?.message?.includes('unique constraint');
+        errorObj?.status === 409 || 
+        errorObj?.statusCode === 409 ||
+        errorObj?.code === '23505' ||
+        errorObj?.code === 'PGRST116' ||
+        errorObj?.message?.includes('409') ||
+        errorObj?.message?.includes('Conflict') ||
+        errorObj?.message?.includes('duplicate') ||
+        errorObj?.message?.includes('already exists') ||
+        errorObj?.message?.includes('unique constraint');
       
       if (isConflictError) {
         // User already exists - try to get the existing user

@@ -9,7 +9,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Bot, Send, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { dbHelpers } from '@/lib/supabase';
+import { dbHelpers, type HealthEntry, type Chat } from '@/lib/supabase';
 import { useToast } from '@/components/hooks/use-toast';
 
 interface Message {
@@ -21,7 +21,7 @@ interface Message {
 }
 
 interface HealthChatbotProps {
-  entries: any[];
+  entries: HealthEntry[];
   className?: string;
   userId?: string;
 }
@@ -100,7 +100,7 @@ export function HealthChatbot({ entries, className, userId }: HealthChatbotProps
 
       if (data && data.length > 0) {
         // Convert Supabase chat messages to Message format
-        const loadedMessages: Message[] = data.map((chat: any) => ({
+        const loadedMessages: Message[] = data.map((chat: Chat) => ({
           id: chat.id,
           type: chat.is_user_message ? 'user' : 'bot',
           content: chat.message,

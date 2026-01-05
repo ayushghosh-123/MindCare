@@ -105,16 +105,17 @@ export default function ProfilePage() {
         // Profile exists, use it
         setUserProfile(profileData);
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Load error:', err);
       // Don't show error toast for 409 conflicts - they're handled gracefully
+      const errorObj = err as { status?: number; statusCode?: number; code?: string; message?: string } | null;
       const isConflictError = 
-        err?.status === 409 || 
-        err?.statusCode === 409 ||
-        err?.code === '23505' ||
-        err?.message?.includes('409') ||
-        err?.message?.includes('Conflict') ||
-        err?.message?.includes('duplicate');
+        errorObj?.status === 409 || 
+        errorObj?.statusCode === 409 ||
+        errorObj?.code === '23505' ||
+        errorObj?.message?.includes('409') ||
+        errorObj?.message?.includes('Conflict') ||
+        errorObj?.message?.includes('duplicate');
       
       if (!isConflictError) {
         toast({

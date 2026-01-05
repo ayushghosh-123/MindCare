@@ -15,7 +15,7 @@ import { motion } from 'framer-motion';
 
 export default function Home() {
   const { user, isLoaded } = useUser();
-  const [entries, setEntries] = useState<HealthEntry[]>([]);
+  const [_entries, setEntries] = useState<HealthEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
@@ -59,7 +59,7 @@ export default function Home() {
 
       // Create user profile if it doesn't exist (automatic after sign-in)
       try {
-        const { data: existingProfile, error: profileError } = await dbHelpers.getUserProfile(user.id);
+        const { error: profileError } = await dbHelpers.getUserProfile(user.id);
         
         // If profile doesn't exist, create a default one
         if (profileError && profileError.code === 'PGRST116') {
@@ -110,7 +110,7 @@ export default function Home() {
       const { data, error } = await dbHelpers.getUserHealthEntries(user.id);
       if (error) throw error;
       setEntries(data || []);
-    } catch (err) {
+    } catch (_err) {
       toast({
         title: 'Error',
         description: 'Failed to load your health entries.',
@@ -167,7 +167,13 @@ export default function Home() {
 
   // --- Components for Landing Page ---
 
-  const AwarenessCard = ({ icon, title, desc }: any) => (
+  interface AwarenessCardProps {
+    icon: React.ReactNode;
+    title: string;
+    desc: string;
+  }
+
+  const AwarenessCard = ({ icon, title, desc }: AwarenessCardProps) => (
     <motion.div
       className="bg-white rounded-3xl p-8 shadow-xl border border-slate-100/80 transition-all duration-300 ease-in-out hover:shadow-2xl hover:scale-[1.02] text-center"
       initial={{ opacity: 0, y: 30 }}
@@ -185,7 +191,14 @@ export default function Home() {
     </motion.div>
   );
 
-  const HowCard = ({ step, icon, title, desc }: any) => (
+  interface HowCardProps {
+    step: string | number;
+    icon: React.ReactNode;
+    title: string;
+    desc: string;
+  }
+
+  const HowCard = ({ step, icon, title, desc }: HowCardProps) => (
     <motion.div
       className="bg-white rounded-3xl p-8 shadow-lg border border-rose-100 hover:shadow-xl transition-all duration-300"
       initial={{ opacity: 0, y: 30 }}
@@ -204,7 +217,13 @@ export default function Home() {
   );
   
   // NEW Component: Feature Card
-  const FeatureCard = ({ icon, title, desc }: any) => (
+  interface FeatureCardProps {
+    icon: React.ReactNode;
+    title: string;
+    desc: string;
+  }
+
+  const FeatureCard = ({ icon, title, desc }: FeatureCardProps) => (
       <motion.div
         className="flex items-start p-4 bg-white rounded-xl shadow-md border border-slate-100"
         initial={{ opacity: 0, scale: 0.95 }}
@@ -223,7 +242,13 @@ export default function Home() {
   );
 
   // NEW Component: Testimonial Card
-  const TestimonialCard = ({ quote, name, title }: any) => (
+  interface TestimonialCardProps {
+    quote: string;
+    name: string;
+    title: string;
+  }
+
+  const TestimonialCard = ({ quote, name, title }: TestimonialCardProps) => (
     <motion.div 
       className="bg-white p-8 rounded-3xl shadow-xl border border-rose-100 flex flex-col h-full"
       initial={{ opacity: 0, x: -20 }}
@@ -232,7 +257,7 @@ export default function Home() {
       transition={{ type: "spring", stiffness: 80, damping: 10 }}
     >
       <p className="text-2xl font-serif text-slate-700 italic mb-6 flex-grow">
-        "{quote}"
+        &ldquo;{quote}&rdquo;
       </p>
       <div className="pt-4 border-t border-slate-100">
         <p className="font-bold text-rose-600">{name}</p>

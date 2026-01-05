@@ -6,13 +6,11 @@ import Link from "next/link";
 import {
   Home,
   BookOpen,
-  MessageSquare,
   BarChart3,
   User,
   Menu,
   X,
   Brain,
-  Activity,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 

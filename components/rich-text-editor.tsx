@@ -3,20 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  Bold,
-  Italic,
-  Underline,
-  List,
-  ListOrdered,
-  Quote,
-  Save,
-  Eye,
-  Type,
-  AlignLeft,
-  AlignCenter,
-  AlignRight,
-} from 'lucide-react';
+import {Bold, Italic, Underline, List, ListOrdered, Quote, Save, Eye, Type, AlignLeft, AlignCenter, AlignRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface RichTextEditorProps {
@@ -59,10 +46,10 @@ export function RichTextEditor({
     // execCommand signature: document.execCommand(command, showUI?, value)
     try {
       document.execCommand(command, false, normalized);
-    } catch (e) {
+    } catch (_e) {
       // execCommand is deprecated in some environments; swallow errors gracefully
       // Optionally you can add fallback behavior here if you integrate a rich text lib later.
-      // console.warn('execCommand failed', e);
+      // console.warn('execCommand failed', _e);
     }
 
     if (editorRef.current) {

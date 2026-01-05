@@ -246,7 +246,7 @@ export function AdvancedStats({ entries }: AdvancedStatsProps) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Calendar className="h-5 w-5 text-rose-600" />
-            This Week's Summary
+            This Week&apos;s Summary
           </CardTitle>
         </CardHeader>
         <CardContent>
