@@ -42,7 +42,7 @@ export default function ProfilePage() {
       // Load health entries
       const { data: entriesData, error: entriesError } = await dbHelpers.getUserHealthEntries(user.id);
       if (entriesError) {
-        console.error('Error loading health entries:', entriesError);
+        console.log('Error loading health entries:', entriesError);
         // Don't throw - continue loading profile even if entries fail
         setEntries([]);
       } else {
@@ -95,7 +95,7 @@ export default function ProfilePage() {
         }
       } else if (profileError) {
         // Other error (not "not found")
-        console.error('Profile load error:', profileError);
+        console.log('Profile load error:', profileError);
         toast({
           title: 'Error',
           description: 'Failed to load profile. Please try refreshing the page.',
