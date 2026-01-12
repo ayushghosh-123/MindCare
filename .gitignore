@@ -44,10 +44,3 @@ next-env.d.ts
 /.clerk/
 .env
 
-# -------------------------------------------------
-# Documentation / Local-only files
-# -------------------------------------------------
-SETUP-FIXES.md
-SETUP.md
-SUPABASE-INTEGRATION-VERIFICATION.md
-superbase-schema-simple.sql
