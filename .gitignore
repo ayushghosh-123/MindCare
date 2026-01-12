@@ -43,3 +43,9 @@ next-env.d.ts
 # clerk configuration (can include secrets)
 /.clerk/
 .env
+
+# some readme file not include
+SETUP-FIXES.md
+SETUP.md
+SUPABASE-INTEGRATION-VERIFICATION.md
+superbase-schema-sample.sql
