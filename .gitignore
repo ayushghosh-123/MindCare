@@ -44,8 +44,10 @@ next-env.d.ts
 /.clerk/
 .env
 
-# some readme file not include
+# -------------------------------------------------
+# Documentation / Local-only files
+# -------------------------------------------------
 SETUP-FIXES.md
 SETUP.md
 SUPABASE-INTEGRATION-VERIFICATION.md
-superbase-schema-sample.sql
+superbase-schema-simple.sql
