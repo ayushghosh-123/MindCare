@@ -57,8 +57,8 @@ export default function ChatbotPage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       {/* Header */}
       <div className="bg-white border-b border-slate-200 sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
+        <div className="container mx-auto px-4 sm:px-6 py-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-4">
               <Button
                 variant="ghost"
@@ -69,15 +69,15 @@ export default function ChatbotPage() {
                 Back
               </Button>
               <div>
-                <h1 className="text-2xl font-bold text-slate-800">AI Health Assistant</h1>
-                <p className="text-slate-600">Get personalized health insights</p>
+                <h1 className="text-2xl sm:text-3xl font-bold text-slate-800">AI Health Assistant</h1>
+                <p className="text-sm sm:text-base text-slate-600">Get personalized health insights</p>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8">
         <div className="max-w-4xl mx-auto">
           {loading ? (
             <div className="flex items-center justify-center py-12">

@@ -8,10 +8,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { 
-  Save, 
-  BookOpen, 
-  Plus, 
+import {
+  Save,
+  BookOpen,
+  Plus,
   Calendar,
   FileText,
   ArrowLeft
@@ -27,14 +27,14 @@ export default function DiaryPage() {
   const { user, isLoaded } = useUser();
   const router = useRouter();
   const { toast } = useToast();
-  
+
   const [journals, setJournals] = useState<Journal[]>([]);
   const [selectedJournal, setSelectedJournal] = useState<Journal | null>(null);
   const [entries, setEntries] = useState<JournalEntry[]>([]);
   const [_selectedEntry, setSelectedEntry] = useState<JournalEntry | null>(null);
   const [loading, setLoading] = useState(true);
   const [isWriting, setIsWriting] = useState(false);
-  
+
   // Form states
   const [entryTitle, setEntryTitle] = useState('');
   const [entryContent, setEntryContent] = useState('');
@@ -88,7 +88,7 @@ export default function DiaryPage() {
 
   const createJournal = async () => {
     if (!user?.id) return;
-    
+
     try {
       const { data, error } = await dbHelpers.createJournal({
         user_id: user.id,
@@ -101,7 +101,7 @@ export default function DiaryPage() {
       if (error) throw error;
       setJournals(prev => [data, ...prev]);
       setSelectedJournal(data);
-      
+
       toast({
         title: 'Success',
         description: 'Journal created successfully!',
@@ -121,7 +121,7 @@ export default function DiaryPage() {
 
     try {
       setLoading(true);
-      
+
       const { data, error } = await dbHelpers.createJournalEntry({
         journal_id: selectedJournal.id,
         user_id: user.id,
@@ -196,8 +196,8 @@ export default function DiaryPage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       {/* Header */}
       <div className="bg-white border-b border-slate-200 sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
+        <div className="container mx-auto px-4 sm:px-6 py-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-4">
               <Button
                 variant="ghost"
@@ -208,8 +208,8 @@ export default function DiaryPage() {
                 Back
               </Button>
               <div>
-                <h1 className="text-2xl font-bold text-slate-800">My Diary</h1>
-                <p className="text-slate-600">Write and organize your thoughts</p>
+                <h1 className="text-2xl sm:text-3xl font-bold text-slate-800">My Diary</h1>
+                <p className="text-sm sm:text-base text-slate-600">Write and organize your thoughts</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -227,8 +227,8 @@ export default function DiaryPage() {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
           {/* Sidebar - Journals */}
           <div className="lg:col-span-1">
             <Card>
@@ -366,9 +366,9 @@ export default function DiaryPage() {
                       {entryTags.length > 0 && (
                         <div className="flex flex-wrap gap-1 mt-2">
                           {entryTags.map((tag, index) => (
-                            <Badge 
-                              key={index} 
-                              variant="secondary" 
+                            <Badge
+                              key={index}
+                              variant="secondary"
                               className="cursor-pointer"
                               onClick={() => removeTag(tag)}
                             >
@@ -413,7 +413,7 @@ export default function DiaryPage() {
                   ) : (
                     <div className="space-y-4">
                       {entries.map((entry) => (
-                        <Card 
+                        <Card
                           key={entry.id}
                           className="cursor-pointer hover:shadow-md transition-shadow"
                           onClick={() => setSelectedEntry(entry)}
@@ -425,7 +425,7 @@ export default function DiaryPage() {
                                   {entry.title || 'Untitled Entry'}
                                 </CardTitle>
                                 {entry.mood && (
-                                  <Badge variant="outline" className={getMoodColor(entry.mood)}>
+                                  <Badge variant="outline" className={cn("hidden sm:inline-flex", getMoodColor(entry.mood))}>
                                     {entry.mood}
                                   </Badge>
                                 )}

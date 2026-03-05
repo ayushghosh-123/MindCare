@@ -38,7 +38,7 @@ export default function ProfilePage() {
         // Silently ignore - user might already exist (409 is expected and handled in createUser)
         // This prevents the error from blocking the page load
       });
-      
+
       // Load health entries
       const { data: entriesData, error: entriesError } = await dbHelpers.getUserHealthEntries(user.id);
       if (entriesError) {
@@ -48,10 +48,10 @@ export default function ProfilePage() {
       } else {
         setEntries(entriesData || []);
       }
-      
+
       // Load user profile from database
       const { data: profileData, error: profileError } = await dbHelpers.getUserProfile(user.id);
-      
+
       // If profile doesn't exist (PGRST116 = no rows returned), create a default one
       if (profileError && profileError.code === 'PGRST116') {
         // Profile doesn't exist - create a default one
@@ -67,9 +67,9 @@ export default function ProfilePage() {
           doctor_info: '',
           additional_notes: ''
         };
-        
+
         const { data: newProfile, error: createError } = await dbHelpers.createUserProfile(defaultProfileData);
-        
+
         if (createError) {
           console.error('Failed to create profile:', createError);
           toast({
@@ -109,14 +109,14 @@ export default function ProfilePage() {
       console.error('Load error:', err);
       // Don't show error toast for 409 conflicts - they're handled gracefully
       const errorObj = err as { status?: number; statusCode?: number; code?: string; message?: string } | null;
-      const isConflictError = 
-        errorObj?.status === 409 || 
+      const isConflictError =
+        errorObj?.status === 409 ||
         errorObj?.statusCode === 409 ||
         errorObj?.code === '23505' ||
         errorObj?.message?.includes('409') ||
         errorObj?.message?.includes('Conflict') ||
         errorObj?.message?.includes('duplicate');
-      
+
       if (!isConflictError) {
         toast({
           title: 'Error',
@@ -154,8 +154,8 @@ export default function ProfilePage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       {/* Header */}
       <div className="bg-white border-b border-slate-200 sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
+        <div className="container mx-auto px-4 sm:px-6 py-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-4">
               <Button
                 variant="ghost"
@@ -166,19 +166,19 @@ export default function ProfilePage() {
                 Back
               </Button>
               <div>
-                <h1 className="text-2xl font-bold text-slate-800">My Profile</h1>
-                <p className="text-slate-600">Manage your personal health information</p>
+                <h1 className="text-2xl sm:text-3xl font-bold text-slate-800">My Profile</h1>
+                <p className="text-sm sm:text-base text-slate-600">Manage your personal health information</p>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8">
         <div className="max-w-4xl mx-auto space-y-6">
           {/* Connection Test Component */}
           {/* <SupabaseConnectionTest /> */}
-          
+
           {loading ? (
             <div className="flex items-center justify-center py-12">
               <div className="text-center">
@@ -187,8 +187,8 @@ export default function ProfilePage() {
               </div>
             </div>
           ) : (
-            <UserProfileComponent 
-              entries={entries} 
+            <UserProfileComponent
+              entries={entries}
               userProfile={userProfile}
               onProfileUpdate={loadData}
             />

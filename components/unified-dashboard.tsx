@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import {Activity, Calendar, Moon, GlassWater, Brain as BrainIcon, Zap} from 'lucide-react';
+import { Activity, Calendar, Moon, GlassWater, Brain as BrainIcon, Zap } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { dbHelpers, type HealthEntry } from '@/lib/supabase';
 import { useToast } from '@/components/hooks/use-toast';
@@ -114,7 +114,7 @@ export function UnifiedDashboardToday({ userId, className }: UnifiedDashboardTod
     water_intake?: string | number;
   }) => {
     const sourceData = data || form;
-    
+
     const moodMap: Record<string, number> = {
       excellent: 5,
       good: 4,
@@ -233,7 +233,7 @@ export function UnifiedDashboardToday({ userId, className }: UnifiedDashboardTod
 
   // Compute current score from form (live preview)
   const currentScore = computeHealthScore();
-  
+
   // Calculate stored score from database entry (health_score is not stored, calculate from saved data)
   const storedScore = todayEntry ? computeHealthScore({
     mood: todayEntry.mood,
@@ -394,11 +394,11 @@ export function UnifiedDashboardToday({ userId, className }: UnifiedDashboardTod
               </div>
 
               {/* Save Button */}
-              <div className="flex items-center gap-3">
+              <div className="flex flex-col sm:flex-row items-center sm:justify-start gap-3 mt-6">
                 <button
                   onClick={handleSave}
                   disabled={saving}
-                  className="px-4 py-2 bg-rose-600 text-white rounded hover:bg-rose-700 transition disabled:opacity-50"
+                  className="w-full sm:w-auto px-6 py-2.5 bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition disabled:opacity-50 font-medium"
                 >
                   {todayEntry ? (saving ? 'Updating...' : 'Update Today') : (saving ? 'Saving...' : 'Save Today')}
                 </button>
@@ -416,12 +416,12 @@ export function UnifiedDashboardToday({ userId, className }: UnifiedDashboardTod
                       stress_level: ''
                     });
                   }}
-                  className="px-3 py-2 border rounded text-slate-700 hover:bg-slate-50"
+                  className="w-full sm:w-auto px-6 py-2.5 border border-slate-200 rounded-lg text-slate-700 hover:bg-slate-50 font-medium"
                 >
                   Clear
                 </button>
 
-                <div className="ml-auto text-xs text-slate-500">
+                <div className="sm:ml-auto w-full sm:w-auto text-center sm:text-right text-xs text-slate-500 mt-2 sm:mt-0">
                   {todayEntry ? 'Entry exists for today' : 'No entry yet'}
                 </div>
               </div>
@@ -443,7 +443,7 @@ export function UnifiedDashboardToday({ userId, className }: UnifiedDashboardTod
               {todayEntry ? (
                 <div className="space-y-3">
                   {/* Display STORED values from database */}
-                  
+
                   {/* Sleep - from DB */}
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">

@@ -1,7 +1,7 @@
 'use client';
 
 import { useUser } from '@clerk/nextjs';
-import { LogIn, UserPlus, Activity, CheckCircle, Smile, Calendar, TrendingUp, Zap, Clock, Utensils, Moon , Brain } from 'lucide-react';
+import { LogIn, UserPlus, Activity, CheckCircle, Smile, Calendar, TrendingUp, Zap, Clock, Utensils, Moon, Brain } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
@@ -27,10 +27,10 @@ export default function Home() {
 
   const initializeUser = async () => {
     if (!user?.id) return;
-    
+
     try {
       setLoading(true);
-      
+
       // Create or get user in our database (ignore errors for existing users)
       const userResult = await dbHelpers.createUser({
         id: user.id,
@@ -39,28 +39,28 @@ export default function Home() {
         username: user.username || user.firstName || '',
         avatar_url: user.imageUrl
       });
-      
+
       // Only log actual errors (not 409 conflicts which are handled gracefully)
-            if (userResult.error) {
-              // Narrow the error type safely to check properties
-              const err = userResult.error as { code?: string; message?: string } | undefined;
-      
-              const isConflict =
-                err?.code === '23505' ||
-                err?.message?.includes('409') ||
-                err?.message?.includes('Conflict') ||
-                err?.message?.includes('duplicate');
-      
-              if (!isConflict) {
-                console.warn('User creation error:', userResult.error);
-              }
-              // Continue anyway - user might already exist or conflict is handled
-            }
+      if (userResult.error) {
+        // Narrow the error type safely to check properties
+        const err = userResult.error as { code?: string; message?: string } | undefined;
+
+        const isConflict =
+          err?.code === '23505' ||
+          err?.message?.includes('409') ||
+          err?.message?.includes('Conflict') ||
+          err?.message?.includes('duplicate');
+
+        if (!isConflict) {
+          console.warn('User creation error:', userResult.error);
+        }
+        // Continue anyway - user might already exist or conflict is handled
+      }
 
       // Create user profile if it doesn't exist (automatic after sign-in)
       try {
         const { error: profileError } = await dbHelpers.getUserProfile(user.id);
-        
+
         // If profile doesn't exist, create a default one
         if (profileError && profileError.code === 'PGRST116') {
           const defaultProfileData = {
@@ -75,9 +75,9 @@ export default function Home() {
             doctor_info: '',
             additional_notes: ''
           };
-          
+
           const { error: createProfileError } = await dbHelpers.createUserProfile(defaultProfileData);
-          
+
           if (createProfileError) {
             console.log('Profile creation skipped (may already exist):', createProfileError);
           } else {
@@ -91,7 +91,7 @@ export default function Home() {
 
       // Load health entries
       await loadEntries();
-      
+
     } catch (err) {
       console.error('Initialize user error:', err);
       toast({
@@ -121,42 +121,43 @@ export default function Home() {
 
   const Navbar = () => (
     <nav className="border-b border-slate-200 bg-white/80 backdrop-blur-md sticky top-0 z-20 shadow-sm">
-      <div className="container mx-auto px-6 py-4 flex items-center justify-between">
+      <div className="container mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
-          <Brain className="h-7 w-7 text-rose-600" />
-          <span className="font-extrabold text-xl text-slate-800 tracking-tight">MindCare</span>
+          <Brain className="h-6 w-6 sm:h-7 sm:w-7 text-rose-600" />
+          <span className="font-extrabold text-lg sm:text-xl text-slate-800 tracking-tight">MindCare</span>
         </Link>
 
         {user ? (
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-slate-600 hidden sm:inline">
+          <div className="flex items-center gap-2 sm:gap-4">
+            <span className="text-sm text-slate-600 hidden md:inline">
               Welcome, {user.firstName || user.emailAddresses[0].emailAddress}
             </span>
             <div className="flex items-center gap-2">
               <Link href="/diary">
-                <Button variant="outline" size="sm">
-                  <Calendar className="h-4 w-4 mr-2" />
-                  Diary
+                <Button variant="outline" size="sm" className="px-2 sm:px-3">
+                  <Calendar className="h-4 w-4 sm:mr-2" />
+                  <span className="hidden sm:inline">Diary</span>
                 </Button>
               </Link>
               <Link href="/chatbot">
-                <Button variant="outline" size="sm">
-                  <Brain className="h-4 w-4 mr-2" />
-                  AI Chat
+                <Button variant="outline" size="sm" className="px-2 sm:px-3">
+                  <Brain className="h-4 w-4 sm:mr-2" />
+                  <span className="hidden sm:inline">AI Chat</span>
                 </Button>
               </Link>
             </div>
           </div>
         ) : (
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <Link href="/sign-in">
-              <Button variant="ghost" className="text-slate-600 hover:text-rose-600">
-                <LogIn className="h-4 w-4 mr-2" /> Sign In
+              <Button variant="ghost" className="text-slate-600 hover:text-rose-600 px-2 sm:px-4">
+                <LogIn className="h-4 w-4 sm:mr-2" /> <span className="hidden sm:inline">Sign In</span>
               </Button>
             </Link>
             <Link href="/sign-up">
-              <Button className="bg-rose-600 hover:bg-rose-700 text-white shadow-lg shadow-rose-200/50">
-                <UserPlus className="h-4 w-4 mr-2" /> Start for Free
+              <Button className="bg-rose-600 hover:bg-rose-700 text-white shadow-lg shadow-rose-200/50 px-3 sm:px-4">
+                <UserPlus className="h-4 w-4 sm:mr-2" /> <span className="hidden sm:inline">Start for Free</span>
+                <span className="sm:hidden">Start</span>
               </Button>
             </Link>
           </div>
@@ -182,7 +183,7 @@ export default function Home() {
       transition={{ type: "spring", stiffness: 100, damping: 10 }}
     >
       <div className="flex justify-center mb-4">
-         <div className="p-3 bg-rose-100 rounded-xl">
+        <div className="p-3 bg-rose-100 rounded-xl">
           {icon}
         </div>
       </div>
@@ -215,7 +216,7 @@ export default function Home() {
       <p className="text-slate-600 text-base">{desc}</p>
     </motion.div>
   );
-  
+
   // NEW Component: Feature Card
   interface FeatureCardProps {
     icon: React.ReactNode;
@@ -224,21 +225,21 @@ export default function Home() {
   }
 
   const FeatureCard = ({ icon, title, desc }: FeatureCardProps) => (
-      <motion.div
-        className="flex items-start p-4 bg-white rounded-xl shadow-md border border-slate-100"
-        initial={{ opacity: 0, scale: 0.95 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 0.5 }}
-      >
-          <div className="p-3 bg-rose-50 rounded-lg mr-4 flex-shrink-0">
-              {icon}
-          </div>
-          <div>
-              <h4 className="text-lg font-semibold text-slate-800">{title}</h4>
-              <p className="text-sm text-slate-600">{desc}</p>
-          </div>
-      </motion.div>
+    <motion.div
+      className="flex items-start p-4 bg-white rounded-xl shadow-md border border-slate-100"
+      initial={{ opacity: 0, scale: 0.95 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.5 }}
+    >
+      <div className="p-3 bg-rose-50 rounded-lg mr-4 flex-shrink-0">
+        {icon}
+      </div>
+      <div>
+        <h4 className="text-lg font-semibold text-slate-800">{title}</h4>
+        <p className="text-sm text-slate-600">{desc}</p>
+      </div>
+    </motion.div>
   );
 
   // NEW Component: Testimonial Card
@@ -249,7 +250,7 @@ export default function Home() {
   }
 
   const TestimonialCard = ({ quote, name, title }: TestimonialCardProps) => (
-    <motion.div 
+    <motion.div
       className="bg-white p-8 rounded-3xl shadow-xl border border-rose-100 flex flex-col h-full"
       initial={{ opacity: 0, x: -20 }}
       whileInView={{ opacity: 1, x: 0 }}
@@ -277,7 +278,7 @@ export default function Home() {
 
         <div className="relative z-10">
           <motion.h1
-            className="text-4xl sm:text-7xl font-extrabold text-slate-900 mb-6 leading-tight max-w-4xl mx-auto"
+            className="text-4xl sm:text-5xl lg:text-7xl font-extrabold text-slate-900 mb-6 leading-tight max-w-4xl mx-auto"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -312,63 +313,63 @@ export default function Home() {
           </motion.div>
         </div>
       </section>
-      
+
       {/* NEW SECTION: Key Features */}
       <section className="py-24 px-6 bg-slate-100/70">
-          <div className="container mx-auto">
-              <div className="text-center mb-16">
-                  <p className="text-sm font-semibold text-rose-600 uppercase tracking-widest mb-2">Detailed Tracking</p>
-                  <h2 className="text-4xl font-bold text-slate-800 mb-4">Track What Truly Matters</h2>
-                  <p className="text-slate-600 max-w-4xl mx-auto text-lg">
-                      Log a wide range of metrics in one place to understand how everything affects your overall well-being.
-                  </p>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-                  <FeatureCard 
-                      icon={<Brain className="text-rose-600 h-6 w-6" />} 
-                      title="Mental Health Score" 
-                      desc="Daily mood, anxiety level, and general stress rating." 
-                  />
-                  <FeatureCard 
-                      icon={<Moon className="text-rose-600 h-6 w-6" />} 
-                      title="Sleep Quality" 
-                      desc="Track hours slept, perceived quality, and wakefulness." 
-                  />
-                  <FeatureCard 
-                      icon={<Utensils className="text-rose-600 h-6 w-6" />} 
-                      title="Nutrition & Diet" 
-                      desc="Log meals, cravings, and track food-related reactions." 
-                  />
-                  <FeatureCard 
-                      icon={<Activity className="text-rose-600 h-6 w-6" />} 
-                      title="Physical Activity" 
-                      desc="Record workouts, intensity, and duration for better insights." 
-                  />
-                  <FeatureCard 
-                      icon={<Zap className="text-rose-600 h-6 w-6" />} 
-                      title="Energy Levels" 
-                      desc="Monitor fatigue throughout the day to find peak performance times." 
-                  />
-                  <FeatureCard 
-                      icon={<Clock className="text-rose-600 h-6 w-6" />} 
-                      title="Custom Notes" 
-                      desc="Add detailed journal entries for context around your data." 
-                  />
-              </div>
+        <div className="container mx-auto">
+          <div className="text-center mb-16">
+            <p className="text-sm font-semibold text-rose-600 uppercase tracking-widest mb-2">Detailed Tracking</p>
+            <h2 className="text-3xl sm:text-4xl font-bold text-slate-800 mb-4">Track What Truly Matters</h2>
+            <p className="text-slate-600 max-w-4xl mx-auto text-base sm:text-lg">
+              Log a wide range of metrics in one place to understand how everything affects your overall well-being.
+            </p>
           </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 max-w-6xl mx-auto">
+            <FeatureCard
+              icon={<Brain className="text-rose-600 h-6 w-6" />}
+              title="Mental Health Score"
+              desc="Daily mood, anxiety level, and general stress rating."
+            />
+            <FeatureCard
+              icon={<Moon className="text-rose-600 h-6 w-6" />}
+              title="Sleep Quality"
+              desc="Track hours slept, perceived quality, and wakefulness."
+            />
+            <FeatureCard
+              icon={<Utensils className="text-rose-600 h-6 w-6" />}
+              title="Nutrition & Diet"
+              desc="Log meals, cravings, and track food-related reactions."
+            />
+            <FeatureCard
+              icon={<Activity className="text-rose-600 h-6 w-6" />}
+              title="Physical Activity"
+              desc="Record workouts, intensity, and duration for better insights."
+            />
+            <FeatureCard
+              icon={<Zap className="text-rose-600 h-6 w-6" />}
+              title="Energy Levels"
+              desc="Monitor fatigue throughout the day to find peak performance times."
+            />
+            <FeatureCard
+              icon={<Clock className="text-rose-600 h-6 w-6" />}
+              title="Custom Notes"
+              desc="Add detailed journal entries for context around your data."
+            />
+          </div>
+        </div>
       </section>
 
       {/* Mental Health Awareness Section */}
       <section className="bg-slate-50/70 py-24 px-6">
         <div className="container mx-auto">
-          <div className="text-center mb-16">
+          <div className="text-center mb-12 sm:mb-16">
             <p className="text-sm font-semibold text-rose-600 uppercase tracking-widest mb-2">The Foundation</p>
-            <h2 className="text-4xl font-bold text-slate-800 mb-4">Why Tracking Your Wellness Works</h2>
-            <p className="text-slate-600 max-w-4xl mx-auto text-lg">
+            <h2 className="text-3xl sm:text-4xl font-bold text-slate-800 mb-4">Why Tracking Your Wellness Works</h2>
+            <p className="text-slate-600 max-w-4xl mx-auto text-base sm:text-lg">
               MindCare moves beyond simple notes. It turns reflection into actionable insight, helping you preempt stress and cultivate lasting well-being.
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 max-w-5xl mx-auto">
             <AwarenessCard
               icon={<Brain className="text-rose-600 h-6 w-6" />}
               title="Understand Yourself"
@@ -391,11 +392,11 @@ export default function Home() {
       {/* How It Works Section */}
       <section className="py-24 px-6 bg-white">
         <div className="container mx-auto">
-          <div className="text-center mb-16">
+          <div className="text-center mb-12 sm:mb-16">
             <p className="text-sm font-semibold text-rose-600 uppercase tracking-widest mb-2">Simple Steps</p>
-            <h2 className="text-4xl font-bold text-slate-800 mb-4">Your Journey to Balance in 3 Steps</h2>
+            <h2 className="text-3xl sm:text-4xl font-bold text-slate-800 mb-4">Your Journey to Balance in 3 Steps</h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-10 max-w-6xl mx-auto">
             <HowCard
               step="1"
               icon={<Calendar className="text-rose-600 h-6 w-6" />}
@@ -417,29 +418,29 @@ export default function Home() {
           </div>
         </div>
       </section>
-      
+
       {/* NEW SECTION: Testimonials */}
       <section className="py-24 px-6 bg-rose-50/70">
         <div className="container mx-auto">
-          <div className="text-center mb-16">
+          <div className="text-center mb-12 sm:mb-16">
             <p className="text-sm font-semibold text-rose-600 uppercase tracking-widest mb-2">Trusted By Users</p>
-            <h2 className="text-4xl font-bold text-slate-800 mb-4">Real Results, Real People</h2>
-            <p className="text-slate-600 max-w-4xl mx-auto text-lg">
-                See what others are saying about finding clarity and balance with Reflect & Connect.
+            <h2 className="text-3xl sm:text-4xl font-bold text-slate-800 mb-4">Real Results, Real People</h2>
+            <p className="text-slate-600 max-w-4xl mx-auto text-base sm:text-lg">
+              See what others are saying about finding clarity and balance with Reflect & Connect.
             </p>
           </div>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-            <TestimonialCard 
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 max-w-7xl mx-auto">
+            <TestimonialCard
               quote="I finally saw the link between my poor sleep and my anxiety levels. This diary is simple, but the insights are game-changing."
               name="Sarah L."
               title="Marketing Manager"
             />
-            <TestimonialCard 
+            <TestimonialCard
               quote="The best self-help tool I've used. Seeing my mood score trending up over a month has been incredibly motivating."
               name="Michael T."
               title="Software Developer"
             />
-            <TestimonialCard 
+            <TestimonialCard
               quote="It helped me track my triggers without feeling overwhelmed. It's a supportive, non-judgmental way to manage stress."
               name="Jessica M."
               title="Student & Freelancer"
@@ -449,16 +450,16 @@ export default function Home() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 px-6 bg-rose-500/10">
-        <div className="container mx-auto text-center rounded-2xl p-10 bg-white shadow-2xl max-w-4xl">
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-800 mb-4">
+      <section className="py-16 sm:py-20 px-4 sm:px-6 bg-rose-500/10">
+        <div className="container mx-auto text-center rounded-2xl p-6 sm:p-10 bg-white shadow-2xl max-w-4xl">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-800 mb-4">
             Ready to Find Your Balance?
           </h2>
-          <p className="text-slate-600 mb-10 max-w-2xl mx-auto text-lg">
+          <p className="text-base sm:text-lg text-slate-600 mb-8 sm:mb-10 max-w-2xl mx-auto">
             Start a healthier journey today. It takes less than a minute to sign up and begin your first entry.
           </p>
           <Link href="/sign-up">
-            <Button size="lg" className="bg-rose-600 hover:bg-rose-700 text-white text-lg py-8 px-12 shadow-xl shadow-rose-300/60 transition-all duration-300">
+            <Button size="lg" className="w-full sm:w-auto bg-rose-600 hover:bg-rose-700 text-white text-base sm:text-lg py-6 sm:py-8 px-8 sm:px-12 shadow-xl shadow-rose-300/60 transition-all duration-300">
               Start Your Free Health Diary
             </Button>
           </Link>
@@ -467,7 +468,7 @@ export default function Home() {
 
       <footer className="bg-slate-800 py-8 border-t text-center text-slate-400 text-sm">
         <p className="mb-2">
-           A modern tool for mental and physical well-being.
+          A modern tool for mental and physical well-being.
         </p>
         © {new Date().getFullYear()} Reflect & Connect. All rights reserved.
       </footer>
@@ -476,14 +477,14 @@ export default function Home() {
 
   // Authenticated Dashboard
   const Dashboard = () => (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
-      <MainNavbar  />
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 pb-20 md:pb-0">
+      <MainNavbar />
       {loading ? (
-        <main className="container mx-auto px-4 py-8">
+        <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 mt-4 md:mt-0">
           <LoadingSkeleton />
         </main>
       ) : (
-        <main className="container mx-auto px-4 py-8">
+        <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 mt-4 md:mt-0">
           <UnifiedDashboardToday userId={user?.id || ''} />
         </main>
       )}

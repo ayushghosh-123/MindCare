@@ -29,18 +29,20 @@ export default function SignUpPage() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-4 sm:p-8">
       <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-slate-800 mb-2">Health Diary</h1>
-          <p className="text-slate-600">Create an account to start tracking</p>
+        <div className="text-center mb-6 sm:mb-8 mt-8 sm:mt-0">
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-800 mb-2">Health Diary</h1>
+          <p className="text-sm sm:text-base text-slate-600">Create an account to start tracking</p>
         </div>
-        <SignUp 
-          routing="path"
-          path="/sign-up"
-          signInUrl="/sign-in"
-          afterSignUpUrl="/"
-        />
+        <div className="flex justify-center w-full">
+          <SignUp
+            routing="path"
+            path="/sign-up"
+            signInUrl="/sign-in"
+            afterSignUpUrl="/"
+          />
+        </div>
       </div>
     </div>
   );
