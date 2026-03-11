@@ -19,30 +19,11 @@ A comprehensive health and wellness journaling platform with AI-powered insights
 - **Responsive Design**: Mobile-first, accessible interface
 - **Type Safety**: Full TypeScript implementation
 
-## 🏗️ Architecture
 
-### Database Schema
 
-```sql
--- Core Tables
-users (Clerk integration)
-├── journals (User's journal collections)
-│   └── journal_entries (Individual entries)
-├── chats (AI conversation history)
-├── avatar (Mood tracking)
-├── health_entries (Health metrics)
-└── user_profiles (Extended user data)
-```
+## Quick start
 
-### Key Relationships
-- `journals.user_id` → `users.id`
-- `journal_entries.journal_id` → `journals.id`
-- `chats.user_id` → `users.id`
-- `avatar.user_id` → `users.id`
-- `health_entries.user_id` → `users.id`
-- `user_profiles.user_id` → `users.id`
 
-## 🚀 Quick Start
 
 ### 1. Environment Setup
 
@@ -128,19 +109,7 @@ npm run dev
 - Reading time calculation
 - Auto-save functionality
 
-## 🔧 Database Functions
 
-### User Statistics
-```sql
-SELECT * FROM get_user_stats('user-id');
--- Returns: total_journals, total_entries, total_words, avg_mood, total_health_entries, streak_days
-```
-
-### Journal Insights
-```sql
-SELECT * FROM get_journal_insights('journal-id');
--- Returns: total_entries, total_words, avg_mood, most_common_mood, first_entry_date, last_entry_date
-```
 
 ## 🎨 UI/UX Features
 
@@ -215,20 +184,6 @@ SELECT * FROM get_journal_insights('journal-id');
 - **Conflict Resolution**: Smart data merging
 - **Backup**: Automatic data backup
 
-## 🛠️ Development
-
-### Code Structure
-```
-├── app/                    # Next.js app directory
-├── components/             # React components
-│   ├── ui/                # Base UI components
-│   ├── hooks/            # Custom hooks
-│   └── [feature-components] # Feature-specific components
-├── lib/                   # Utilities and database
-│   ├── supabase.ts       # Database connection & helpers
-│   └── utils.ts          # Utility functions
-└── public/               # Static assets
-```
 
 ### Key Technologies
 - **Frontend**: Next.js 15, React 19, TypeScript

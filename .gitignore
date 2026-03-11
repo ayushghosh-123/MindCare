@@ -47,3 +47,5 @@ next-env.d.ts
 /.clerk/
 .env
 
+FOLDER_STRUCTURE.md
+
