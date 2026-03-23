@@ -9,8 +9,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Bot, Send, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { dbHelpers, type HealthEntry, type Chat } from '@/lib/supabase';
-import { useToast } from '@/components/hooks/use-toast';
+import { type HealthEntry } from '@/lib/supabase';
 
 interface Message {
   id: string;
@@ -26,172 +25,58 @@ interface HealthChatbotProps {
   userId?: string;
 }
 
-const healthInsights = [
-  {
-    trigger: ['sleep', 'tired', 'exhausted', 'insomnia'],
-    response: "I notice you've been tracking your sleep patterns. Based on your data, here are some insights about your sleep quality and suggestions for improvement.",
-    suggestions: ['How can I improve my sleep?', 'What affects my sleep quality?', 'Sleep hygiene tips']
-  },
-  {
-    trigger: ['mood', 'depressed', 'anxious', 'stress', 'sad'],
-    response: "I see you're discussing your mood and mental health. Your diary entries show patterns that we can explore together.",
-    suggestions: ['How is my mood trending?', 'What affects my mood?', 'Mental health resources']
-  },
-  {
-    trigger: ['exercise', 'workout', 'fitness', 'activity'],
-    response: "Great to hear about your physical activity! Let me analyze your exercise patterns and provide some insights.",
-    suggestions: ['Exercise recommendations', 'How does exercise affect my mood?', 'Fitness goals']
-  },
-  {
-    trigger: ['nutrition', 'diet', 'food', 'eating', 'meal'],
-    response: "Nutrition plays a crucial role in your overall health. Let me help you understand the connection between your diet and well-being.",
-    suggestions: ['Nutritional insights', 'How does food affect my energy?', 'Healthy eating tips']
+// Suggestion chips based on what agent returned
+function getSuggestions(agentType: string | null): string[] {
+  if (agentType === 'data') {
+    return [
+      'Tell me more about my sleep',
+      'How is my mood trending?',
+      'Show my exercise patterns',
+    ];
   }
-];
+  if (agentType === 'report') {
+    return [
+      'Make a weekly report',
+      'How was my week overall?',
+    ];
+  }
+  return [
+    'How can I improve my sleep?',
+    'What affects my mood?',
+    'Make a report of today',
+    'Show my health trends',
+  ];
+}
 
-export function HealthChatbot({ entries, className, userId }: HealthChatbotProps) {
+export function HealthChatbot({ className, userId }: HealthChatbotProps) {
   const { user } = useUser();
-  const { toast } = useToast();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
       type: 'bot',
-      content: "Hello! I'm your health assistant. I can help you analyze your health data, provide insights, and answer questions about your wellness journey. What would you like to know?",
+      content:
+        "Hello! I'm your MindCare health assistant. I can answer your health questions, analyze your data, and generate wellness reports. What would you like to know?",
       timestamp: new Date(),
       suggestions: [
         'Analyze my recent health trends',
-        'What patterns do you see in my data?',
-        'Give me health recommendations',
-        'How can I improve my well-being?'
-      ]
-    }
+        'How can I improve my sleep?',
+        'Make a report of today',
+        'How am I doing this week?',
+      ],
+    },
   ]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [sessionId] = useState(() => `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const [isLoadingHistory, setIsLoadingHistory] = useState(true);
 
-  // Get the actual user ID from props or Clerk
   const currentUserId = userId || user?.id;
 
-  // Load chat history from Supabase on mount
   useEffect(() => {
-    if (currentUserId) {
-      loadChatHistory();
-    } else {
-      setIsLoadingHistory(false);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentUserId]);
-
-  const loadChatHistory = async () => {
-    if (!currentUserId) return;
-
-    try {
-      setIsLoadingHistory(true);
-      const { data, error } = await dbHelpers.getChatHistory(currentUserId, sessionId);
-
-      if (error) {
-        console.warn('Failed to load chat history:', error);
-        setIsLoadingHistory(false);
-        return;
-      }
-
-      if (data && data.length > 0) {
-        // Convert Supabase chat messages to Message format
-        const loadedMessages: Message[] = data.map((chat: Chat) => ({
-          id: chat.id,
-          type: chat.is_user_message ? 'user' : 'bot',
-          content: chat.message,
-          timestamp: new Date(chat.created_at),
-        }));
-
-        // If we have loaded messages, replace the default welcome message
-        if (loadedMessages.length > 0) {
-          setMessages(loadedMessages);
-        }
-      }
-    } catch (err) {
-      console.error('Error loading chat history:', err);
-    } finally {
-      setIsLoadingHistory(false);
-    }
-  };
-
-  const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
   }, [messages]);
 
-  const generateInsight = (userMessage: string) => {
-    const lowerMessage = userMessage.toLowerCase();
-    
-    // Find matching insight
-    const matchedInsight = healthInsights.find(insight => 
-      insight.trigger.some(trigger => lowerMessage.includes(trigger))
-    );
-
-    if (matchedInsight) {
-      return {
-        response: matchedInsight.response,
-        suggestions: matchedInsight.suggestions
-      };
-    }
-
-    // Generate generic health insights based on entries
-    const recentEntries = entries.slice(0, 7);
-    const avgMood = recentEntries.length > 0 
-      ? recentEntries.reduce((sum, entry) => {
-          const moodValues = { excellent: 5, good: 4, neutral: 3, poor: 2, terrible: 1 };
-          return sum + (moodValues[entry.mood as keyof typeof moodValues] || 3);
-        }, 0) / recentEntries.length
-      : 3;
-
-    const avgSleep = recentEntries.length > 0
-      ? recentEntries.reduce((sum, entry) => sum + entry.sleep_hours, 0) / recentEntries.length
-      : 0;
-
-    const totalExercise = recentEntries.reduce((sum, entry) => sum + entry.exercise_minutes, 0);
-
-    let response = "Based on your recent health data, here's what I've observed:\n\n";
-    
-    if (avgMood >= 4) {
-      response += "🌟 Your mood has been quite positive recently! ";
-    } else if (avgMood <= 2) {
-      response += "💙 I notice your mood has been lower lately. ";
-    } else {
-      response += "📊 Your mood has been fairly stable. ";
-    }
-
-    if (avgSleep >= 7) {
-      response += "Your sleep quality looks good with an average of " + avgSleep.toFixed(1) + " hours. ";
-    } else if (avgSleep < 6) {
-      response += "Your sleep might need attention - averaging " + avgSleep.toFixed(1) + " hours. ";
-    }
-
-    if (totalExercise > 150) {
-      response += "Great job staying active! ";
-    } else if (totalExercise < 60) {
-      response += "Consider adding more physical activity to your routine. ";
-    }
-
-    response += "\n\nWould you like me to dive deeper into any specific area?";
-
-    return {
-      response,
-      suggestions: [
-        'Tell me more about my sleep patterns',
-        'How can I improve my mood?',
-        'What exercise routine would work for me?',
-        'Show me my health trends'
-      ]
-    };
-  };
-
+  // ── UPDATED: calls real /api/agent instead of fake keyword matching ─────────
   const handleSendMessage = async () => {
     if (!input.trim() || !currentUserId) return;
 
@@ -199,7 +84,7 @@ export function HealthChatbot({ entries, className, userId }: HealthChatbotProps
       id: Date.now().toString(),
       type: 'user',
       content: input,
-      timestamp: new Date()
+      timestamp: new Date(),
     };
 
     setMessages(prev => [...prev, userMessage]);
@@ -207,62 +92,52 @@ export function HealthChatbot({ entries, className, userId }: HealthChatbotProps
     setInput('');
     setIsTyping(true);
 
-    // Save user message to Supabase
     try {
-      await dbHelpers.saveChatMessage({
-        user_id: currentUserId,
-        session_id: sessionId,
-        message: userInput,
-        is_user_message: true,
-        context_data: {
-          entries_count: entries.length,
-          recent_entries: entries.slice(0, 5),
-        },
+      // Call the real agent — main_agent routes to chat/data/report automatically
+      const res = await fetch('/api/agent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userMessage: userInput,
+          sessionId,
+        }),
       });
-    } catch (err) {
-      console.error('Failed to save user message:', err);
-      toast({
-        title: 'Warning',
-        description: 'Message saved locally but may not be synced to database.',
-        variant: 'error',
-      });
-    }
 
-    // Simulate AI processing
-    setTimeout(async () => {
-      const insight = generateInsight(userInput);
+      if (!res.ok) {
+        throw new Error('Agent request failed');
+      }
+
+      const data = await res.json();
+
+      // data.status === "complete" for chat and data queries (no HITL needed)
+      // data.status === "interrupted" only for journaling/report (email step)
+      const responseText =
+        data.status === 'complete'
+          ? data.response
+          : data.reviewPayload?.sections?.body ?? 'Your report is ready for review.';
+
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
         type: 'bot',
-        content: insight.response,
+        content: responseText ?? "I'm here to help! Could you tell me more?",
         timestamp: new Date(),
-        suggestions: insight.suggestions
+        suggestions: getSuggestions(data.agentType ?? null),
       };
 
       setMessages(prev => [...prev, botMessage]);
+    } catch (err) {
+      console.error('[HealthChatbot] Agent error:', err);
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        type: 'bot',
+        content: 'Sorry, I had trouble processing that. Please try again.',
+        timestamp: new Date(),
+        suggestions: ['How can I improve my sleep?', 'Show my health trends'],
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
       setIsTyping(false);
-
-      // Save bot response to Supabase
-      try {
-        await dbHelpers.saveChatMessage({
-          user_id: currentUserId,
-          session_id: sessionId,
-          message: insight.response,
-          is_user_message: false,
-          context_data: {
-            user_message: userInput,
-            suggestions: insight.suggestions,
-          },
-        });
-      } catch (err) {
-        console.error('Failed to save bot message:', err);
-        toast({
-          title: 'Warning',
-          description: 'Response saved locally but may not be synced to database.',
-          variant: 'error',
-        });
-      }
-    }, 1500);
+    }
   };
 
   const handleSuggestionClick = (suggestion: string) => {
@@ -277,7 +152,7 @@ export function HealthChatbot({ entries, className, userId }: HealthChatbotProps
   };
 
   return (
-    <Card className={cn("h-[600px] flex flex-col", className)}>
+    <Card className={cn('h-[600px] flex flex-col', className)}>
       <CardHeader className="pb-3">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-rose-100 rounded-lg">
@@ -289,40 +164,43 @@ export function HealthChatbot({ entries, className, userId }: HealthChatbotProps
           </div>
         </div>
       </CardHeader>
-      
-      <CardContent className="flex-1 flex flex-col p-0">
-        {isLoadingHistory ? (
-          <div className="flex-1 flex items-center justify-center">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-rose-600 mx-auto mb-4"></div>
-              <p className="text-sm text-slate-600">Loading chat history...</p>
-            </div>
-          </div>
-        ) : (
-          <div className="flex-1 overflow-y-auto p-4 space-y-4">
-            {messages.map((message) => (
+
+      <CardContent className="flex-1 flex flex-col p-0 overflow-hidden">
+
+        {/* Messages */}
+        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          {messages.map((message) => (
             <div
               key={message.id}
               className={cn(
-                "flex gap-3",
+                'flex gap-3',
                 message.type === 'user' ? 'justify-end' : 'justify-start'
               )}
             >
               {message.type === 'bot' && (
-                <Avatar className="h-8 w-8">
+                <Avatar className="h-8 w-8 shrink-0">
                   <AvatarFallback className="bg-rose-100 text-rose-600">
                     <Bot className="h-4 w-4" />
                   </AvatarFallback>
                 </Avatar>
               )}
-              
-              <div className={cn(
-                "max-w-[80%] rounded-lg p-3",
-                message.type === 'user' 
-                  ? "bg-rose-600 text-white" 
-                  : "bg-slate-100 text-slate-800"
-              )}>
-                <div className="whitespace-pre-wrap">{message.content}</div>
+
+              <div
+                className={cn(
+                  'max-w-[80%] rounded-lg p-3',
+                  message.type === 'user'
+                    ? 'bg-rose-600 text-white'
+                    : 'bg-slate-100 text-slate-800'
+                )}
+              >
+                {/* Render each paragraph separately */}
+                <div className="space-y-1">
+                  {message.content.split('\n').filter(l => l.trim()).map((line, i) => (
+                    <p key={i} className="whitespace-pre-wrap text-sm leading-relaxed">{line}</p>
+                  ))}
+                </div>
+
+                {/* Suggestion chips */}
                 {message.suggestions && (
                   <div className="mt-3 flex flex-wrap gap-2">
                     {message.suggestions.map((suggestion, index) => (
@@ -337,22 +215,24 @@ export function HealthChatbot({ entries, className, userId }: HealthChatbotProps
                     ))}
                   </div>
                 )}
-                <div className="text-xs opacity-70 mt-2">
+
+                <div className="text-xs opacity-60 mt-2">
                   {message.timestamp.toLocaleTimeString()}
                 </div>
               </div>
 
               {message.type === 'user' && (
-                <Avatar className="h-8 w-8">
+                <Avatar className="h-8 w-8 shrink-0">
                   <AvatarFallback className="bg-slate-100 text-slate-600">
                     <User className="h-4 w-4" />
                   </AvatarFallback>
                 </Avatar>
               )}
             </div>
-            ))}
-            
-            {isTyping && (
+          ))}
+
+          {/* Typing indicator */}
+          {isTyping && (
             <div className="flex gap-3 justify-start">
               <Avatar className="h-8 w-8">
                 <AvatarFallback className="bg-rose-100 text-rose-600">
@@ -361,36 +241,45 @@ export function HealthChatbot({ entries, className, userId }: HealthChatbotProps
               </Avatar>
               <div className="bg-slate-100 rounded-lg p-3">
                 <div className="flex gap-1">
-                  <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce"></div>
-                  <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                  <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                  {[0, 100, 200].map((delay) => (
+                    <div
+                      key={delay}
+                      className="w-2 h-2 bg-slate-400 rounded-full animate-bounce"
+                      style={{ animationDelay: `${delay}ms` }}
+                    />
+                  ))}
                 </div>
               </div>
             </div>
-            )}
-            
-            <div ref={messagesEndRef} />
-          </div>
-        )}
+          )}
 
+          <div ref={messagesEndRef} />
+        </div>
+
+        {/* Input */}
         <div className="border-t p-4">
           <div className="flex gap-2">
             <Input
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder="Ask about your health data..."
+              placeholder="Ask about your health data…"
               className="flex-1"
+              disabled={isTyping}
             />
-            <Button 
+            <Button
               onClick={handleSendMessage}
-              disabled={!input.trim() || isTyping}
+              disabled={!input.trim() || isTyping || !currentUserId}
               className="bg-rose-600 hover:bg-rose-700"
             >
               <Send className="h-4 w-4" />
             </Button>
           </div>
+          <p className="text-xs text-slate-400 mt-1.5 text-center">
+            Try: How is my health? · Make a report of today .I feel anxious
+          </p>
         </div>
+
       </CardContent>
     </Card>
   );

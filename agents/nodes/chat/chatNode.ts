@@ -6,7 +6,7 @@
 import { AgentState } from "../../types/state";
 import { llm } from "../../config/llm";
 import { CHAT_PROMPT } from "../../prompts";
-import { saveChatMessage, fetchChatHistory } from "../../tools/supabaseTool";
+import { saveChatMessage, fetchChatHistory } from "../../tools/supbaseTool";
 import { chatSessionHelpers } from "@/lib/supabase-chat";
 
 export async function chatNode(

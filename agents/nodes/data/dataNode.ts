@@ -13,7 +13,7 @@
 import { AgentState } from "../../types/state";
 import { llm } from "../../config/llm";
 import { DATA_PROMPT } from "../../prompts";
-import { buildHealthSummary } from "../../tools/supabaseTool";
+import { buildHealthSummary } from "../../tools/supbaseTool";
 
 export async function dataNode(
   state: AgentState

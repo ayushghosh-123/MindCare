@@ -5,7 +5,7 @@ import {SENTIMENT_PROMPT} from '../../prompts/index'
 import {SentimentResponseSchema, SentimentResponse} from '../../schemas/responseSchema'
 
 export async function SentimentNode(state: AgentState): Promise<Partial<AgentState>>{
-    const content = state.journalEntry?.content ?? state.usermessage;
+    const content = state.JournalEntry?.content ?? state.userMessage;
 
     try {
         const result = await llm.invoke(
@@ -30,7 +30,7 @@ export async function SentimentNode(state: AgentState): Promise<Partial<AgentSta
     };
 
     } catch (error) {
-        console.error("[sentimentNode]", err);
-        return { sentiment: "negative", sentimentScore: 40, error: String(err) };
+        console.error("[sentimentNode]", error);
+        return { sentiment: "negative", sentimentScore: 40, error: String(error) };
     }
 }

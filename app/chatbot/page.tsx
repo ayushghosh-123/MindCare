@@ -17,9 +17,7 @@ export default function ChatbotPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (isLoaded && user) {
-      loadEntries();
-    }
+    if (isLoaded && user) loadEntries();
   }, [isLoaded, user]);
 
   const loadEntries = async () => {
@@ -29,12 +27,8 @@ export default function ChatbotPage() {
       const { data, error } = await dbHelpers.getUserHealthEntries(user.id);
       if (error) throw error;
       setEntries(data || []);
-    } catch (_err) {
-      toast({
-        title: 'Error',
-        description: 'Failed to load health entries.',
-        variant: 'error'
-      });
+    } catch {
+      toast({ title: 'Error', description: 'Failed to load health entries.', variant: 'error' });
     } finally {
       setLoading(false);
     }
@@ -43,35 +37,25 @@ export default function ChatbotPage() {
   if (!isLoaded) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-rose-600"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-rose-600" />
       </div>
     );
   }
 
-  if (!user) {
-    router.push('/sign-in');
-    return null;
-  }
+  if (!user) { router.push('/sign-in'); return null; }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
-      {/* Header */}
+
       <div className="bg-white border-b border-slate-200 sticky top-0 z-10">
         <div className="container mx-auto px-4 sm:px-6 py-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <Button
-                variant="ghost"
-                onClick={() => router.back()}
-                className="flex items-center gap-2"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                Back
-              </Button>
-              <div>
-                <h1 className="text-2xl sm:text-3xl font-bold text-slate-800">AI Health Assistant</h1>
-                <p className="text-sm sm:text-base text-slate-600">Get personalized health insights</p>
-              </div>
+          <div className="flex items-center gap-4">
+            <Button variant="ghost" onClick={() => router.back()} className="flex items-center gap-2">
+              <ArrowLeft className="h-4 w-4" /> Back
+            </Button>
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-bold text-slate-800">AI Health Assistant</h1>
+              <p className="text-sm sm:text-base text-slate-600">Get personalized health insights</p>
             </div>
           </div>
         </div>
@@ -82,8 +66,8 @@ export default function ChatbotPage() {
           {loading ? (
             <div className="flex items-center justify-center py-12">
               <div className="text-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-rose-600 mx-auto mb-4"></div>
-                <p className="text-slate-600">Loading your health data...</p>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-rose-600 mx-auto mb-4" />
+                <p className="text-slate-600">Loading your health data…</p>
               </div>
             </div>
           ) : (
@@ -91,6 +75,7 @@ export default function ChatbotPage() {
           )}
         </div>
       </div>
+
     </div>
   );
 }

@@ -8,7 +8,7 @@ import { llm } from "../../config/llm";
 export async function positiveResponseNode(
   state: AgentState
 ): Promise<Partial<AgentState>> {
-  const content = state.journalEntry?.content ?? state.userMessage;
+  const content = state.JournalEntry?.content ?? state.userMessage;
 
   try {
     const result = await llm.invoke([

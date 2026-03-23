@@ -8,10 +8,10 @@ import { llmPro, parseLLMJson } from "../../config/llm";
 import { DIAGNOSIS_PROMPT } from "../../prompts";
 import { DiagnosisResponseSchema, DiagnosisResponse } from "../../schemas/responseSchema";
 
-export async function diagnosisNode(
+export async function DiagnosisNode(
   state: AgentState
 ): Promise<Partial<AgentState>> {
-  const content = state.journalEntry?.content ?? state.userMessage;
+  const content = state.JournalEntry?.content ?? state.userMessage;
 
   try {
     const result = await llmPro.invoke([
@@ -27,7 +27,7 @@ export async function diagnosisNode(
 
     if (!validated.success) {
       return {
-        diagnosis: "Unable to complete analysis. You are not alone — support is available.",
+        diagonosis: "Unable to complete analysis. You are not alone — support is available.",
       };
     }
 
@@ -45,11 +45,11 @@ export async function diagnosisNode(
       .filter(Boolean)
       .join("\n");
 
-    return { diagnosis: diagnosisText };
+    return { diagonosis: diagnosisText };
   } catch (err) {
     console.error("[diagnosisNode]", err);
     return {
-      diagnosis: "Analysis unavailable. You are not alone — support is available.",
+      diagonosis: "Analysis unavailable. You are not alone — support is available.",
       error: String(err),
     };
   }

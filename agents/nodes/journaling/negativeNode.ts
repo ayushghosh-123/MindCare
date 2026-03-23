@@ -9,7 +9,7 @@ import { llmPro } from "../../config/llm";
 export async function negativeResponseNode(
   state: AgentState
 ): Promise<Partial<AgentState>> {
-  const content = state.journalEntry?.content ?? state.userMessage;
+  const content = state.JournalEntry?.content ?? state.userMessage;
 
   try {
     const result = await llmPro.invoke([
@@ -25,7 +25,7 @@ Never be clinical, cold, or dismissive. Never say "I understand" as an opener.`,
       },
       {
         role: "user",
-        content: `Journal Entry:\n${content}\n\nInsights:\n${state.diagnosis}`,
+        content: `Journal Entry:\n${content}\n\nInsights:\n${state.diagonosis}`,
       },
     ]);
 
