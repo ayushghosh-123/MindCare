@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-export  function MainNavbar() {
+export function MainNavbar() {
   const { user } = useUser();
   const [open, setOpen] = useState(false);
 

@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { AdvancedStats } from '@/components/advanced-stats';
 import { dbHelpers, type HealthEntry } from '@/lib/supabase';
 import { useToast } from '@/components/hooks/use-toast';
-import { ArrowLeft } from 'lucide-react';
+import { MainNavbar } from '@/components/main-navbar';
 import { Button } from '@/components/ui/button';
 
 export default function AnalyticsPage() {
@@ -55,19 +55,12 @@ export default function AnalyticsPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+      <MainNavbar />
       {/* Header */}
       <div className="bg-white border-b border-slate-200 sticky top-0 z-10">
         <div className="container mx-auto px-4 sm:px-6 py-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-4">
-              <Button
-                variant="ghost"
-                onClick={() => router.back()}
-                className="flex items-center gap-2"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                Back
-              </Button>
               <div>
                 <h1 className="text-2xl sm:text-3xl font-bold text-slate-800">Health Analytics</h1>
                 <p className="text-sm sm:text-base text-slate-600">Detailed insights into your wellness journey</p>

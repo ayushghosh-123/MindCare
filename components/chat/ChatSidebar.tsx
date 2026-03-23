@@ -5,7 +5,7 @@
 "use client";
 import { useState } from "react";
 import { ChatSession } from "@/lib/supabase-chat";
-import { useChatSessions } from "@/hooks/use-chat-sessions";
+import { useChatSessions } from "@/components/hooks/use-chat-session";
 
 interface ChatSidebarProps {
   activeSessionId: string | null;
@@ -62,22 +62,22 @@ export function ChatSidebar({
   }
 
   return (
-    <aside className="w-72 h-full bg-gray-50 border-r border-gray-200 flex flex-col">
+    <aside className="w-full h-full bg-[#f9f9f9] flex flex-col">
 
       {/* Header + search */}
-      <div className="p-4 border-b border-gray-200">
+      <div className="p-3">
         <h2 className="text-base font-semibold text-gray-800 mb-3">Conversations</h2>
         <input
           type="text"
           placeholder="Search chats…"
           value={searchQuery}
           onChange={(e) => handleSearch(e.target.value)}
-          className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-violet-300"
+          className="w-full text-sm border-none bg-white shadow-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-violet-400 placeholder:text-gray-400"
         />
       </div>
 
       {/* New session */}
-      <div className="p-3 border-b border-gray-100">
+      <div className="px-3 pb-2 border-b border-gray-100">
         {showNewInput ? (
           <div className="flex gap-2">
             <input
@@ -102,9 +102,9 @@ export function ChatSidebar({
         ) : (
           <button
             onClick={() => setShowNewInput(true)}
-            className="w-full text-sm text-violet-600 border border-violet-200 rounded-lg py-2 hover:bg-violet-50 transition font-medium"
+            className="w-full text-sm text-gray-700 bg-white shadow-sm border border-gray-200 rounded-lg py-2 hover:bg-gray-50 transition flex items-center justify-center gap-2 font-medium"
           >
-            + New Chat
+            <span>+</span> New Chat
           </button>
         )}
       </div>
@@ -120,10 +120,10 @@ export function ChatSidebar({
                 <div
                     key={session.id}
                     onClick={() => onSelectSession(session)}
-                    className={`group px-3 py-3 border-b border-gray-100 cursor-pointer hover:bg-white transition ${
+                    className={`group mx-2 my-1 px-3 py-2.5 rounded-lg cursor-pointer transition-colors ${
                         activeSessionId === session.id
-                            ? "bg-white border-l-2 border-l-violet-500"
-                            : ""
+                            ? "bg-gray-200 text-gray-900"
+                            : "hover:bg-gray-200/50 text-gray-700"
                     }`}
                 >
                     {renamingId === session.id ? (
@@ -140,7 +140,7 @@ export function ChatSidebar({
                                     if (e.key === "Enter") handleRename(session.id);
                                     if (e.key === "Escape") setRenamingId(null);
                                 }}
-                                className="flex-1 text-sm border border-violet-300 rounded px-2 py-1 focus:outline-none"
+                                className="flex-1 text-sm border border-violet-300 bg-white rounded px-2 py-1 focus:outline-none"
                             />
                             <button
                                 onClick={() => handleRename(session.id)}
@@ -151,51 +151,17 @@ export function ChatSidebar({
                         </div>
                     ) : (
                         <>
-                            <div className="flex items-center justify-between gap-1">
-                                <span className="text-sm font-medium text-gray-800 truncate">
-                                    {AGENT_EMOJI[session.agent_type ?? "chat"]} {session.name}
+                            <div className="flex items-center justify-between gap-2">
+                                <span className="text-sm font-medium truncate flex-1">
+                                    {session.name}
                                 </span>
                                 <div
                                     className="hidden group-hover:flex gap-1 shrink-0"
                                     onClick={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}
                                 >
-                                    <button
-                                        onClick={() => {
-                                            setRenamingId(session.id);
-                                            setRenameValue(session.name);
-                                        }}
-                                        className="text-xs text-gray-400 hover:text-violet-600 px-1"
-                                        title="Rename"
-                                    >
-                                        ✏️
-                                    </button>
-                                    <button
-                                        onClick={() => deleteSession(session.id)}
-                                        className="text-xs text-gray-400 hover:text-red-500 px-1"
-                                        title="Delete"
-                                    >
-                                        🗑️
-                                    </button>
+                                    <button onClick={() => { setRenamingId(session.id); setRenameValue(session.name); }} className="text-gray-400 hover:text-gray-600">✏️</button>
+                                    <button onClick={() => deleteSession(session.id)} className="text-gray-400 hover:text-red-500">🗑️</button>
                                 </div>
-                            </div>
-
-                            {session.last_message && (
-                                <p className="text-xs text-gray-400 truncate mt-0.5">
-                                    {session.last_message}
-                                </p>
-                            )}
-
-                            <div className="flex items-center gap-2 mt-1">
-                                <span className="text-xs text-gray-300">
-                                    {session.message_count} msg{session.message_count !== 1 ? "s" : ""}
-                                </span>
-                                <span className="text-xs text-gray-300">·</span>
-                                <span className="text-xs text-gray-300">
-                                    {new Date(session.updated_at).toLocaleDateString("en-US", {
-                                        month: "short",
-                                        day: "numeric",
-                                    })}
-                                </span>
                             </div>
                         </>
                     )}

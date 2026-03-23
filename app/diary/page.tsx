@@ -8,10 +8,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Save, BookOpen, Plus, Calendar, FileText, ArrowLeft } from 'lucide-react';
+import { Save, BookOpen, Plus, Calendar, FileText } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { MainNavbar } from '@/components/main-navbar';
 import { dbHelpers, type Journal, type JournalEntry } from '@/lib/supabase';
 import { useToast } from '@/components/hooks/use-toast';
 import { RichTextEditor } from '@/components/rich-text-editor';
@@ -186,15 +187,12 @@ export default function DiaryPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
-
+      <MainNavbar />
       {/* Header */}
       <div className="bg-white border-b border-slate-200 sticky top-0 z-10">
         <div className="container mx-auto px-4 sm:px-6 py-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-4">
-              <Button variant="ghost" onClick={() => router.back()} className="flex items-center gap-2">
-                <ArrowLeft className="h-4 w-4" /> Back
-              </Button>
               <div>
                 <h1 className="text-2xl sm:text-3xl font-bold text-slate-800">My Diary</h1>
                 <p className="text-sm sm:text-base text-slate-600">Write and organize your thoughts</p>
@@ -433,7 +431,7 @@ export default function DiaryPage() {
             )}
 
             {/* 2. HITL — graph paused, human must approve before email sends */}
-            {agent.status === 'interrupted' && agent.reviewPayload && (
+            {(agent.status === 'interrupted' || agent.status === 'resuming') && agent.reviewPayload && (
               <div>
                 <div className="flex items-center gap-2 mb-3">
                   <div className="w-2 h-2 bg-amber-400 rounded-full animate-pulse" />
@@ -450,15 +448,6 @@ export default function DiaryPage() {
               </div>
             )}
 
-            {/* 3. Sending email */}
-            {agent.status === 'resuming' && (
-              <Card className="border-emerald-200 bg-emerald-50">
-                <CardContent className="flex items-center gap-3 py-4">
-                  <div className="w-4 h-4 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
-                  <p className="text-sm text-slate-600">Sending your email…</p>
-                </CardContent>
-              </Card>
-            )}
 
             {/* 4. Complete */}
             {agent.status === 'complete' && agent.result && (

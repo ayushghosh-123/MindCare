@@ -124,10 +124,14 @@ export function buildMainGraph() {
     data_agent: "data_agent",
   });
  
-  // Normal paths → evaluate
-  graph.addEdge("journaling_agent", "evaluate_agent");
+  // Normal paths or parallel paths join at merge/evaluate
+  graph.addConditionalEdges("journaling_agent", (state: any) => 
+    state.agentType === "report" ? "merge_report" : "evaluate_agent"
+  );
   graph.addEdge("chat_agent", "evaluate_agent");
-  graph.addEdge("data_agent", "evaluate_agent");
+  graph.addConditionalEdges("data_agent", (state: any) => 
+    state.agentType === "report" ? "merge_report" : "evaluate_agent"
+  );
  
   // Report parallel paths → merge → evaluate
   graph.addEdge("merge_report", "evaluate_agent");

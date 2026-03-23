@@ -12,31 +12,26 @@ export function MessageBubble({ message }: { message: Chat }) {
   });
 
   return (
-    <div className={`flex ${isUser ? "justify-end" : "justify-start"} mb-3`}>
+    <div className={`flex w-full mb-6 ${isUser ? "justify-end" : "justify-start"}`}>
+      
       {!isUser && (
-        <div className="w-7 h-7 rounded-full bg-violet-100 flex items-center justify-center text-sm mr-2 shrink-0 mt-1">
+        <div className="w-8 h-8 rounded-full border border-gray-200 bg-white flex items-center justify-center text-sm mr-4 shrink-0 mt-0.5">
           🤖
         </div>
       )}
 
-      <div className={`max-w-[75%] flex flex-col gap-1 ${isUser ? "items-end" : "items-start"}`}>
+      <div className={`flex flex-col gap-1 max-w-[85%] md:max-w-[75%] ${isUser ? "items-end" : "items-start"}`}>
         <div
-          className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed whitespace-pre-line ${
+          className={`px-5 py-3.5 text-[15px] leading-relaxed whitespace-pre-line ${
             isUser
-              ? "bg-violet-600 text-white rounded-br-sm"
-              : "bg-white border border-gray-100 text-gray-700 rounded-bl-sm shadow-sm"
+              ? "bg-gray-100 text-gray-900 rounded-2xl"
+              : "text-gray-800"
           }`}
         >
           {message.message}
         </div>
-        <span className="text-xs text-gray-300">{time}</span>
       </div>
 
-      {isUser && (
-        <div className="w-7 h-7 rounded-full bg-violet-600 flex items-center justify-center text-xs text-white ml-2 shrink-0 mt-1">
-          You
-        </div>
-      )}
     </div>
   );
 }

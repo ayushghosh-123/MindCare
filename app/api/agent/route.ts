@@ -68,13 +68,13 @@ export async function POST(req: Request) {
     // ── 6. Check if graph paused at interrupt() ────────────────────────────
     const graphState = await graph.getState(config);
     const isInterrupted = (graphState.tasks ?? []).some(
-      (t) => t.interrupts?.length > 0
+      (t: any) => t.interrupts?.length > 0
     );
 
     if (isInterrupted) {
       // Extract the HumanReviewPayload that evaluate_agent passed to interrupt()
       const reviewPayload: HumanReviewPayload | undefined = graphState.tasks
-        .flatMap((t) => t.interrupts ?? [])
+        .flatMap((t: any) => t.interrupts ?? [])
         .at(0)?.value as HumanReviewPayload | undefined;
 
       if (!reviewPayload) {

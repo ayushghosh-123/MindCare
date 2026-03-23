@@ -45,93 +45,104 @@ export function ChatWindow({
   }
 
   return (
-    <div className="flex flex-col h-full">
-      {/* Session header */}
-      <div className="px-5 py-3 border-b border-gray-200 bg-white">
-        <h2 className="text-base font-semibold text-gray-800">{sessionName}</h2>
-        <p className="text-xs text-gray-400">{messages.length} messages</p>
-      </div>
+    <div className="flex flex-col h-full bg-white relative">
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-1">
-        {isLoading ? (
-          <div className="flex items-center justify-center h-full">
-            <p className="text-sm text-gray-400 animate-pulse">Loading conversation…</p>
-          </div>
-        ) : messages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full gap-2 text-center">
-            <span className="text-4xl">💬</span>
-            <p className="text-sm text-gray-500 font-medium">Start the conversation</p>
-            <p className="text-xs text-gray-400">
-              Ask anything about your wellness, share how you&re feeling, or request a daily report.
-            </p>
-          </div>
-        ) : (
-          messages.map((msg) => <MessageBubble key={msg.id} message={msg} />)
-        )}
-
-        {/* Typing indicator */}
-        {isSending && (
-          <div className="flex justify-start mb-3">
-            <div className="w-7 h-7 rounded-full bg-violet-100 flex items-center justify-center text-sm mr-2">
-              🤖
+      <div className="flex-1 overflow-y-auto px-4 pb-32 pt-4">
+        <div className="max-w-3xl mx-auto space-y-6">
+          {isLoading ? (
+            <div className="flex items-center justify-center h-[50vh]">
+              <p className="text-sm text-gray-400 animate-pulse">Loading conversation…</p>
             </div>
-            <div className="bg-white border border-gray-100 rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm">
-              <div className="flex gap-1">
+          ) : messages.length === 0 ? (
+            <div className="flex flex-col items-center justify-center h-[50vh] gap-3 text-center">
+              <span className="text-4xl text-gray-300">👋</span>
+              <p className="text-lg text-gray-700 font-medium">How can I help you today?</p>
+              <p className="text-sm text-gray-500 max-w-sm">
+                Ask about your wellness, share how you're feeling, or request a daily report.
+              </p>
+            </div>
+          ) : (
+            messages.map((msg) => <MessageBubble key={msg.id} message={msg} />)
+          )}
+
+          {/* Typing indicator */}
+          {isSending && (
+            <div className="flex justify-start mb-3">
+              <div className="w-8 h-8 rounded-full border border-gray-200 bg-white flex items-center justify-center text-sm mr-3 shrink-0">
+                🤖
+              </div>
+              <div className="flex items-center gap-1.5 mt-2">
                 {[0, 150, 300].map((delay) => (
                   <span
                     key={delay}
-                    className="w-1.5 h-1.5 bg-gray-300 rounded-full animate-bounce"
+                    className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
                     style={{ animationDelay: `${delay}ms` }}
                   />
                 ))}
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* HITL review panel — appears when evaluate_agent calls interrupt() */}
-        {agentStatus === "interrupted" && reviewPayload && (
-          <div className="mt-4">
-            <AgentReviewPanel
-              payload={reviewPayload}
-              isResuming={agentStatus === "resuming"}
-              onApprove={onApprove}
-              onReject={onReject}
-            />
-          </div>
-        )}
+          {/* HITL review panel */}
+          {(agentStatus === "interrupted" || agentStatus === "resuming") && reviewPayload && (
+            <div className="mt-6 mb-8">
+              <AgentReviewPanel
+                payload={reviewPayload}
+                isResuming={agentStatus === "resuming"}
+                onApprove={onApprove}
+                onReject={onReject}
+              />
+            </div>
+          )}
 
-        <div ref={bottomRef} />
+          <div ref={bottomRef} className="h-4" />
+        </div>
       </div>
 
-      {/* Input */}
-      <div className="px-4 py-3 border-t border-gray-200 bg-white">
-        <div className="flex gap-2">
-          <textarea
-            rows={1}
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                handleSend();
-              }
-            }}
-            placeholder="Message MindCare…"
-            className="flex-1 text-sm border border-gray-200 rounded-xl px-4 py-2.5 resize-none focus:outline-none focus:ring-2 focus:ring-violet-300"
-          />
-          <button
-            onClick={handleSend}
-            disabled={isSending || !input.trim()}
-            className="bg-violet-600 hover:bg-violet-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition disabled:opacity-40"
-          >
-            {isSending ? "…" : "Send"}
-          </button>
+      {/* Floating Input Area */}
+      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-white via-white to-transparent pt-6 pb-6 px-4">
+        <div className="max-w-3xl mx-auto relative">
+          <div className="relative flex items-end shadow-lg border border-gray-200 bg-white rounded-2xl overflow-hidden focus-within:ring-2 focus-within:ring-violet-200 focus-within:border-violet-400 transition-all">
+            <textarea
+              rows={1}
+              value={input}
+              onChange={(e) => {
+                setInput(e.target.value);
+                e.target.style.height = 'auto';
+                e.target.style.height = Math.min(e.target.scrollHeight, 200) + 'px';
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSend();
+                  e.currentTarget.style.height = 'auto';
+                }
+              }}
+              placeholder="Message MindCare…"
+              className="flex-1 max-h-[200px] text-base bg-transparent px-4 py-3.5 resize-none focus:outline-none placeholder:text-gray-400"
+            />
+            <div className="p-2">
+              <button
+                onClick={() => {
+                   handleSend();
+                   const ta = document.querySelector('textarea');
+                   if (ta) ta.style.height = 'auto';
+                }}
+                disabled={isSending || !input.trim()}
+                className="bg-black hover:bg-gray-800 disabled:bg-gray-200 disabled:text-gray-400 text-white p-2 rounded-xl transition-colors flex items-center justify-center"
+                title="Send message"
+              >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5">
+                  <path d="M12 4L12 20M12 4L5.5 10.5M12 4L18.5 10.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <p className="text-[11px] text-gray-400 mt-2 text-center">
+             MindCare can make mistakes. Consider verifying important health information.
+          </p>
         </div>
-        <p className="text-xs text-gray-300 mt-1.5 text-center">
-          Try: "I'm feeling anxious" · "How was my week?" · "Make a report of today"
-        </p>
       </div>
     </div>
   );
