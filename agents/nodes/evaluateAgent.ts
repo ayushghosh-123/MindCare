@@ -17,6 +17,8 @@ import { interrupt } from "@langchain/langgraph";
 import { AgentState } from "../types/state";
 import { llmPro } from "../config/llm";
 import { EVALUATE_PROMPT } from "../prompts";
+import { dbHelpers } from "@/lib/supabase";
+import { saveChatMessage } from "../tools/supbaseTool";
 
 // This is the payload the UI receives when the graph pauses.
 // AgentReviewPanel renders this directly — fully typed end to end.
@@ -31,7 +33,9 @@ export interface HumanReviewPayload {
   sentiment: AgentState["sentiment"];
   agentType: AgentState["agentType"];
   sentimentScore: number | null;
-  urgencyHigh: boolean;  // true = show red crisis warning banner in UI
+  urgencyHigh: boolean;
+  email: string; // recipient's email address
+  steps: { label: string; completed: boolean }[]; // workflow progress
 }
 
 // Builds human-readable sections based on agent type and sentiment
@@ -56,6 +60,15 @@ function formatForHuman(
       emoji: "📈",
       body: response.trim(),
       footer: "This health summary will be emailed to you.",
+    };
+  }
+
+  if (agentType === "chat") {
+    return {
+      title: "Your Chat Insight",
+      emoji: "💭",
+      body: response.trim(),
+      footer: "This chat-based wellness insight will be emailed to you.",
     };
   }
 
@@ -118,6 +131,22 @@ export async function evaluateAgentNode(
   const sections = formatForHuman(reviewedResponse, state);
   const urgencyHigh = detectHighUrgency(reviewedResponse);
 
+  // ── Step 2.5: Fetch User Email ──────────────────────────────────────────
+  let userEmail = state.email || "";
+  if (!userEmail) {
+    const { data: user } = await dbHelpers.getUser(state.userId);
+    if (user?.email) userEmail = user.email;
+  }
+
+  // ── Step 2.6: Determine Completed Steps ──────────────────────────────────
+  const workflowSteps = [
+     { label: "Classified Request", completed: true },
+     { label: "Analyzed Sentiment", completed: !!state.sentiment },
+     { label: state.agentType === 'report' ? "Merged Data & Journal" : "Generated Insights", completed: true },
+     { label: "Drafted Email", completed: true },
+     { label: "Waiting for Approval", completed: false },
+  ];
+
   // ── Step 3: HUMAN-IN-THE-LOOP ─────────────────────────────────────────────
   // interrupt() PAUSES the graph here.
   // The full payload is sent to the UI → AgentReviewPanel renders it.
@@ -133,7 +162,11 @@ export async function evaluateAgentNode(
     agentType: state.agentType,
     sentimentScore: state.sentimentScore,
     urgencyHigh,
+    email: userEmail,
+    steps: workflowSteps,
   });
+
+  console.log(`[evaluateAgent] Human decision received: approved=${humanDecision.approved}, edited=${!!humanDecision.editedResponse}`);
 
   // ── Step 4: Handle human decision ────────────────────────────────────────
   if (!humanDecision.approved) {
@@ -153,5 +186,6 @@ export async function evaluateAgentNode(
     humanApproved: true,
     humanFeedback: humanDecision.editedResponse ?? null,
     response: finalResponse,
+    email: userEmail,
   };
 }

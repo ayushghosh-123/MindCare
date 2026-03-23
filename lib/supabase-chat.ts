@@ -3,7 +3,7 @@
 // Each named session stores user_id, name, message_count, last_message preview.
 // Powers the sidebar in the chatbot page and the resume feature.
 
-import { supabase, Chat } from "@/lib/supabase";
+import { supabase, supabaseAdmin, Chat } from "@/lib/supabase";
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -34,7 +34,7 @@ export const chatSessionHelpers = {
     name: string,
     agentType?: ChatSession["agent_type"]
   ): Promise<ChatSession | null> {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from("chat_sessions")
       .insert([{ user_id: userId, name, agent_type: agentType }])
       .select()
@@ -46,7 +46,7 @@ export const chatSessionHelpers = {
 
   // Get all sessions for a user, sorted by most recently updated
   async getUserSessions(userId: string): Promise<ChatSession[]> {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from("chat_sessions")
       .select("*")
       .eq("user_id", userId)
@@ -59,7 +59,7 @@ export const chatSessionHelpers = {
 
   // Get a single session by ID
   async getSession(sessionId: string): Promise<ChatSession | null> {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from("chat_sessions")
       .select("*")
       .eq("id", sessionId)
@@ -74,7 +74,7 @@ export const chatSessionHelpers = {
     const session = await chatSessionHelpers.getSession(sessionId);
     if (!session) return null;
 
-    const { data: messages, error } = await supabase
+    const { data: messages, error } = await supabaseAdmin
       .from("chats")
       .select("*")
       .eq("session_id", sessionId)
@@ -86,7 +86,7 @@ export const chatSessionHelpers = {
 
   // Rename a session
   async renameSession(sessionId: string, name: string): Promise<boolean> {
-    const { error } = await supabase
+    const { error } = await supabaseAdmin
       .from("chat_sessions")
       .update({ name })
       .eq("id", sessionId);
@@ -97,7 +97,7 @@ export const chatSessionHelpers = {
 
   // Soft-delete (sets is_active = false, keeps data)
   async deleteSession(sessionId: string): Promise<boolean> {
-    const { error } = await supabase
+    const { error } = await supabaseAdmin
       .from("chat_sessions")
       .update({ is_active: false })
       .eq("id", sessionId);
@@ -112,7 +112,7 @@ export const chatSessionHelpers = {
     lastMessage: string,
     summary?: string
   ): Promise<void> {
-    const { error } = await supabase.rpc("increment_session_message_count", {
+    const { error } = await supabaseAdmin.rpc("increment_session_message_count", {
       session_id_param: sessionId,
       last_message_param: lastMessage.slice(0, 120),
       summary_param: summary ?? null,
@@ -120,7 +120,7 @@ export const chatSessionHelpers = {
 
     if (error) {
       // Fallback: manual update if RPC not available
-      await supabase
+      await supabaseAdmin
         .from("chat_sessions")
         .update({ last_message: lastMessage.slice(0, 120) })
         .eq("id", sessionId);
@@ -129,7 +129,7 @@ export const chatSessionHelpers = {
 
   // Search sessions by name
   async searchSessions(userId: string, query: string): Promise<ChatSession[]> {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from("chat_sessions")
       .select("*")
       .eq("user_id", userId)

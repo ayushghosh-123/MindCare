@@ -8,6 +8,14 @@ import { MessageBubble } from "./MessageBubble";
 import { AgentReviewPanel } from "@/components/journal/AgentReviewPanel";
 import type { HumanReviewPayload } from "@/agents/nodes/evaluateAgent";
 
+interface AgentCompleteResult {
+  response: string;
+  sentiment: string | null;
+  agentType: string | null;
+  emailSent: boolean;
+  email?: string | null;
+}
+
 interface ChatWindowProps {
   sessionName: string;
   messages: Chat[];
@@ -15,6 +23,7 @@ interface ChatWindowProps {
   isLoading: boolean;
   agentStatus: string;
   reviewPayload: HumanReviewPayload | null;
+  agentResult?: AgentCompleteResult | null;
   onApprove: (edited?: string) => void;
   onReject: () => void;
   onSendMessage: (text: string) => void;
@@ -27,6 +36,7 @@ export function ChatWindow({
   isLoading,
   agentStatus,
   reviewPayload,
+  agentResult,
   onApprove,
   onReject,
   onSendMessage,
@@ -84,12 +94,14 @@ export function ChatWindow({
             </div>
           )}
 
-          {/* HITL review panel */}
-          {(agentStatus === "interrupted" || agentStatus === "resuming") && reviewPayload && (
+          {/* Agent HITL / Review Panel — Persists after completion as a receipt */}
+          {(agentStatus === "interrupted" || agentStatus === "resuming" || agentStatus === "complete") && reviewPayload && (
             <div className="mt-6 mb-8">
               <AgentReviewPanel
                 payload={reviewPayload}
                 isResuming={agentStatus === "resuming"}
+                isComplete={agentStatus === "complete"}
+                result={agentResult}
                 onApprove={onApprove}
                 onReject={onReject}
               />

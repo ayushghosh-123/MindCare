@@ -1,11 +1,3 @@
-// STEP 14 — agents/nodes/data/mergeReportNode.ts
-// Combines the outputs of journaling_agent and data_agent into one report.
-// Only runs in report mode after both parallel branches complete.
-//
-// Reads:  state.response      (journal emotional insight from journaling_agent)
-//         state.healthSummary (health metrics from data_agent)
-// Writes: state.response      (final merged wellness report)
-
 import { AgentState } from "../../types/state";
 import { llmPro } from "../../config/llm";
 import { REPORT_MERGE_PROMPT } from "../../prompts";

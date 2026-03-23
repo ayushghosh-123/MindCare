@@ -1,4 +1,4 @@
-import { dbHelpers, JournalEntry, HealthEntry, Chat } from "@/lib/supabase";
+import { dbHelpers, JournalEntry, HealthEntry, Chat, supabaseAdmin } from "@/lib/supabase";
 
 //  for save the journal into database
 export async function saveJournalEntry(entryData: Partial<JournalEntry>) {
@@ -25,16 +25,23 @@ export async function fetchHealthEntries(userId: string, limit = 14) {
 export async function saveChatMessage(
   userId: string, sessionId: string, message: string, isUserMessage: boolean
 ) {
-  const { error } = await dbHelpers.saveChatMessage({
-    user_id: userId, session_id: sessionId, message, is_user_message: isUserMessage,
-  });
+  const { error } = await supabaseAdmin
+    .from('chats')
+    .insert([{
+      user_id: userId, session_id: sessionId, message, is_user_message: isUserMessage,
+    }]);
   if (error) console.error("[supabaseTool] saveChatMessage:", error);
 }
 
 
 // fetch the chat history 
 export async function fetchChatHistory(userId: string, sessionId: string) {
-  const { data, error } = await dbHelpers.getChatHistory(userId, sessionId);
+  const { data, error } = await supabaseAdmin
+    .from('chats')
+    .select('*')
+    .eq('user_id', userId)
+    .eq('session_id', sessionId)
+    .order('created_at', { ascending: true });
   if (error) console.error("[supabaseTool] fetchChatHistory:", error);
   return (data ?? []) as Chat[];
 }

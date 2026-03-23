@@ -37,7 +37,14 @@ export function useChatSessions(): UseChatSessionsReturn {
     }
   }, []);
 
-  useEffect(() => { refreshSessions(); }, [refreshSessions]);
+  useEffect(() => { 
+    refreshSessions(); 
+    
+    // Listen for events from ChatWindow auto-creating a session
+    const handleRefresh = () => refreshSessions();
+    window.addEventListener("refresh-chat-sessions", handleRefresh);
+    return () => window.removeEventListener("refresh-chat-sessions", handleRefresh);
+  }, [refreshSessions]);
 
   // Create new session
   const createSession = useCallback(

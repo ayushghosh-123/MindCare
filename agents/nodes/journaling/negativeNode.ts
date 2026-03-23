@@ -25,7 +25,7 @@ Never be clinical, cold, or dismissive. Never say "I understand" as an opener.`,
       },
       {
         role: "user",
-        content: `Journal Entry:\n${content}\n\nInsights:\n${state.diagonosis}`,
+        content: `Journal Entry:\n${content}\n\nInsights:\n${state.diagnosis}`,
       },
     ]);
 

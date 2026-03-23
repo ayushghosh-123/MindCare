@@ -104,6 +104,7 @@ export default function ChatbotPage() {
               isLoading={isLoading}
               agentStatus={agent.status}
               reviewPayload={agent.reviewPayload}
+              agentResult={agent.result}
               onApprove={agent.approve}
               onReject={agent.reject}
               onSendMessage={sendMessage}

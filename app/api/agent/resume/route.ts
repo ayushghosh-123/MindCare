@@ -1,15 +1,7 @@
-// STEP 22 — app/api/agent/resume/route.ts
-// Resumes the graph after human approves, edits, or rejects in AgentReviewPanel.
-//
-// How it works:
-// graph.invoke(null, config) → null means "use saved state from checkpointer"
-// resumeValue → returned by interrupt() inside evaluateAgentNode
-//   approved: true  → evaluateAgent returns humanApproved:true → email_agent fires
-//   approved: false → evaluateAgent returns humanApproved:false → END (no email)
-
 import { auth } from "@clerk/nextjs/server";
 import { buildMainGraph } from "@/agents";
 import { z } from "zod";
+import { Command } from "@langchain/langgraph";
 
 export const maxDuration = 60;
 
@@ -52,15 +44,13 @@ export async function POST(req: Request) {
 
   try {
     // ── 4. Resume from checkpointer ────────────────────────────────────────
-    // null = don't reinitialise state, use what was saved at interrupt()
-    // resumeValue = the value that interrupt() returns inside evaluateAgentNode
-    const result = await graph.invoke(null, {
-      ...config,
-      resumeValue: {
+    // Resume using Command per LangGraph 1.x / 0.2.x+ API
+    const result = await graph.invoke(new Command({
+      resume: {
         approved: humanApproved,
         editedResponse: editedResponse?.trim() || undefined,
-      },
-    });
+      }
+    }), config);
 
     return Response.json({
       status: "complete",
@@ -68,6 +58,8 @@ export async function POST(req: Request) {
       sentiment: result.sentiment,
       agentType: result.agentType,
       emailSent: result.emailSent,
+      email: result.email,
+      diagnosis: result.diagnosis,
       usedEditedResponse: !!editedResponse?.trim(),
     });
 

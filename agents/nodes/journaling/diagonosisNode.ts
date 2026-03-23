@@ -27,7 +27,7 @@ export async function DiagnosisNode(
 
     if (!validated.success) {
       return {
-        diagonosis: "Unable to complete analysis. You are not alone — support is available.",
+        diagnosis: "Unable to complete analysis. You are not alone — support is available.",
       };
     }
 
@@ -45,11 +45,11 @@ export async function DiagnosisNode(
       .filter(Boolean)
       .join("\n");
 
-    return { diagonosis: diagnosisText };
+    return { diagnosis: diagnosisText };
   } catch (err) {
     console.error("[diagnosisNode]", err);
     return {
-      diagonosis: "Analysis unavailable. You are not alone — support is available.",
+      diagnosis: "Analysis unavailable. You are not alone — support is available.",
       error: String(err),
     };
   }

@@ -430,18 +430,23 @@ export default function DiaryPage() {
               </Card>
             )}
 
-            {/* 2. HITL — graph paused, human must approve before email sends */}
-            {(agent.status === 'interrupted' || agent.status === 'resuming') && agent.reviewPayload && (
+            {/* 2. HITL / Review — Paused OR Resuming OR Complete (if we have a review payload) */}
+            {(agent.status === 'interrupted' || agent.status === 'resuming' || agent.status === 'complete') && agent.reviewPayload && (
               <div>
                 <div className="flex items-center gap-2 mb-3">
-                  <div className="w-2 h-2 bg-amber-400 rounded-full animate-pulse" />
+                  <div className={cn(
+                    "w-2 h-2 rounded-full animate-pulse",
+                    agent.status === 'complete' ? "bg-emerald-400" : "bg-amber-400"
+                  )} />
                   <p className="text-sm font-medium text-slate-600">
-                    Your AI insight is ready — review it before it gets emailed to you
+                    {agent.status === 'complete' ? "Your report has been delivered" : "Your AI insight is ready — review it before it gets emailed to you"}
                   </p>
                 </div>
                 <AgentReviewPanel
                   payload={agent.reviewPayload}
                   isResuming={agent.status === 'resuming'}
+                  isComplete={agent.status === 'complete'}
+                  result={agent.result}
                   onApprove={(edited) => agent.approve(edited)}
                   onReject={() => agent.reject()}
                 />
@@ -449,8 +454,8 @@ export default function DiaryPage() {
             )}
 
 
-            {/* 4. Complete */}
-            {agent.status === 'complete' && agent.result && (
+            {/* 4. Complete — Already handled by the persistent ReviewPanel above if reviewPayload exists */}
+            {agent.status === 'complete' && agent.result && !agent.reviewPayload && (
               <Card className={cn(
                 'border',
                 agent.result.sentiment === 'positive'
@@ -464,7 +469,7 @@ export default function DiaryPage() {
                     </p>
                     {agent.result.emailSent ? (
                       <span className="text-xs bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded-full font-medium">
-                        📧 Email sent
+                        📧 Email sent to {agent.result.email}
                       </span>
                     ) : (
                       <span className="text-xs bg-slate-100 text-slate-500 px-2.5 py-1 rounded-full font-medium">

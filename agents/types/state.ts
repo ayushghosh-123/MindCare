@@ -13,7 +13,7 @@ export interface AgentState{
 
     sentiment: "positive"|"negative"|null;
     sentimentScore: number | null;
-    diagonosis: string |null;
+    diagnosis: string |null;
 
     healthSummary: string|null;
     
@@ -24,6 +24,7 @@ export interface AgentState{
     humanFeedback: string | null;
 
     emailSent: boolean;
+    email: string | null;
     error: string | null;
 }
 

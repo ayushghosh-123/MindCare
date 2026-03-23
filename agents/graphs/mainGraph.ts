@@ -8,9 +8,9 @@
 // 3. MemorySaver — checkpointer required for interrupt() / HITL to work
 // 4. routeAfterEvaluate — skips email if human rejected
 
-import { StateGraph, END,  Annotation, Send } from "@langchain/langgraph";
-import { MemorySaver } from "@langchain/langgraph";
+import { StateGraph, END, Annotation, Send, MemorySaver } from "@langchain/langgraph";
 import { AgentState } from "../types/state";
+import { getCheckpointer } from "@/lib/agent-memory";
 
 // Nodes
 import { mainAgentNode } from "../nodes/mainAgent";
@@ -34,7 +34,7 @@ async function journalingAgentNode(
     response: result.response,
     sentiment: result.sentiment,
     sentimentScore: result.sentimentScore,
-    diagonosis: result.diagnosis,
+    diagnosis: result.diagnosis,
   };
 }
 
@@ -93,13 +93,14 @@ function routeAfterMainAgent(
 function routeAfterEvaluate(
   state: typeof MainState.State
 ): "email_agent" | typeof END {
+  console.log(`[mainGraph] routeAfterEvaluate: humanApproved=${state.humanApproved}, agentType=${state.agentType}`);
   return state.humanApproved ? "email_agent" : END;
 }
 
 // ── Graph builder ────────────────────────────────────────────────────────────
 export function buildMainGraph() {
    // MemorySaver required for interrupt() HITL — swap for PostgresSaver in prod
-  const checkpointer = new MemorySaver();
+  const checkpointer = getCheckpointer();
  
   // ✅ FINAL FIX: cast to any once — bypasses all broken LangGraph type errors
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -128,7 +129,7 @@ export function buildMainGraph() {
   graph.addConditionalEdges("journaling_agent", (state: any) => 
     state.agentType === "report" ? "merge_report" : "evaluate_agent"
   );
-  graph.addEdge("chat_agent", "evaluate_agent");
+  graph.addEdge("chat_agent", END);
   graph.addConditionalEdges("data_agent", (state: any) => 
     state.agentType === "report" ? "merge_report" : "evaluate_agent"
   );

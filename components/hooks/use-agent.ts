@@ -18,8 +18,10 @@ interface AgentCompleteResponse {
   response: string;
   sentiment: "positive" | "negative" | null;
   sentimentScore: number | null;
+  diagnosis: string | null;
   agentType: "journaling" | "chat" | "data" | "report" | null;
   emailSent: boolean;
+  email?: string | null;
   usedEditedResponse?: boolean;
 }
 

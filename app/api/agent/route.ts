@@ -47,13 +47,14 @@ export async function POST(req: Request) {
     agentType: null,
     sentiment: null,
     sentimentScore: null,
-    diagonosis: null,
+    diagnosis: null,
     healthSummary: null,
     response: null,
     chatHistory: [],
     humanApproved: false,
     humanFeedback: null,
     emailSent: false,
+    email: null,
     error: null,
   };
 
@@ -75,7 +76,7 @@ export async function POST(req: Request) {
       // Extract the HumanReviewPayload that evaluate_agent passed to interrupt()
       const reviewPayload: HumanReviewPayload | undefined = graphState.tasks
         .flatMap((t: any) => t.interrupts ?? [])
-        .at(0)?.value as HumanReviewPayload | undefined;
+        [0]?.value as HumanReviewPayload | undefined;
 
       if (!reviewPayload) {
         return Response.json({ error: "Interrupt payload missing" }, { status: 500 });
@@ -99,6 +100,8 @@ export async function POST(req: Request) {
       sentimentScore: finalState.sentimentScore,
       agentType: finalState.agentType,
       emailSent: finalState.emailSent,
+      email: finalState.email,
+      diagnosis: finalState.diagnosis,
     });
 
   } catch (err) {

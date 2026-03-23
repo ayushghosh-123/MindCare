@@ -46,9 +46,12 @@ export async function chatNode(
     return { response, chatHistory: contextWindow };
   } catch (err) {
     console.error("[chatNode]", err);
+    
+    const fallbackMessage = "I'm here for you. Could you tell me a bit more about how you're feeling today?";
+    await saveChatMessage(state.userId, state.sessionId, fallbackMessage, false);
+
     return {
-      response:
-        "I'm here for you. Could you tell me a bit more about how you're feeling today?",
+      response: fallbackMessage,
       error: String(err),
     };
   }
