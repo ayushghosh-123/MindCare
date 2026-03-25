@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Activity, Calendar, Moon, GlassWater, Brain as BrainIcon, Zap } from 'lucide-react';
+import { Calendar } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { dbHelpers, type HealthEntry } from '@/lib/supabase';
 import { useToast } from '@/components/hooks/use-toast';
@@ -425,138 +425,6 @@ export function UnifiedDashboardToday({ userId, className }: UnifiedDashboardTod
                   {todayEntry ? 'Entry exists for today' : 'No entry yet'}
                 </div>
               </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Right: STORED DATA Snapshot (Shows saved data from database) */}
-        <div>
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Activity className="h-5 w-5 text-blue-600" />
-                {todayEntry ? 'Saved Data' : 'Today Snapshot'}
-              </CardTitle>
-            </CardHeader>
-
-            <CardContent>
-              {todayEntry ? (
-                <div className="space-y-3">
-                  {/* Display STORED values from database */}
-
-                  {/* Sleep - from DB */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <Moon className="h-6 w-6 text-indigo-600" />
-                      <div>
-                        <div className="text-sm text-slate-500">Sleep</div>
-                        <div className="font-medium text-slate-800">
-                          {todayEntry.sleep_hours != null ? `${todayEntry.sleep_hours} h` : '—'}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Exercise - from DB */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <Zap className="h-6 w-6 text-orange-600" />
-                      <div>
-                        <div className="text-sm text-slate-500">Exercise</div>
-                        <div className="font-medium text-slate-800">
-                          {todayEntry.exercise_minutes != null ? `${todayEntry.exercise_minutes} m` : '—'}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Water - from DB */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <GlassWater className="h-6 w-6 text-blue-600" />
-                      <div>
-                        <div className="text-sm text-slate-500">Water</div>
-                        <div className="font-medium text-slate-800">
-                          {todayEntry.water_intake != null ? `${todayEntry.water_intake} cups` : '—'}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Mood - from DB */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <BrainIcon className="h-6 w-6 text-pink-600" />
-                      <div>
-                        <div className="text-sm text-slate-500">Mood</div>
-                        <div className="font-medium">
-                          {todayEntry.mood ? (
-                            <span className={cn('px-2 py-1 rounded text-xs', getMoodColor(todayEntry.mood))}>
-                              {todayEntry.mood}
-                            </span>
-                          ) : '—'}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Energy & Stress - from DB */}
-                  {(todayEntry.energy_level || todayEntry.stress_level) && (
-                    <div className="pt-2 border-t border-slate-100">
-                      <div className="grid grid-cols-2 gap-2 text-xs">
-                        {todayEntry.energy_level && (
-                          <div>
-                            <div className="text-slate-500">Energy</div>
-                            <div className="font-semibold text-slate-800">{todayEntry.energy_level}/10</div>
-                          </div>
-                        )}
-                        {todayEntry.stress_level && (
-                          <div>
-                            <div className="text-slate-500">Stress</div>
-                            <div className="font-semibold text-slate-800">{todayEntry.stress_level}/10</div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Stored Health Score - from DB */}
-                  <div className="pt-3 border-t border-slate-100">
-                    <div className="text-xs text-slate-500">Saved Health Score</div>
-                    <div className={cn('text-2xl font-bold mt-1 p-3 rounded inline-block', getHealthScoreColor(storedScore || 0))}>
-                      {storedScore || 0}
-                    </div>
-                    <div className="text-xs text-slate-400 mt-2">
-                      Last saved: {new Date(todayEntry.updated_at || todayEntry.created_at).toLocaleTimeString()}
-                    </div>
-                  </div>
-
-                  {/* Symptoms & Notes - from DB */}
-                  {(todayEntry.symptoms || todayEntry.notes) && (
-                    <div className="pt-3 border-t border-slate-100">
-                      {todayEntry.symptoms && (
-                        <div className="mb-2">
-                          <div className="text-xs text-slate-500">Symptoms</div>
-                          <div className="text-sm text-slate-700">{todayEntry.symptoms}</div>
-                        </div>
-                      )}
-                      {todayEntry.notes && (
-                        <div>
-                          <div className="text-xs text-slate-500">Notes</div>
-                          <div className="text-sm text-slate-700 line-clamp-3">{todayEntry.notes}</div>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-              ) : (
-                // No entry saved yet - show placeholder
-                <div className="text-center py-8 text-slate-400">
-                  <Activity className="h-12 w-12 mx-auto mb-3 opacity-30" />
-                  <p className="text-sm">No data saved yet</p>
-                  <p className="text-xs mt-1">Fill in the form and click &ldquo;Save Today&rdquo;</p>
-                </div>
-              )}
             </CardContent>
           </Card>
         </div>

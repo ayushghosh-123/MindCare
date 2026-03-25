@@ -274,57 +274,6 @@ export function AdvancedStats({ entries }: AdvancedStatsProps) {
       </Card>
 
       {/* Insights and Recommendations */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Target className="h-5 w-5 text-rose-600" />
-            Personalized Insights
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            {moodTrend > 10 && (
-              <div className="flex items-start gap-3 p-3 bg-green-50 rounded-lg">
-                <TrendingUp className="h-5 w-5 text-green-600 mt-0.5" />
-                <div>
-                  <div className="font-medium text-green-800">Great mood improvement!</div>
-                  <div className="text-sm text-green-700">Your mood has been trending upward. Keep up the great work!</div>
-                </div>
-              </div>
-            )}
-            
-            {avgSleep < 6 && (
-              <div className="flex items-start gap-3 p-3 bg-yellow-50 rounded-lg">
-                <Moon className="h-5 w-5 text-yellow-600 mt-0.5" />
-                <div>
-                  <div className="font-medium text-yellow-800">Sleep needs attention</div>
-                  <div className="text-sm text-yellow-700">Consider improving your sleep routine for better health.</div>
-                </div>
-              </div>
-            )}
-            
-            {totalExercise < 150 && (
-              <div className="flex items-start gap-3 p-3 bg-blue-50 rounded-lg">
-                <Activity className="h-5 w-5 text-blue-600 mt-0.5" />
-                <div>
-                  <div className="font-medium text-blue-800">More activity recommended</div>
-                  <div className="text-sm text-blue-700">Try to increase your daily physical activity for better health.</div>
-                </div>
-              </div>
-            )}
-            
-            {avgWater < 6 && (
-              <div className="flex items-start gap-3 p-3 bg-cyan-50 rounded-lg">
-                <Droplets className="h-5 w-5 text-cyan-600 mt-0.5" />
-                <div>
-                  <div className="font-medium text-cyan-800">Stay hydrated</div>
-                  <div className="text-sm text-cyan-700">Aim for 8 glasses of water daily for optimal health.</div>
-                </div>
-              </div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }

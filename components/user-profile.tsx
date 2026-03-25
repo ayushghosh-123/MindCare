@@ -365,43 +365,6 @@ export function UserProfile({ entries, userProfile: dbUserProfile, onProfileUpda
           </div>
         </CardHeader>
       </Card>
-
-      {/* Health Metrics Overview */}
-      {healthMetrics && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Heart className="h-5 w-5 text-rose-600" />
-              Current Health Status
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="text-center p-4 bg-slate-50 rounded-lg">
-                <Brain className="h-6 w-6 text-blue-600 mx-auto mb-2" />
-                <div className="text-2xl font-bold text-slate-800">{healthMetrics.avgMood}</div>
-                <div className="text-sm text-slate-600">Avg Mood</div>
-              </div>
-              <div className="text-center p-4 bg-slate-50 rounded-lg">
-                <Moon className="h-6 w-6 text-indigo-600 mx-auto mb-2" />
-                <div className="text-2xl font-bold text-slate-800">{healthMetrics.avgSleep}h</div>
-                <div className="text-sm text-slate-600">Avg Sleep</div>
-              </div>
-              <div className="text-center p-4 bg-slate-50 rounded-lg">
-                <Activity className="h-6 w-6 text-green-600 mx-auto mb-2" />
-                <div className="text-2xl font-bold text-slate-800">{healthMetrics.totalExercise}m</div>
-                <div className="text-sm text-slate-600">Total Exercise</div>
-              </div>
-              <div className="text-center p-4 bg-slate-50 rounded-lg">
-                <Droplets className="h-6 w-6 text-cyan-600 mx-auto mb-2" />
-                <div className="text-2xl font-bold text-slate-800">{healthMetrics.avgWater}</div>
-                <div className="text-sm text-slate-600">Avg Water</div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
       {/* Personal Information */}
       <Card>
         <CardHeader>
