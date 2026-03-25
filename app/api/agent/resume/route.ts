@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs/server";
+import { getVerifiedUserId } from "@/lib/auth-bypass";
 import { buildMainGraph } from "@/agents";
 import { z } from "zod";
 import { Command } from "@langchain/langgraph";
@@ -15,7 +15,7 @@ const ResumeSchema = z.object({
 
 export async function POST(req: Request) {
   // ── 1. Auth ───────────────────────────────────────────────────────────────
-  const { userId } = await auth();
+  const userId = await getVerifiedUserId(req);
   if (!userId) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }

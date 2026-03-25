@@ -4,6 +4,7 @@
 // Uses optimistic updates for instant UI feedback.
 
 import { useState, useCallback, useEffect } from "react";
+import { useAuth } from "@clerk/nextjs";
 import { ChatSession } from "@/lib/supabase-chat";
 
 interface UseChatSessionsReturn {
@@ -18,6 +19,7 @@ interface UseChatSessionsReturn {
 }
 
 export function useChatSessions(): UseChatSessionsReturn {
+  const { getToken } = useAuth();
   const [sessions, setSessions] = useState<ChatSession[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -26,7 +28,10 @@ export function useChatSessions(): UseChatSessionsReturn {
   const refreshSessions = useCallback(async () => {
     setIsLoading(true);
     try {
-      const res = await fetch("/api/chat/sessions");
+      const token = await getToken();
+      const res = await fetch("/api/chat/sessions", {
+        headers: { "Authorization": `Bearer ${token}` }
+      });
       if (!res.ok) throw new Error("Failed to load sessions");
       const { sessions: data } = await res.json();
       setSessions(data);
@@ -53,9 +58,14 @@ export function useChatSessions(): UseChatSessionsReturn {
       agentType?: ChatSession["agent_type"]
     ): Promise<ChatSession | null> => {
       try {
+        const token = await getToken();
         const res = await fetch("/api/chat/sessions", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { 
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+          credentials: "include",
           body: JSON.stringify({ name, agentType }),
         });
         if (!res.ok) throw new Error("Failed to create session");
@@ -77,9 +87,13 @@ export function useChatSessions(): UseChatSessionsReturn {
         prev.map((s) => (s.id === sessionId ? { ...s, name } : s))
       );
       try {
+        const token = await getToken();
         const res = await fetch(`/api/chat/sessions/${sessionId}`, {
           method: "PATCH",
-          headers: { "Content-Type": "application/json" },
+          headers: { 
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
           body: JSON.stringify({ name }),
         });
         if (!res.ok) throw new Error("Rename failed");
@@ -96,8 +110,10 @@ export function useChatSessions(): UseChatSessionsReturn {
     async (sessionId: string) => {
       setSessions((prev) => prev.filter((s) => s.id !== sessionId));
       try {
+        const token = await getToken();
         const res = await fetch(`/api/chat/sessions/${sessionId}`, {
           method: "DELETE",
+          headers: { "Authorization": `Bearer ${token}` }
         });
         if (!res.ok) throw new Error("Delete failed");
       } catch (err) {
@@ -112,8 +128,10 @@ export function useChatSessions(): UseChatSessionsReturn {
   const searchSessions = useCallback(async (query: string) => {
     setIsLoading(true);
     try {
+      const token = await getToken();
       const res = await fetch(
-        `/api/chat/sessions/search?q=${encodeURIComponent(query)}`
+        `/api/chat/sessions/search?q=${encodeURIComponent(query)}`,
+        { headers: { "Authorization": `Bearer ${token}` } }
       );
       if (!res.ok) throw new Error("Search failed");
       const { sessions: data } = await res.json();

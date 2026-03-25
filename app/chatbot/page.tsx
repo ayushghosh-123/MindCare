@@ -10,6 +10,7 @@ import { Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ChatSession } from '@/lib/supabase-chat';
 import { MainNavbar } from '@/components/main-navbar';
+import { useToast } from '@/components/hooks/use-toast';
 
 export default function ChatbotPage() {
   const { user, isLoaded } = useUser();
@@ -21,6 +22,7 @@ export default function ChatbotPage() {
     messages,
     isLoading,
     isSending,
+    error,
     agent,
     loadSession,
     startNewSession,
@@ -28,6 +30,17 @@ export default function ChatbotPage() {
   } = useChat();
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const { toast } = useToast();
+
+  useEffect(() => {
+    if (error) {
+      toast({
+        title: 'Error',
+        description: error,
+      });
+    }
+  }, [error, toast]);
 
   if (!isLoaded) {
     return (

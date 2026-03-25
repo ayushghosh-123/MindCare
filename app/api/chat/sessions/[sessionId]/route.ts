@@ -3,7 +3,7 @@
 // PATCH  → rename session
 // DELETE → soft delete session
 
-import { auth } from "@clerk/nextjs/server";
+import { getVerifiedUserId } from "@/lib/auth-bypass";
 import { chatSessionHelpers } from "@/lib/supabase-chat";
 import { z } from "zod";
 
@@ -17,7 +17,7 @@ export async function GET(
   { params }: { params: Promise<{ sessionId: string }> }
 ) {
   const { sessionId } = await params;
-  const { userId } = await auth();
+  const userId = await getVerifiedUserId(_req);
   if (!userId) return Response.json({ error: "Unauthorized" }, { status: 401 });
 
   const data = await chatSessionHelpers.getSessionWithMessages(sessionId);
@@ -37,7 +37,7 @@ export async function PATCH(
   { params }: { params: Promise<{ sessionId: string }> }
 ) {
   const { sessionId } = await params;
-  const { userId } = await auth();
+  const userId = await getVerifiedUserId(req);
   if (!userId) return Response.json({ error: "Unauthorized" }, { status: 401 });
 
   let body: unknown;
@@ -69,7 +69,7 @@ export async function DELETE(
   { params }: { params: Promise<{ sessionId: string }> }
 ) {
   const { sessionId } = await params;
-  const { userId } = await auth();
+  const userId = await getVerifiedUserId(_req);
   if (!userId) return Response.json({ error: "Unauthorized" }, { status: 401 });
 
   const session = await chatSessionHelpers.getSession(sessionId);

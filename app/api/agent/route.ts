@@ -5,21 +5,25 @@
 //
 // export const maxDuration = 60  → required for Vercel (agents take 10-30s)
 
-import { auth } from "@clerk/nextjs/server";
+import { getVerifiedUserId } from "@/lib/auth-bypass";
+import { NextRequest } from "next/server";
 import { buildMainGraph } from "@/agents";
 import { AgentRequestSchema } from "@/agents/schemas/JournalSchema";
 import { AgentState } from "@/agents/types/state";
 import type { HumanReviewPayload } from "@/agents/nodes/evaluateAgent";
 
 export const maxDuration = 60; // seconds — required for Vercel Pro
+export const dynamic = 'force-dynamic';
 
 // Singleton — compiled once, reused across all requests
 const graph = buildMainGraph();
 
-export async function POST(req: Request) {
-  // ── 1. Auth via Clerk ─────────────────────────────────────────────────────
-  const { userId } = await auth();
+export async function POST(req: NextRequest) {
+  // ── 1. Auth via Central Bypass ──────────────────────────────────────────────
+  const userId = await getVerifiedUserId(req);
+  
   if (!userId) {
+    console.error("[POST /api/agent] Unauthorized. Token invalid or missing.");
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 

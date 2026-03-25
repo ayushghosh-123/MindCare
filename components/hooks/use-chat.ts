@@ -1,5 +1,6 @@
 import { Chat } from './../../lib/supabase';
 import { useState, useCallback, useEffect, useRef } from "react";
+import { useAuth } from "@clerk/nextjs";
 import { ChatSession, SessionWithMessages } from "@/lib/supabase-chat";
 import { useAgent } from "./use-agent";
 
@@ -16,6 +17,7 @@ interface UseChatReturn {
 }
 
 export function useChat(): UseChatReturn {
+  const { getToken } = useAuth();
   const [activeSession, setActiveSession] = useState<ChatSession | null>(null);
   const [messages, setMessages] = useState<Chat[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -29,7 +31,10 @@ export function useChat(): UseChatReturn {
       setIsLoading(true);
       setError(null);
       try {
-        const res = await fetch(`/api/chat/sessions/${sessionId}`);
+        const token = await getToken();
+        const res = await fetch(`/api/chat/sessions/${sessionId}`, {
+          headers: { "Authorization": `Bearer ${token}` }
+        });
         if (!res.ok) throw new Error("Failed to load session");
 
         const { session }: { session: SessionWithMessages } = await res.json();
@@ -69,9 +74,14 @@ export function useChat(): UseChatReturn {
       // Auto-create session if none is active
       if (!currentSession) {
         try {
+          const token = await getToken();
           const res = await fetch("/api/chat/sessions", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { 
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`
+            },
+            credentials: "include",
             body: JSON.stringify({ name: text.slice(0, 30) + (text.length > 30 ? "..." : ""), agentType: "chat" }),
           });
           if (!res.ok) throw new Error("Failed to create session");
@@ -112,7 +122,10 @@ export function useChat(): UseChatReturn {
 
         // After agent completes, reload messages from DB to get AI response
         if (agent.status !== "interrupted") {
-          const res = await fetch(`/api/chat/sessions/${currentSession.id}`);
+          const token = await getToken();
+          const res = await fetch(`/api/chat/sessions/${currentSession.id}`, {
+            headers: { "Authorization": `Bearer ${token}` }
+          });
           const { session }: { session: SessionWithMessages } = await res.json();
           setMessages(session.messages);
           setActiveSession((prev) =>
@@ -144,7 +157,10 @@ export function useChat(): UseChatReturn {
     if (agent.status === "complete" && activeSession && lastProcessedRef.current !== processKey) {
       const reload = async () => {
         lastProcessedRef.current = processKey;
-        const res = await fetch(`/api/chat/sessions/${activeSession.id}`);
+        const token = await getToken();
+        const res = await fetch(`/api/chat/sessions/${activeSession.id}`, {
+          headers: { "Authorization": `Bearer ${token}` }
+        });
         if (res.ok) {
            const { session }: { session: SessionWithMessages } = await res.json();
            setMessages(session.messages);

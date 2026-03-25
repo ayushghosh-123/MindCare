@@ -8,6 +8,7 @@
 //        → error (any step)
 
 import { useState, useCallback } from "react";
+import { useAuth } from "@clerk/nextjs";
 import { AgentRequest } from "@/agents/schemas/JournalSchema";
 import type { HumanReviewPayload } from "@/agents/nodes/evaluateAgent";
 
@@ -51,6 +52,7 @@ interface UseAgentReturn {
 // ── Hook ──────────────────────────────────────────────────────────────────────
 
 export function useAgent(): UseAgentReturn {
+  const { getToken } = useAuth();
   const [status, setStatus] = useState<AgentStatus>("idle");
   const [result, setResult] = useState<AgentCompleteResponse | null>(null);
   const [reviewPayload, setReviewPayload] = useState<HumanReviewPayload | null>(null);
@@ -66,9 +68,14 @@ export function useAgent(): UseAgentReturn {
     setThreadId(null);
 
     try {
+      const token = await getToken();
       const res = await fetch("/api/agent", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        credentials: "include",
         body: JSON.stringify(request),
       });
 
@@ -101,9 +108,14 @@ export function useAgent(): UseAgentReturn {
       setStatus("resuming");
 
       try {
+        const token = await getToken();
         const res = await fetch("/api/agent/resume", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { 
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+          credentials: "include",
           body: JSON.stringify({ threadId, humanApproved, editedResponse }),
         });
 

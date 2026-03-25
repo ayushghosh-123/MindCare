@@ -15,16 +15,17 @@ const isPublicRoute = createRouteMatcher([
 ]);
 
 export default clerkMiddleware(async (auth, req) => {
-  const { userId } = await auth();
-
   // 1️⃣ Protect authenticated pages
-  if (isProtectedRoute(req) && !userId) {
-    return NextResponse.redirect(new URL('/sign-in', req.url));
+  if (isProtectedRoute(req)) {
+    await auth.protect();
   }
 
   // 2️⃣ Prevent logged-in users from visiting auth pages
-  if (isPublicRoute(req) && userId && req.nextUrl.pathname !== '/') {
-    return NextResponse.redirect(new URL('/', req.url));
+  if (isPublicRoute(req) && req.nextUrl.pathname !== '/') {
+    const { userId } = await auth();
+    if (userId) {
+      return NextResponse.redirect(new URL('/', req.url));
+    }
   }
 
   // 3️⃣ Continue normally
