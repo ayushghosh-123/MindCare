@@ -25,6 +25,9 @@ export async function fetchHealthEntries(userId: string, limit = 14) {
 export async function saveChatMessage(
   userId: string, sessionId: string, message: string, isUserMessage: boolean
 ) {
+  // Ensure user exists before saving (handles race condition with Clerk webhook)
+  await dbHelpers.createUser({ id: userId });
+
   const { error } = await supabaseAdmin
     .from('chats')
     .insert([{

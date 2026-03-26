@@ -1,14 +1,3 @@
-// app/api/webhooks/clerk/route.ts
-// Clerk fires this webhook when a user signs up or updates their account.
-// It syncs their email + profile to your Supabase users table.
-// The agent then reads user.email from there to send the wellness email.
-//
-// SETUP:
-// 1. npm install svix
-// 2. Go to clerk.com → Webhooks → Add Endpoint
-//    URL: https://your-domain.com/api/webhooks/clerk
-//    Events: user.created, user.updated
-// 3. Copy the Signing Secret → add to .env.local as CLERK_WEBHOOK_SECRET
 
 import { Webhook } from "svix";
 import { headers } from "next/headers";
@@ -74,6 +63,21 @@ export async function POST(req: Request) {
       full_name: fullName ?? undefined,
       username: username ?? undefined,
       avatar_url: image_url ?? undefined,
+    });
+
+    // Also initialize a default profile for the user
+    // This ensures RLS-safe initialization happens with admin privileges on the server
+    await dbHelpers.createUserProfile({
+      user_id: id,
+      age: undefined,
+      height: undefined,
+      weight: undefined,
+      health_goals: [],
+      medical_conditions: [],
+      medications: [],
+      emergency_contact: '',
+      doctor_info: '',
+      additional_notes: ''
     });
 
     console.log(

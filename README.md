@@ -238,8 +238,27 @@ MindCare uses LangGraph to build a **stateful AI agent** capable of multi-step r
 - Basic nutrition tracking  
 
 ---
-
-## 🚀 Getting Started
+ 
+ ## 📬 Email Delivery & Human-in-the-Loop (HITL)
+ 
+ MindCare implements a **Human-in-the-Loop** safety mechanism for all AI-generated wellness insights and reports.
+ 
+ ### 🔄 Workflow
+ 1. **Generation** → The AI agent (Journaling or Report) drafts a response based on user data.
+ 2. **Evaluation** → The `evaluate_agent` node reviews the response for safety and empathy, then generates a structured review payload.
+ 3. **Approval** → The user receives the review card in the UI and can **Approve**, **Edit**, or **Reject** the draft.
+ 4. **Dispatch** → Once approved, the `email_agent` sends the final text to the user's primary email address via Gmail SMTP.
+ 
+ ### ⚙️ Configuration
+ To enable email delivery, ensure the following keys are set in your `.env.local`:
+ - `GMAIL_USER` — Your Gmail address.
+ - `GMAIL_APP_PASSWORD` — A 16-character App Password from Google Account settings.
+ - `EMAIL_FROM` — The display name and email (e.g., `MindCare <your-email@gmail.com>`).
+ - `MAIN_REPORT_EMAIL` — (Optional) A primary administrative address to receive copies of all reports.
+ 
+ ---
+ 
+ ## 🚀 Getting Started
 
 ### 1. Clone Repository
 

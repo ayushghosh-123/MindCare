@@ -10,6 +10,7 @@ import { Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ChatSession } from '@/lib/supabase-chat';
 import { MainNavbar } from '@/components/main-navbar';
+import { dbHelpers } from '@/lib/supabase';
 import { useToast } from '@/components/hooks/use-toast';
 
 export default function ChatbotPage() {
@@ -41,6 +42,19 @@ export default function ChatbotPage() {
       });
     }
   }, [error, toast]);
+
+  // Ensure user is synced to Supabase when they visit Chat
+  useEffect(() => {
+    if (isLoaded && user) {
+      dbHelpers.createUser({
+        id: user.id,
+        email: user.emailAddresses[0]?.emailAddress || '',
+        full_name: user.fullName || '',
+        username: user.username || user.firstName || '',
+        avatar_url: user.imageUrl
+      }).catch(err => console.error('Failed to sync user in chat:', err));
+    }
+  }, [isLoaded, user]);
 
   if (!isLoaded) {
     return (

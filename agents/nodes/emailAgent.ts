@@ -32,25 +32,40 @@ export async function emailAgentNode(
   // Default to a safe sentiment if missing (e.g. for data/report modes)
   const finalSentiment = state.sentiment || "positive";
 
+  // ── Step 1: Resolve Email Address ─────────────────────────────────────────
+  // Prioritize the email already in state (resolved during HITL approval)
+  let recipientEmail = state.email;
+  let userName = "there";
+
   try {
-    // Fetch the user's email from your Supabase users table.
-    // This was synced from Clerk via the webhook at app/api/webhooks/clerk/route.ts
-    // when the user first signed up or updated their account.
-    const { data: user } = await dbHelpers.getUser(state.userId);
-    if (!user?.email) {
-      console.warn(`[emailAgent] User ${state.userId} NOT found in Supabase (cannot send email)`);
+    // If state.email is missing, fallback to Supabase lookup (shouldn't happen for approved reports)
+    if (!recipientEmail) {
+      console.log(`[emailAgent] state.email missing, fetching from Supabase for user: ${state.userId}`);
+      const { data: user } = await dbHelpers.getUser(state.userId);
+      recipientEmail = user?.email || null;
+      userName = user?.full_name || "there";
+    } else {
+      // If we have state.email, we should still try to get the user's name for a nice greeting
+      const { data: user } = await dbHelpers.getUser(state.userId);
+      userName = user?.full_name || "there";
+    }
+
+    if (!recipientEmail) {
+      console.warn(`[emailAgent] NO RECIPIENT EMAIL FOUND for user ${state.userId}. Cannot send.`);
       return { emailSent: false };
     }
 
+    // ── Step 2: Save to Chat History ──────────────────────────────────────────
     if (state.sessionId && state.response) {
        await saveChatMessage(state.userId, state.sessionId, state.response, false);
     }
 
-    console.log(`[emailAgent] Sending wellness email to: ${user.email}`);
+    // ── Step 3: Send the Email ────────────────────────────────────────────────
+    console.log(`[emailAgent] Sending report to: ${recipientEmail}`);
     
     const sent = await sendWellnessSummaryEmail({
-      to: user.email,
-      userName: user.full_name || "there",
+      to: recipientEmail,
+      userName: userName,
       response: state.response,
       sentiment: finalSentiment as SentimentType,
       journalDate: new Date().toLocaleDateString("en-GB", {
@@ -61,10 +76,13 @@ export async function emailAgentNode(
       }),
     });
 
-    console.log(`[emailAgent] Email tool returned: ${sent}`);
-    return { emailSent: sent, email: user.email };
+    // Optional: If a "main address" is defined in env, you could CC it here or send separately.
+    // For now, we ensure the primary email works.
+
+    console.log(`[emailAgent] Delivery result: ${sent ? "Success" : "Failed"}`);
+    return { emailSent: sent, email: recipientEmail };
   } catch (err: any) {
-    console.error("[emailAgent] CRITICAL ERROR:", err.message);
+    console.error("[emailAgent] CRITICAL ERROR during email delivery:", err.message);
     return { emailSent: false, error: err.message };
   }
 }

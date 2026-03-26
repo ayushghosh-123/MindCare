@@ -31,7 +31,7 @@ export default function Home() {
     try {
       setLoading(true);
 
-      // Create or get user in our database (ignore errors for existing users)
+      // 1. Ensure user exists in our database (Robust sync)
       const userResult = await dbHelpers.createUser({
         id: user.id,
         email: user.emailAddresses[0]?.emailAddress || '',
@@ -40,64 +40,19 @@ export default function Home() {
         avatar_url: user.imageUrl
       });
 
-      // Only log actual errors (not 409 conflicts which are handled gracefully)
       if (userResult.error) {
-        // Narrow the error type safely to check properties
-        const err = userResult.error as { code?: string; message?: string } | undefined;
-
-        const isConflict =
-          err?.code === '23505' ||
-          err?.message?.includes('409') ||
-          err?.message?.includes('Conflict') ||
-          err?.message?.includes('duplicate');
-
-        if (!isConflict) {
-          console.warn('User creation error:', userResult.error);
-        }
-        // Continue anyway - user might already exist or conflict is handled
+        console.warn('User initialization warning:', userResult.error);
       }
 
-      // Create user profile if it doesn't exist (automatic after sign-in)
-      try {
-        const { error: profileError } = await dbHelpers.getUserProfile(user.id);
-
-        // If profile doesn't exist, create a default one
-        if (profileError && profileError.code === 'PGRST116') {
-          const defaultProfileData = {
-            user_id: user.id,
-            age: undefined,
-            height: undefined,
-            weight: undefined,
-            health_goals: [],
-            medical_conditions: [],
-            medications: [],
-            emergency_contact: '',
-            doctor_info: '',
-            additional_notes: ''
-          };
-
-          const { error: createProfileError } = await dbHelpers.createUserProfile(defaultProfileData);
-
-          if (createProfileError) {
-            console.log('Profile creation skipped (may already exist):', createProfileError);
-          } else {
-            console.log('User profile created successfully');
-          }
-        }
-      } catch (profileErr) {
-        // Silently ignore profile creation errors - profile will be created when user visits profile page
-        console.log('Profile initialization:', profileErr);
-      }
-
-      // Load health entries
+      // 2. Refresh health entries (Webhook handles profile initialization)
       await loadEntries();
 
     } catch (err) {
-      console.error('Initialize user error:', err);
+      console.error('Dashboard initialization error:', err);
       toast({
-        title: 'Warning',
-        description: 'Some features may not work properly. Please refresh the page.',
-        variant: 'error'
+        title: 'Notice',
+        description: 'Some data could not be loaded. Please refresh if issues persist.',
+        variant: 'default'
       });
     } finally {
       setLoading(false);

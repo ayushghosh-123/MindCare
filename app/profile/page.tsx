@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { UserProfile as UserProfileComponent } from '@/components/user-profile';
-// import { SupabaseConnectionTest } from '@/components/supabase-connection-test';
 import { dbHelpers, type HealthEntry, type UserProfile } from '@/lib/supabase';
 import { useToast } from '@/components/hooks/use-toast';
 import { MainNavbar } from '@/components/main-navbar';
@@ -28,102 +27,62 @@ export default function ProfilePage() {
     if (!user?.id) return;
     try {
       setLoading(true);
-      dbHelpers.createUser({
+      
+      // 1. Ensure user exists in our database (Robust sync)
+      const userResult = await dbHelpers.createUser({
         id: user.id,
         email: user.emailAddresses[0]?.emailAddress || '',
         full_name: user.fullName || '',
         username: user.username || user.firstName || '',
         avatar_url: user.imageUrl
-      }).catch(() => {
-        // Silently ignore - user might already exist (409 is expected and handled in createUser)
-        // This prevents the error from blocking the page load
       });
 
-      // Load health entries
+      if (userResult.error) {
+        console.warn('User synchronization warning:', userResult.error);
+        // Continue anyway as the user may exist even if sync returns an error
+      }
+
+      // 2. Load health entries
       const { data: entriesData, error: entriesError } = await dbHelpers.getUserHealthEntries(user.id);
       if (entriesError) {
-        console.log('Error loading health entries:', entriesError);
-        // Don't throw - continue loading profile even if entries fail
+        console.error('Error loading health entries:', entriesError);
         setEntries([]);
       } else {
         setEntries(entriesData || []);
       }
 
-      // Load user profile from database
+      // 3. Load user profile
       const { data: profileData, error: profileError } = await dbHelpers.getUserProfile(user.id);
 
-      // If profile doesn't exist (PGRST116 = no rows returned), create a default one
-      if (profileError && profileError.code === 'PGRST116') {
-        // Profile doesn't exist - create a default one
-        const defaultProfileData = {
-          user_id: user.id,
-          age: 0,
-          height: 0,
-          weight: 0,
-          health_goals: [],
-          medical_conditions: [],
-          medications: [],
-          emergency_contact: '',
-          doctor_info: '',
-          additional_notes: ''
-        };
-
-        const { data: newProfile, error: createError } = await dbHelpers.createUserProfile(defaultProfileData);
-
-        if (createError) {
-          console.error('Failed to create profile:', createError);
-          toast({
-            title: 'Warning',
-            description: 'Profile created but some data may not be saved. Please try editing your profile.',
-            variant: 'default'
-          });
-        } else if (newProfile) {
-          setUserProfile(newProfile);
-          toast({
-            title: 'Profile Created',
-            description: 'Your profile has been created. You can now edit it to add your information.',
-            variant: 'default'
-          });
-        } else {
-          // Profile creation succeeded but no data returned - reload to get it
-          const { data: reloadedProfile, error: reloadError } = await dbHelpers.getUserProfile(user.id);
-          if (reloadedProfile) {
-            setUserProfile(reloadedProfile);
-          } else if (reloadError) {
-            console.error('Failed to reload profile after creation:', reloadError);
-          }
-        }
-      } else if (profileError) {
-        // Other error (not "not found")
-        console.log('Profile load error:', profileError);
+      if (profileError) {
+        console.error('Profile access error:', profileError);
         toast({
-          title: 'Error',
-          description: 'Failed to load profile. Please try refreshing the page.',
-          variant: 'error'
+          title: 'Syncing Profile',
+          description: 'Your profile is being synchronized. Please wait a moment...',
+          variant: 'default'
         });
-      } else if (profileData) {
-        // Profile exists, use it
+      }
+
+      if (profileData) {
+        console.log('Profile loaded successfully.');
         setUserProfile(profileData);
+      } else {
+        // If not found yet, wait 2 seconds and try one more time (webhook might be in flight)
+        console.log('Profile not found yet, retrying in 2 seconds...');
+        setTimeout(async () => {
+          const { data: retryData } = await dbHelpers.getUserProfile(user.id);
+          if (retryData) {
+            setUserProfile(retryData);
+          } else {
+            toast({
+              title: 'Completing Setup',
+              description: 'Initial account setup is wrapping up. Please refresh the page in a moment.',
+            });
+          }
+        }, 2500);
       }
-    } catch (err: unknown) {
-      console.error('Load error:', err);
-      // Don't show error toast for 409 conflicts - they're handled gracefully
-      const errorObj = err as { status?: number; statusCode?: number; code?: string; message?: string } | null;
-      const isConflictError =
-        errorObj?.status === 409 ||
-        errorObj?.statusCode === 409 ||
-        errorObj?.code === '23505' ||
-        errorObj?.message?.includes('409') ||
-        errorObj?.message?.includes('Conflict') ||
-        errorObj?.message?.includes('duplicate');
-
-      if (!isConflictError) {
-        toast({
-          title: 'Error',
-          description: 'Failed to load profile data. Please try refreshing the page.',
-          variant: 'error'
-        });
-      }
+    } catch (err: any) {
+      console.error('Initialization exception:', err);
     } finally {
       setLoading(false);
     }

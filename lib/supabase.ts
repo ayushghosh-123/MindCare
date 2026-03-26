@@ -108,80 +108,31 @@ export const dbHelpers = {
   // User management
   async createUser(userData: Partial<User>) {
     try {
-      const { data, error } = await supabase
+      // 1. Safe existence check via maybeSingle to avoid 406 errors
+      if (userData.id) {
+        const { data: existing, error: fetchError } = await supabase
+          .from('users')
+          .select('*')
+          .eq('id', userData.id)
+          .maybeSingle(); // Returns null instead of 406 if not found
+        
+        if (existing) return { data: existing, error: null };
+        if (fetchError) console.error("[dbHelpers.createUser] Fetch error:", fetchError);
+      }
+
+      // 2. Perform the upsert (best on server-side via supabaseAdmin)
+      // We provide a fallback email to satisfy NOT NULL constraints until the Clerk webhook syncs real data.
+      const { data, error } = await supabaseAdmin
         .from('users')
-        .insert([userData])
+        .upsert({
+          email: `sync_${userData.id?.slice(-8)}@mindcare.placeholder`, // Fallback email
+          ...userData
+        }, { onConflict: 'id' })
         .select()
-        .single();
+        .maybeSingle();
       
-      // Handle duplicate user (409 Conflict or 23505 unique violation)
-      // Both indicate the user already exists, which is fine
-      if (error) {
-        const isDuplicateError = 
-          error.code === '23505' || // PostgreSQL unique violation
-          error.code === 'PGRST116' || // PostgREST no rows returned (sometimes used for conflicts)
-          error.message?.includes('duplicate') ||
-          error.message?.includes('already exists') ||
-          error.message?.includes('unique constraint');
-        
-        if (isDuplicateError) {
-          // User already exists - try to get the existing user
-          if (userData.id) {
-            const { data: existingUser } = await supabase
-              .from('users')
-              .select('*')
-              .eq('id', userData.id)
-              .single();
-            
-            if (existingUser) {
-              return { data: existingUser, error: null };
-            }
-          }
-          // If we can't get the user, return success anyway (user exists)
-          return { data: null, error: null };
-        }
-        
-        // For other errors, return the error
-        throw error;
-      }
-      
-      return { data, error: null };
-    } catch (err: unknown) {
-      // Check if it's a 409 HTTP status (Conflict) or related error
-      const errorObj = err as { status?: number; statusCode?: number; code?: string; message?: string } | null;
-      const isConflictError = 
-        errorObj?.status === 409 || 
-        errorObj?.statusCode === 409 ||
-        errorObj?.code === '23505' ||
-        errorObj?.code === 'PGRST116' ||
-        errorObj?.message?.includes('409') ||
-        errorObj?.message?.includes('Conflict') ||
-        errorObj?.message?.includes('duplicate') ||
-        errorObj?.message?.includes('already exists') ||
-        errorObj?.message?.includes('unique constraint');
-      
-      if (isConflictError) {
-        // User already exists - try to get the existing user
-        if (userData.id) {
-          try {
-            const { data: existingUser } = await supabase
-              .from('users')
-              .select('*')
-              .eq('id', userData.id)
-              .single();
-            
-            if (existingUser) {
-              return { data: existingUser, error: null };
-            }
-          } catch (getError) {
-            // Ignore get error, user exists but we can't fetch it
-            console.log('User already exists, but could not fetch:', getError);
-          }
-        }
-        // User exists, return success (no error)
-        return { data: null, error: null };
-      }
-      
+      return { data, error };
+    } catch (err) {
       return { data: null, error: err };
     }
   },
@@ -191,7 +142,7 @@ export const dbHelpers = {
       .from('users')
       .select('*')
       .eq('id', userId)
-      .single();
+      .maybeSingle(); // Safe check
     return { data, error };
   },
 
@@ -319,12 +270,22 @@ export const dbHelpers = {
 
   // User profiles
   async createUserProfile(profileData: Partial<UserProfile>) {
-    const { data, error } = await supabase
-      .from('user_profiles')
-      .insert([profileData])
-      .select()
-      .single();
-    return { data, error };
+    try {
+      // 1. Check if profile already exists to avoid 409/conflict errors
+      const { data: existing } = await this.getUserProfile(profileData.user_id!);
+      if (existing) return { data: existing, error: null };
+
+      // 2. Not found, safe to insert using admin privileges
+      const { data, error } = await supabaseAdmin
+        .from('user_profiles')
+        .insert([profileData])
+        .select()
+        .maybeSingle();
+
+      return { data, error };
+    } catch (err) {
+      return { data: null, error: err };
+    }
   },
 
   async getUserProfile(userId: string) {
@@ -332,7 +293,7 @@ export const dbHelpers = {
       .from('user_profiles')
       .select('*')
       .eq('user_id', userId)
-      .single();
+      .maybeSingle(); // Avoids 406 Not Acceptable
     return { data, error };
   },
 

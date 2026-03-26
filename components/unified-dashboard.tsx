@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { dbHelpers, type HealthEntry } from '@/lib/supabase';
 import { useToast } from '@/components/hooks/use-toast';
 import type { ChangeEvent } from 'react';
+import { calculateHealthScore } from '@/lib/health-calculators';
 
 interface UnifiedDashboardTodayProps {
   userId: string;
@@ -115,26 +116,12 @@ export function UnifiedDashboardToday({ userId, className }: UnifiedDashboardTod
   }) => {
     const sourceData = data || form;
 
-    const moodMap: Record<string, number> = {
-      excellent: 5,
-      good: 4,
-      neutral: 3,
-      poor: 2,
-      terrible: 1
-    };
-
-    const moodVal = moodMap[String(sourceData.mood || '')] ?? 3;
-    const sleepVal = parseFloat(String(sourceData.sleep_hours || '0'));
-    const exerciseVal = parseFloat(String(sourceData.exercise_minutes || '0'));
-    const waterVal = parseFloat(String(sourceData.water_intake || '0'));
-
-    const partMood = (moodVal / 5) * 30;
-    const partSleep = Math.min(sleepVal / 8, 1) * 25;
-    const partExercise = Math.min(exerciseVal / 120, 1) * 25;
-    const partWater = Math.min(waterVal / 8, 1) * 20;
-
-    const rawScore = partMood + partSleep + partExercise + partWater;
-    return Math.round(rawScore);
+    return calculateHealthScore({
+      mood: String(sourceData.mood || ''),
+      sleep_hours: parseFloat(String(sourceData.sleep_hours || '0')),
+      exercise_minutes: parseFloat(String(sourceData.exercise_minutes || '0')),
+      water_intake: parseFloat(String(sourceData.water_intake || '0'))
+    });
   };
 
   // Color helper for health score badge

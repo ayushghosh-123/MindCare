@@ -12,70 +12,12 @@ import { User, Edit, Save, X, Heart, Target, Calendar, Activity, Moon, Brain, Dr
 import { useUser } from '@clerk/nextjs';
 import { dbHelpers, type HealthEntry, type UserProfile as UserProfileType } from '@/lib/supabase';
 import { useToast } from '@/components/hooks/use-toast';
+import { calculateDayStreak, calculateAggregateStats } from '@/lib/health-calculators';
 
 interface UserProfileProps {
   entries: HealthEntry[];
   userProfile?: UserProfileType | null;
   onProfileUpdate?: () => void;
-}
-
-// Helper function to calculate day streak
-export function calculateDayStreak(entries: HealthEntry[]): number {
-  if (entries.length === 0) return 0;
-
-  // Get unique dates (one entry per day) and sort by date (most recent first)
-  const uniqueDates = new Set<string>();
-  const dateEntries: Date[] = [];
-
-  for (const entry of entries) {
-    const entryDate = new Date(entry.entry_date);
-    entryDate.setHours(0, 0, 0, 0);
-    const dateKey = entryDate.toISOString().split('T')[0];
-
-    if (!uniqueDates.has(dateKey)) {
-      uniqueDates.add(dateKey);
-      dateEntries.push(entryDate);
-    }
-  }
-
-  // Sort by date descending (most recent first)
-  dateEntries.sort((a, b) => b.getTime() - a.getTime());
-
-  if (dateEntries.length === 0) return 0;
-
-  // Calculate streak from most recent entry backwards
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  // Check if the most recent entry is today or yesterday
-  const mostRecentDate = dateEntries[0];
-  const daysDiff = Math.floor((today.getTime() - mostRecentDate.getTime()) / (1000 * 60 * 60 * 24));
-
-  // If the most recent entry is more than 1 day ago, streak is broken
-  if (daysDiff > 1) return 0;
-
-  // Start counting from the most recent entry date
-  let streak = 0;
-  const checkDate = new Date(mostRecentDate);
-
-  // Count consecutive days backwards from the most recent entry
-  for (const entryDate of dateEntries) {
-    const entryDateNormalized = new Date(entryDate);
-    entryDateNormalized.setHours(0, 0, 0, 0);
-
-    const checkDateNormalized = new Date(checkDate);
-    checkDateNormalized.setHours(0, 0, 0, 0);
-
-    if (entryDateNormalized.getTime() === checkDateNormalized.getTime()) {
-      streak++;
-      checkDate.setDate(checkDate.getDate() - 1);
-    } else {
-      // If dates don't match, streak is broken
-      break;
-    }
-  }
-
-  return streak;
 }
 
 interface UserHealthProfile {
@@ -166,19 +108,13 @@ export function UserProfile({ entries, userProfile: dbUserProfile, onProfileUpda
     if (entries.length === 0) return null;
 
     const last30Days = entries.slice(0, 30);
-    const moodValues = { excellent: 5, good: 4, neutral: 3, poor: 2, terrible: 1 };
-    const avgMood = last30Days.reduce((sum, entry) =>
-      sum + (moodValues[entry.mood as keyof typeof moodValues] || 3), 0) / last30Days.length;
-
-    const avgSleep = last30Days.reduce((sum, entry) => sum + entry.sleep_hours, 0) / last30Days.length;
-    const totalExercise = last30Days.reduce((sum, entry) => sum + entry.exercise_minutes, 0);
-    const avgWater = last30Days.reduce((sum, entry) => sum + entry.water_intake, 0) / last30Days.length;
+    const stats = calculateAggregateStats(last30Days);
 
     return {
-      avgMood: avgMood.toFixed(1),
-      avgSleep: avgSleep.toFixed(1),
-      totalExercise,
-      avgWater: avgWater.toFixed(1),
+      avgMood: stats.avgMood.toFixed(1),
+      avgSleep: stats.avgSleep.toFixed(1),
+      totalExercise: last30Days.reduce((sum, e) => sum + (e.exercise_minutes || 0), 0),
+      avgWater: stats.avgWater.toFixed(1),
       totalEntries: entries.length,
       streak: calculateStreak()
     };

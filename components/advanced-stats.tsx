@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { TrendingUp, TrendingDown, Activity, Moon, Droplets, Brain, Heart, Calendar, BarChart3, Target, Flame} from 'lucide-react';
 import type { HealthEntry } from '@/lib/supabase';
-import { calculateDayStreak } from '@/components/user-profile';
+import { calculateDayStreak, calculateAggregateStats, calculateTrend } from '@/lib/health-calculators';
 
 interface AdvancedStatsProps {
   entries: HealthEntry[];
@@ -28,44 +28,27 @@ export function AdvancedStats({ entries }: AdvancedStatsProps) {
   // Calculate day streak
   const dayStreak = calculateDayStreak(entries);
 
+  // Use aggregate stats for last 30 days
+  const stats = calculateAggregateStats(last30Days);
+  const { avgMood, avgSleep, avgExercise, avgWater, healthScore } = stats;
+
   // Calculate trends
-  const calculateTrend = (values: number[]) => {
-    if (values.length < 2) return 0;
-    const firstHalf = values.slice(0, Math.floor(values.length / 2));
-    const secondHalf = values.slice(Math.floor(values.length / 2));
-    const firstAvg = firstHalf.reduce((a, b) => a + b, 0) / firstHalf.length;
-    const secondAvg = secondHalf.reduce((a, b) => a + b, 0) / secondHalf.length;
-    return ((secondAvg - firstAvg) / firstAvg) * 100;
-  };
-
-  // Mood analysis
-  const moodValues = { excellent: 5, good: 4, neutral: 3, poor: 2, terrible: 1 };
-  const moodScores = last30Days.map(entry => moodValues[entry.mood as keyof typeof moodValues] || 3);
+  const moodScores = last30Days.map(entry => {
+    const moodMap: Record<string, number> = {
+      excellent: 5, good: 4, neutral: 3, poor: 2, terrible: 1
+    };
+    return moodMap[entry.mood as keyof typeof moodMap] || 3;
+  });
   const moodTrend = calculateTrend(moodScores);
-  const avgMood = moodScores.reduce((a, b) => a + b, 0) / moodScores.length;
 
-  // Sleep analysis
   const sleepHours = last30Days.map(entry => entry.sleep_hours);
   const sleepTrend = calculateTrend(sleepHours);
-  const avgSleep = sleepHours.reduce((a, b) => a + b, 0) / sleepHours.length;
 
-  // Exercise analysis
   const exerciseMinutes = last30Days.map(entry => entry.exercise_minutes);
   const exerciseTrend = calculateTrend(exerciseMinutes);
-  const totalExercise = exerciseMinutes.reduce((a, b) => a + b, 0);
 
-  // Water intake analysis
   const waterIntake = last30Days.map(entry => entry.water_intake);
   const waterTrend = calculateTrend(waterIntake);
-  const avgWater = waterIntake.reduce((a, b) => a + b, 0) / waterIntake.length;
-
-  // Health score calculation
-  const healthScore = Math.round(
-    (avgMood / 5) * 30 + 
-    (Math.min(avgSleep / 8, 1)) * 25 + 
-    (Math.min(totalExercise / 1500, 1)) * 25 + 
-    (Math.min(avgWater / 8, 1)) * 20
-  );
 
   const getTrendIcon = (trend: number) => {
     if (trend > 5) return <TrendingUp className="h-4 w-4 text-green-500" />;
@@ -199,7 +182,7 @@ export function AdvancedStats({ entries }: AdvancedStatsProps) {
           <CardContent>
             <div className="flex items-center justify-between mb-2">
               <div className="text-2xl font-bold text-slate-800">
-                {Math.round(totalExercise / 30)}m
+                {Math.round(avgExercise)}m
               </div>
               <div className="flex items-center gap-1">
                 {getTrendIcon(exerciseTrend)}
