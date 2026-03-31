@@ -110,9 +110,7 @@ export function ChatWindow({
       ? "Voice chat works in supported Chromium-based browsers like Chrome or Edge."
       : permissionState === "denied"
         ? "Microphone access is blocked. Click the lock icon in the address bar → allow Microphone → reload the page."
-        : voiceMode === "full"
-          ? "Voice recognition active (Full AI pipeline: STT → Agent → TTS)"
-          : "Tap the mic for voice chat, or type your message as usual.";
+        : "";
 
   const modeInfo = getVoiceModeInfo(voiceMode);
   const isFallbackMode = voiceMode === "fallback";
@@ -306,9 +304,6 @@ export function ChatWindow({
           {voiceError && (
             <p className="text-[11px] text-rose-500 mt-1 text-center">{voiceError}</p>
           )}
-          <p className="text-[11px] text-gray-400 mt-1 text-center">
-             MindCare can make mistakes. Consider verifying important health information.
-          </p>
         </div>
       </div>
     </div>
