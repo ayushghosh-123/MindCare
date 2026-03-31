@@ -1,11 +1,14 @@
 // STEP 30 — components/chat/ChatWindow.tsx
 // Main message area. Shows message history, typing indicator, and HITL panel.
+// Voice: OpenAI Voice Pipeline (full) + browser fallback (free)
 
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { Mic, MicOff, Volume2, VolumeX, AlertCircle } from "lucide-react";
 import { Chat } from "@/lib/supabase";
 import { MessageBubble } from "./MessageBubble";
 import { AgentReviewPanel } from "@/components/journal/AgentReviewPanel";
+import { useVoiceAgent, getVoiceModeInfo } from "@/components/hooks/use-voice-agent-v2";
 import type { HumanReviewPayload } from "@/agents/nodes/evaluateAgent";
 
 interface AgentCompleteResult {
@@ -42,17 +45,77 @@ export function ChatWindow({
   onSendMessage,
 }: ChatWindowProps) {
   const [input, setInput] = useState("");
+  const [voiceMode, setVoiceMode] = useState<"full" | "fallback">("fallback");
   const bottomRef = useRef<HTMLDivElement>(null);
+  const lastSpokenResponseRef = useRef("");
+
+  const {
+    isSupported: isVoiceSupported,
+    isListening,
+    autoSpeak,
+    error: voiceError,
+    permissionState,
+    mode,
+    isRetrying,
+    retryCount,
+    networkStatus,
+    toggleListening,
+    stopListening,
+    toggleAutoSpeak,
+    speakText,
+    stopSpeaking,
+    retryLastAction,
+  } = useVoiceAgent({
+    onTranscriptChange: (transcript) => setInput(transcript),
+    onTranscriptReady: (transcript) => {
+      if (isSending) return;
+      onSendMessage(transcript);
+      setInput("");
+    },
+  });
+
+  useEffect(() => {
+    setVoiceMode(mode);
+  }, [mode]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, agentStatus]);
 
+  useEffect(() => {
+    if (isListening) {
+      stopSpeaking();
+    }
+  }, [isListening, stopSpeaking]);
+
+  useEffect(() => {
+    if (!agentResult?.response || isListening) return;
+    if (agentResult.response === lastSpokenResponseRef.current) return;
+
+    speakText(agentResult.response);
+    lastSpokenResponseRef.current = agentResult.response;
+  }, [agentResult?.response, isListening, speakText]);
+
   function handleSend() {
     if (!input.trim() || isSending) return;
+    if (isListening) stopListening();
+    stopSpeaking();
     onSendMessage(input.trim());
     setInput("");
   }
+
+  const voiceHintText = isListening
+    ? "Listening now… speak naturally and your message will send when you stop."
+    : !isVoiceSupported
+      ? "Voice chat works in supported Chromium-based browsers like Chrome or Edge."
+      : permissionState === "denied"
+        ? "Microphone access is blocked. Click the lock icon in the address bar → allow Microphone → reload the page."
+        : voiceMode === "full"
+          ? "Voice recognition active (Full AI pipeline: STT → Agent → TTS)"
+          : "Tap the mic for voice chat, or type your message as usual.";
+
+  const modeInfo = getVoiceModeInfo(voiceMode);
+  const isFallbackMode = voiceMode === "fallback";
 
   return (
     <div className="flex flex-col h-full bg-white relative">
@@ -69,7 +132,7 @@ export function ChatWindow({
               <span className="text-4xl text-gray-300">👋</span>
               <p className="text-lg text-gray-700 font-medium">How can I help you today?</p>
               <p className="text-sm text-gray-500 max-w-sm">
-                Ask about your wellness, share how you're feeling, or request a daily report.
+                Ask about your wellness, share how you&apos;re feeling, or request a daily report.
               </p>
             </div>
           ) : (
@@ -113,8 +176,60 @@ export function ChatWindow({
       </div>
 
       {/* Floating Input Area */}
-      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-white via-white to-transparent pt-6 pb-6 px-4">
+      <div className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-white via-white to-transparent pt-6 pb-6 px-4">
         <div className="max-w-3xl mx-auto relative">
+          {/* Voice Mode Info - Show when in fallback */}
+          {isFallbackMode && isVoiceSupported && (
+            <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg text-sm">
+              <div className="flex gap-2 items-start">
+                <AlertCircle className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
+                <div className="text-amber-900">
+                  <p className="font-medium mb-1">Running in Browser Fallback Mode</p>
+                  <p className="text-xs mb-2">To unlock the full OpenAI voice experience (Whisper STT → Agent → TTS), add this to <code className="bg-amber-100 px-1 rounded">.env.local</code>:</p>
+                  <div className="bg-white p-2 rounded text-xs font-mono text-gray-700 mb-2">
+                    <div>OPENAI_API_KEY=your_api_key_here</div>
+                  </div>
+                  <div className="text-xs space-y-1">
+                    <p><a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer" className="text-amber-700 underline">Get your OpenAI API key</a></p>
+                    <p className="mt-2">Then restart: <code className="bg-amber-100 px-1 rounded">npm run dev</code></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Voice Error Alert - Show when voice error occurs */}
+          {voiceError && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm">
+              <div className="flex gap-2 items-start">
+                <AlertCircle className="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" />
+                <div className="text-red-900 flex-1">
+                  <p className="font-medium mb-1">Voice Recognition Issue</p>
+                  <p className="text-xs mb-3">{voiceError}</p>
+                  {networkStatus === "offline" && (
+                    <div className="text-xs mb-2 p-2 bg-white rounded border border-red-100">
+                      <p className="font-medium text-red-700">📡 No Internet Connection</p>
+                      <p className="mt-1">Check your network and try again.</p>
+                    </div>
+                  )}
+                  {isRetrying && retryCount > 0 && (
+                    <div className="text-xs mb-2 p-2 bg-white rounded border border-orange-100">
+                      <p className="font-medium text-orange-700">🔄 Auto-retrying ({retryCount}/3)…</p>
+                    </div>
+                  )}
+                  {!isRetrying && networkStatus !== "offline" && retryCount > 0 && (
+                    <button
+                      onClick={retryLastAction}
+                      className="px-3 py-1 bg-red-600 text-white text-xs rounded hover:bg-red-700 transition-colors"
+                    >
+                      Retry Now
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className="relative flex items-end shadow-lg border border-gray-200 bg-white rounded-2xl overflow-hidden focus-within:ring-2 focus-within:ring-violet-200 focus-within:border-violet-400 transition-all">
             <textarea
               rows={1}
@@ -131,15 +246,51 @@ export function ChatWindow({
                   e.currentTarget.style.height = 'auto';
                 }
               }}
-              placeholder="Message MindCare…"
-              className="flex-1 max-h-[200px] text-base bg-transparent px-4 py-3.5 resize-none focus:outline-none placeholder:text-gray-400"
+              placeholder={`Message ${sessionName || "MindCare"}…`}
+              className="flex-1 max-h-50 text-base bg-transparent px-4 py-3.5 resize-none focus:outline-none placeholder:text-gray-400"
             />
-            <div className="p-2">
+            <div className="p-2 flex items-center gap-2">
               <button
+                type="button"
+                onClick={toggleListening}
+                disabled={!isVoiceSupported || isSending}
+                className={`p-2 rounded-xl border transition-colors ${
+                  isListening
+                    ? "bg-rose-50 text-rose-600 border-rose-200"
+                    : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
+                } disabled:bg-gray-100 disabled:text-gray-300 disabled:border-gray-100`}
+                title={
+                  isVoiceSupported
+                    ? isListening
+                      ? "Stop voice input"
+                      : "Start voice input"
+                    : "Voice input is not supported in this browser"
+                }
+                aria-label={isListening ? "Stop voice input" : "Start voice input"}
+              >
+                {isListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+              </button>
+
+              <button
+                type="button"
+                onClick={toggleAutoSpeak}
+                className={`p-2 rounded-xl border transition-colors ${
+                  autoSpeak
+                    ? "bg-violet-50 text-violet-600 border-violet-200"
+                    : "bg-white text-gray-500 border-gray-200 hover:bg-gray-50"
+                }`}
+                title={autoSpeak ? "Mute spoken replies" : "Enable spoken replies"}
+                aria-label={autoSpeak ? "Mute spoken replies" : "Enable spoken replies"}
+              >
+                {autoSpeak ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
+              </button>
+
+              <button
+                type="button"
                 onClick={() => {
-                   handleSend();
-                   const ta = document.querySelector('textarea');
-                   if (ta) ta.style.height = 'auto';
+                  handleSend();
+                  const ta = document.querySelector("textarea");
+                  if (ta) ta.style.height = "auto";
                 }}
                 disabled={isSending || !input.trim()}
                 className="bg-black hover:bg-gray-800 disabled:bg-gray-200 disabled:text-gray-400 text-white p-2 rounded-xl transition-colors flex items-center justify-center"
@@ -151,7 +302,11 @@ export function ChatWindow({
               </button>
             </div>
           </div>
-          <p className="text-[11px] text-gray-400 mt-2 text-center">
+          <p className="text-[11px] text-gray-400 mt-2 text-center">{voiceHintText}</p>
+          {voiceError && (
+            <p className="text-[11px] text-rose-500 mt-1 text-center">{voiceError}</p>
+          )}
+          <p className="text-[11px] text-gray-400 mt-1 text-center">
              MindCare can make mistakes. Consider verifying important health information.
           </p>
         </div>

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useUser } from '@clerk/nextjs';
+import { useAuth, useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { UserProfile as UserProfileComponent } from '@/components/user-profile';
 import { dbHelpers, type HealthEntry, type UserProfile } from '@/lib/supabase';
@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 
 export default function ProfilePage() {
   const { user, isLoaded } = useUser();
+  const { getToken } = useAuth();
   const router = useRouter();
   const { toast } = useToast();
   const [entries, setEntries] = useState<HealthEntry[]>([]);
@@ -28,17 +29,17 @@ export default function ProfilePage() {
     try {
       setLoading(true);
       
-      // 1. Ensure user exists in our database (Robust sync)
-      const userResult = await dbHelpers.createUser({
-        id: user.id,
-        email: user.emailAddresses[0]?.emailAddress || '',
-        full_name: user.fullName || '',
-        username: user.username || user.firstName || '',
-        avatar_url: user.imageUrl
+      // 1. Ensure user exists in our database using the server-side sync route
+      const token = await getToken();
+      const syncResponse = await fetch('/api/users/sync', {
+        method: 'POST',
+        credentials: 'include',
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       });
 
-      if (userResult.error) {
-        console.warn('User synchronization warning:', userResult.error);
+      if (!syncResponse.ok) {
+        const syncPayload = await syncResponse.json().catch(() => null);
+        console.warn('User synchronization warning:', syncPayload?.error ?? 'User sync failed');
         // Continue anyway as the user may exist even if sync returns an error
       }
 

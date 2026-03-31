@@ -11,9 +11,10 @@ if (!supabaseUrl || !supabaseAnonKey) {
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-export const supabaseAdmin = process.env.SUPABASE_SERVICE_ROLE_KEY
-  ? createClient(supabaseUrl, process.env.SUPABASE_SERVICE_ROLE_KEY)
-  : supabase;
+export const supabaseAdmin =
+  typeof window === 'undefined' && process.env.SUPABASE_SERVICE_ROLE_KEY
+    ? createClient(supabaseUrl, process.env.SUPABASE_SERVICE_ROLE_KEY)
+    : supabase;
 
 // Enhanced types for Reflect & Connect Journaling System
 export type User = {
@@ -108,6 +109,11 @@ export const dbHelpers = {
   // User management
   async createUser(userData: Partial<User>) {
     try {
+      if (typeof window !== 'undefined') {
+        console.warn('[dbHelpers.createUser] Skipping client-side upsert. Use /api/users/sync or the Clerk webhook instead.');
+        return { data: null, error: null };
+      }
+
       // 1. Safe existence check via maybeSingle to avoid 406 errors
       if (userData.id) {
         const { data: existing, error: fetchError } = await supabase

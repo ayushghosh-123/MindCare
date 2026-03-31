@@ -1,6 +1,6 @@
 'use client';
 
-import { useUser } from '@clerk/nextjs';
+import { useAuth, useUser } from '@clerk/nextjs';
 import { LogIn, UserPlus, Activity, CheckCircle, Smile, Calendar, TrendingUp, Zap, Clock, Utensils, Moon, Brain } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -15,6 +15,7 @@ import { motion } from 'framer-motion';
 
 export default function Home() {
   const { user, isLoaded } = useUser();
+  const { getToken } = useAuth();
   const [_entries, setEntries] = useState<HealthEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
@@ -31,17 +32,17 @@ export default function Home() {
     try {
       setLoading(true);
 
-      // 1. Ensure user exists in our database (Robust sync)
-      const userResult = await dbHelpers.createUser({
-        id: user.id,
-        email: user.emailAddresses[0]?.emailAddress || '',
-        full_name: user.fullName || '',
-        username: user.username || user.firstName || '',
-        avatar_url: user.imageUrl
+      // 1. Ensure user exists in our database using the server-side sync route
+      const token = await getToken();
+      const syncResponse = await fetch('/api/users/sync', {
+        method: 'POST',
+        credentials: 'include',
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       });
 
-      if (userResult.error) {
-        console.warn('User initialization warning:', userResult.error);
+      if (!syncResponse.ok) {
+        const syncPayload = await syncResponse.json().catch(() => null);
+        console.warn('User initialization warning:', syncPayload?.error ?? 'User sync failed');
       }
 
       // 2. Refresh health entries (Webhook handles profile initialization)

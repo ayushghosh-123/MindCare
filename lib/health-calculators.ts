@@ -14,14 +14,7 @@ export function moodToScore(mood: string | null | undefined): number {
   return moodMap[mood || ''] ?? 3;
 }
 
-/**
- * Calculates a health score (0-100) based on mood, sleep, exercise, and water intake.
- * Unifies the target metrics:
- * - Mood: 30% (5/5 = 30 pts)
- * - Sleep: 25% (8h = 25 pts)
- * - Exercise: 25% (60m = 25 pts) -- Unified to 60m daily target
- * - Water: 20% (8 units = 20 pts)
- */
+
 export function calculateHealthScore(params: {
   mood?: string | null;
   sleep_hours?: number;
