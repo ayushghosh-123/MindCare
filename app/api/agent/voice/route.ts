@@ -24,21 +24,8 @@ const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const OPENAI_BASE_URL = "https://api.openai.com/v1";
 const VOICE_TIMEOUT = 30000; // 30 second timeout
 const MAX_RETRIES = 3;
-const INITIAL_RETRY_DELAY = 1000; // 1 second
+const INITIAL_RETRY_DELAY = 2000; // 1 second
 
-interface VoiceEvent {
-  type:
-    | "connection_opened"
-    | "connection_closed"
-    | "stt_chunk"
-    | "stt_output"
-    | "agent_chunk"
-    | "agent_end"
-    | "tts_chunk"
-    | "error";
-  data?: Record<string, unknown>;
-  error?: string;
-}
 
 interface CallOptions {
   timeout?: number;
@@ -56,42 +43,38 @@ function validateVoiceSetup(): { valid: boolean; missingKeys: string[] } {
   };
 }
 
-/**
- * Retry helper with exponential backoff
- */
-async function withRetry<T>(
-  fn: () => Promise<T>,
-  options: CallOptions = {}
-): Promise<T> {
+/*** Retry helper with exponential backoff***/
+async function withRetry<T>(fn: () => Promise<T>,options: CallOptions = {}): Promise<T> {
   const { timeout = VOICE_TIMEOUT, retries = MAX_RETRIES } = options;
   let lastError: Error | null = null;
 
-  for (let i = 0; i < retries; i++) {
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), timeout);
+    for (let i = 0; i < retries; i++) {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), timeout);
 
-      const result = await Promise.race([
+        const result = await Promise.race([
         fn(),
-        new Promise<T>((_, reject) => {
-          if (controller.signal.aborted) {
-            reject(new Error("Request timeout"));
-          }
-        }),
+          new Promise<T>((_, reject) => {
+           if (controller.signal.aborted) {
+              reject(new Error("Request timeout"));
+            }
+          }),
       ]);
 
       clearTimeout(timeoutId);
       return result;
-    } catch (error) {
-      lastError = error instanceof Error ? error : new Error(String(error));
-      clearTimeout(0);
+    } 
+catch (error) {
+    lastError = error instanceof Error ? error : new Error(String(error));
+    clearTimeout(0);
 
-      // Don't retry on certain errors
+    // Don't retry on certain errors
       if (lastError.message.includes("Unauthorized") || lastError.message.includes("Invalid")) {
         throw lastError;
       }
 
-      // Wait before retrying with exponential backoff
+    // Wait before retrying with exponential backoff
       if (i < retries - 1) {
         const delay = INITIAL_RETRY_DELAY * Math.pow(2, i);
         await new Promise((resolve) => setTimeout(resolve, delay));

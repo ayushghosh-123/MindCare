@@ -11,7 +11,7 @@ export function moodToScore(mood: string | null | undefined): number {
     poor: 2,
     terrible: 1
   };
-  return moodMap[mood || ''] ?? 3;
+  return moodMap[mood || ''] ?? 0;
 }
 
 
@@ -56,15 +56,15 @@ export function calculateDayStreak(entries: HealthEntry[]): number {
   if (dates[0] !== today && dates[0] !== yesterday) return 0;
 
   let streak = 0;
-  let currentDate = new Date(dates[0]);
+  let currentDateStr = dates[0];
 
   for (const dateStr of dates) {
-    const entryDate = new Date(dateStr);
-    const expectedDateStr = currentDate.toISOString().split('T')[0];
-
-    if (dateStr === expectedDateStr) {
+    if (dateStr === currentDateStr) {
       streak++;
-      currentDate.setDate(currentDate.getDate() - 1);
+      // Decrement the date by 1 day
+      const d = new Date(currentDateStr + 'T00:00:00');
+      d.setDate(d.getDate() - 1);
+      currentDateStr = d.toISOString().split('T')[0];
     } else {
       break;
     }

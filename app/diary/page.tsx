@@ -17,7 +17,7 @@ import { dbHelpers, type Journal, type JournalEntry } from '@/lib/supabase';
 import { useToast } from '@/components/hooks/use-toast';
 import { RichTextEditor } from '@/components/rich-text-editor';
 
-// ── NEW: Agent imports ────────────────────────────────────────────────────────
+// ── NEW: Agent imports (It's for me as an agent)────────────────────────────────────────────────────────
 import { useAgent } from '@/components/hooks/use-agent';
 import { AgentReviewPanel } from '@/components/journal/AgentReviewPanel';
 
@@ -26,7 +26,7 @@ export default function DiaryPage() {
   const router = useRouter();
   const { toast } = useToast();
 
-  // ── NEW: Agent hook ───────────────────────────────────────────────────────
+  // ── NEW: Agent hook (for control agent data controll ) ───────────────────────────────────────────────────────
   const agent = useAgent();
 
   const [journals, setJournals] = useState<Journal[]>([]);
