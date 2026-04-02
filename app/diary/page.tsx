@@ -408,19 +408,20 @@ export default function DiaryPage() {
                               </Button>
                             </div>
                           ) : (
-                            <div className="flex items-start md:items-center gap-2 group flex-col md:flex-row">
-                              <div className="flex items-center gap-2">
+                            <div className="flex items-start md:items-center gap-2 flex-col md:flex-row">
+                              <div className="flex items-center gap-1.5">
                                 <CardTitle className="text-xl truncate">{selectedJournal.title}</CardTitle>
                                 <Button 
                                   size="icon" 
                                   variant="ghost" 
-                                  className="h-6 w-6 opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity -ml-1 shrink-0"
+                                  className="h-7 w-7 text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors shrink-0"
                                   onClick={() => {
                                     setEditingJournalTitle(selectedJournal.title);
                                     setIsEditingJournal(true);
                                   }}
+                                  title="Edit Journal Name"
                                 >
-                                  <Pencil className="w-3.5 h-3.5 text-slate-400" />
+                                  <Pencil className="w-3.5 h-3.5" />
                                 </Button>
                               </div>
                             </div>

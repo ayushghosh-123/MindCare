@@ -69,7 +69,7 @@ export default function ChatbotPage() {
   if (!user) { router.push('/sign-in'); return null; }
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden bg-white">
+    <div className="flex flex-col h-[100dvh] overflow-hidden bg-white">
       <MainNavbar />
       
       <div className="flex flex-1 overflow-hidden relative">

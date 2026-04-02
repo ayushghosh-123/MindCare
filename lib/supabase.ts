@@ -114,26 +114,27 @@ export const dbHelpers = {
         return { data: null, error: null };
       }
 
-      // 1. Safe existence check via maybeSingle to avoid 406 errors
       if (userData.id) {
-        const { data: existing, error: fetchError } = await supabase
+        // Try updating first to handle "user.updated" and race conditions
+        const { data: updatedData } = await supabaseAdmin
           .from('users')
-          .select('*')
+          .update(userData)
           .eq('id', userData.id)
-          .maybeSingle(); // Returns null instead of 406 if not found
-        
-        if (existing) return { data: existing, error: null };
-        if (fetchError) console.error("[dbHelpers.createUser] Fetch error:", fetchError);
+          .select()
+          .maybeSingle();
+
+        if (updatedData) {
+          return { data: updatedData, error: null };
+        }
       }
 
-      // 2. Perform the upsert (best on server-side via supabaseAdmin)
-      // We provide a fallback email to satisfy NOT NULL constraints until the Clerk webhook syncs real data.
+      // If updating failed (doesn't exist), perform the insert (Signup flow)
       const { data, error } = await supabaseAdmin
         .from('users')
-        .upsert({
-          email: `sync_${userData.id?.slice(-8)}@mindcare.placeholder`, // Fallback email
+        .insert({
+          email: `sync_${userData.id?.slice(-8)}@mindcare.placeholder`, // Fallback email if missing
           ...userData
-        }, { onConflict: 'id' })
+        })
         .select()
         .maybeSingle();
       

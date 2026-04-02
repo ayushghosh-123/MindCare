@@ -178,8 +178,8 @@ export function ChatWindow({
       </div>
 
       {/* Floating Input Area */}
-      <div className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-white via-white to-transparent pt-6 pb-6 px-4">
-        <div className="max-w-3xl mx-auto relative">
+      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-white via-white to-transparent pt-6 pb-[5.5rem] md:pb-6 px-4 pointer-events-none">
+        <div className="max-w-3xl mx-auto relative pointer-events-auto">
           {/* Voice Mode Info - Show when in fallback */}
           {isFallbackMode && isVoiceSupported && (
             <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg text-sm">
@@ -248,7 +248,7 @@ export function ChatWindow({
                   e.currentTarget.style.height = 'auto';
                 }
               }}
-              placeholder={`Message ${sessionName || "MindCare"}…`}
+              placeholder="Message Mindcare..."
               className="flex-1 max-h-50 text-base bg-transparent px-4 py-3.5 resize-none focus:outline-none placeholder:text-gray-400"
             />
             <div className="p-2 flex items-center gap-2">
