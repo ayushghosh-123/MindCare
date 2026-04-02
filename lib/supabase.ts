@@ -171,6 +171,16 @@ export const dbHelpers = {
     return { data, error };
   },
 
+  async updateJournal(journalId: string, updates: Partial<Journal>) {
+    const { data, error } = await supabase
+      .from('journals')
+      .update(updates)
+      .eq('id', journalId)
+      .select()
+      .single();
+    return { data, error };
+  },
+
   // Journal entries
   async createJournalEntry(entryData: Partial<JournalEntry>) {
     const { data, error } = await supabase

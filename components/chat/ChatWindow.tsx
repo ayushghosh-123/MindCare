@@ -59,11 +59,15 @@ export function ChatWindow({
     isRetrying,
     retryCount,
     networkStatus,
+    isPlaying,
     toggleListening,
+    startListening,
     stopListening,
     toggleAutoSpeak,
     speakText,
     stopSpeaking,
+    pauseSpeaking,
+    resumeSpeaking,
     retryLastAction,
   } = useVoiceAgent({
     onTranscriptChange: (transcript) => setInput(transcript),
@@ -139,20 +143,20 @@ export function ChatWindow({
 
           {/* Typing indicator */}
           {isSending && (
-            <div className="flex justify-start mb-3">
-              <div className="w-8 h-8 rounded-full border border-gray-200 bg-white flex items-center justify-center text-sm mr-3 shrink-0">
-                🤖
-              </div>
-              <div className="flex items-center gap-1.5 mt-2">
-                {[0, 150, 300].map((delay) => (
-                  <span
-                    key={delay}
-                    className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
-                    style={{ animationDelay: `${delay}ms` }}
-                  />
-                ))}
-              </div>
-            </div>
+             <div className="flex justify-start mb-6 w-full animate-in fade-in slide-in-from-bottom-2 duration-300">
+               <div className="w-8 h-8 rounded-full border border-gray-200 bg-white flex items-center justify-center text-sm mr-4 shrink-0 shadow-sm">
+                 🤖
+               </div>
+               <div className="bg-white border text-gray-800 rounded-2xl px-5 py-4 shadow-sm flex items-center gap-2">
+                 {[0, 150, 300].map((delay) => (
+                   <span
+                     key={delay}
+                     className="w-2 h-2 bg-violet-400 rounded-full animate-bounce"
+                     style={{ animationDelay: `${delay}ms` }}
+                   />
+                 ))}
+               </div>
+             </div>
           )}
 
           {/* Agent HITL / Review Panel — Persists after completion as a receipt */}
@@ -282,6 +286,29 @@ export function ChatWindow({
               >
                 {autoSpeak ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
               </button>
+
+              {/* Playback Controls (only visible when audio is playing or paused) */}
+              {(isPlaying || lastSpokenResponseRef.current !== "") && autoSpeak && (
+                 <button
+                 type="button"
+                 onClick={() => {
+                   if (isPlaying) pauseSpeaking();
+                   else if (lastSpokenResponseRef.current) resumeSpeaking();
+                 }}
+                 className="p-2 rounded-xl border bg-emerald-50 text-emerald-600 border-emerald-200 hover:bg-emerald-100 transition-colors"
+                 title={isPlaying ? "Pause playback" : "Resume playback"}
+               >
+                 {isPlaying ? (
+                   <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                     <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+                   </svg>
+                 ) : (
+                   <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                     <path d="M8 5v14l11-7z" />
+                   </svg>
+                 )}
+               </button>
+              )}
 
               <button
                 type="button"
