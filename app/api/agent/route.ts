@@ -59,6 +59,9 @@ export async function POST(req: NextRequest) {
     humanFeedback: null,
     emailSent: false,
     email: null,
+    emailSubject: null,
+    emailBody: null,
+    evaluationResult: null,
     error: null,
   };
 
