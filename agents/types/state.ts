@@ -25,6 +25,12 @@ export interface AgentState{
 
     emailSent: boolean;
     email: string | null;
+    emailSubject: string | null;
+    emailBody: string | null;
+    evaluationResult: {
+      status: "approved" | "needs_edit";
+      issues: string[];
+    } | null;
     error: string | null;
 }
 

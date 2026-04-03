@@ -1,11 +1,21 @@
-// STEP 31 — components/chat/ChatSidebar.tsx
-// Shows all named sessions. Handles create, rename, delete, and search.
-// Clicking a session calls onSelectSession which loads its full history.
-
 "use client";
+
 import { useState } from "react";
 import { ChatSession } from "@/lib/supabase-chat";
 import { useChatSessions } from "@/components/hooks/use-chat-session";
+import { 
+  Search, 
+  Plus, 
+  Trash2, 
+  Edit3, 
+  MessageSquare, 
+  X,
+  Check,
+  Loader2,
+  Mail
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 interface ChatSidebarProps {
   activeSessionId: string | null;
@@ -62,113 +72,181 @@ export function ChatSidebar({
   }
 
   return (
-    <aside className="w-full h-full bg-[#f9f9f9] flex flex-col">
+    <aside className="w-full h-full bg-white flex flex-col border-r border-slate-100">
+      {/* Header */}
+      <div className="p-4 space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-bold bg-gradient-to-r from-violet-600 to-indigo-600 bg-clip-text text-transparent">
+            Chats
+          </h2>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setShowNewInput(true)}
+            className="rounded-full hover:bg-violet-50 text-violet-600"
+          >
+            <Plus className="w-5 h-5" />
+          </Button>
+        </div>
 
-      {/* Header + search */}
-      <div className="p-3">
-        <h2 className="text-base font-semibold text-gray-800 mb-3">Conversations</h2>
-        <input
-          type="text"
-          placeholder="Search chats…"
-          value={searchQuery}
-          onChange={(e) => handleSearch(e.target.value)}
-          className="w-full text-sm border-none bg-white shadow-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-violet-400 placeholder:text-gray-400"
-        />
+        <div className="relative group">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-violet-500 transition-colors" />
+          <input
+            type="text"
+            placeholder="Search conversations..."
+            value={searchQuery}
+            onChange={(e) => handleSearch(e.target.value)}
+            className="w-full pl-9 pr-4 py-2 bg-slate-50 border-none rounded-xl text-sm focus:ring-2 focus:ring-violet-500/20 transition-all placeholder:text-slate-400"
+          />
+        </div>
       </div>
 
-      {/* New session */}
-      <div className="px-3 pb-2 border-b border-gray-100">
-        {showNewInput ? (
-          <div className="flex gap-2">
+      {/* New session input */}
+      {showNewInput && (
+        <div className="px-4 pb-4 animate-in slide-in-from-top-2 duration-300">
+          <div className="p-3 bg-violet-50 rounded-xl border border-violet-100 space-y-3">
             <input
               autoFocus
               type="text"
-              placeholder="Session name…"
+              placeholder="Session name..."
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === "Enter") handleCreate();
                 if (e.key === "Escape") setShowNewInput(false);
               }}
-              className="flex-1 text-sm border border-violet-300 rounded-lg px-3 py-1.5 focus:outline-none"
+              className="w-full bg-white border-none rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-violet-500/20"
             />
-            <button
-              onClick={handleCreate}
-              className="text-sm bg-violet-600 text-white px-3 py-1.5 rounded-lg hover:bg-violet-700 transition"
-            >
-              Create
-            </button>
+            <div className="flex gap-2">
+              <Button 
+                size="sm" 
+                className="flex-1 bg-violet-600 hover:bg-violet-700 rounded-lg h-9"
+                onClick={handleCreate}
+              >
+                Create
+              </Button>
+              <Button 
+                size="sm" 
+                variant="ghost" 
+                className="px-3 rounded-lg h-9 hover:bg-violet-100 text-violet-700"
+                onClick={() => setShowNewInput(false)}
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Session list */}
+      <div className="flex-1 overflow-y-auto px-2 space-y-1 custom-scrollbar">
+        {isLoading && sessions.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-32 space-y-2">
+            <Loader2 className="w-6 h-6 text-violet-500 animate-spin" />
+            <p className="text-xs text-slate-400 font-medium">Syncing sessions...</p>
+          </div>
+        ) : sessions.length === 0 ? (
+          <div className="text-center py-10 px-4">
+             <div className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center mx-auto mb-3">
+                <MessageSquare className="w-6 h-6 text-slate-300" />
+             </div>
+             <p className="text-sm font-medium text-slate-500">No chats found</p>
+             <p className="text-xs text-slate-400 mt-1">Start a new conversation to get started</p>
           </div>
         ) : (
-          <button
-            onClick={() => setShowNewInput(true)}
-            className="w-full text-sm text-gray-700 bg-white shadow-sm border border-gray-200 rounded-lg py-2 hover:bg-gray-50 transition flex items-center justify-center gap-2 font-medium"
-          >
-            <span>+</span> New Chat
-          </button>
+          sessions.map((session: ChatSession) => (
+            <div
+              key={session.id}
+              onClick={() => onSelectSession(session)}
+              className={cn(
+                "group relative flex items-center gap-3 px-3 py-3 rounded-xl cursor-pointer transition-all duration-200",
+                activeSessionId === session.id
+                  ? "bg-violet-50 text-violet-700 border border-violet-100 shadow-sm shadow-violet-100/50"
+                  : "hover:bg-slate-50 text-slate-600 hover:text-slate-900 border border-transparent"
+              )}
+            >
+              <div className={cn(
+                "p-2 rounded-lg transition-colors",
+                activeSessionId === session.id ? "bg-white" : "bg-slate-100 group-hover:bg-white"
+              )}>
+                <span className="text-base font-emoji">
+                  {AGENT_EMOJI[session.agent_type || "chat"] || "💬"}
+                </span>
+              </div>
+
+              <div className="flex-1 min-w-0">
+                {renamingId === session.id ? (
+                  <div className="flex items-center gap-1" onClick={e => e.stopPropagation()}>
+                    <input
+                      autoFocus
+                      className="w-full text-sm bg-white border border-violet-200 rounded px-2 py-1 outline-none ring-2 ring-violet-500/20"
+                      value={renameValue}
+                      onChange={e => setRenameValue(e.target.value)}
+                      onKeyDown={e => {
+                        if (e.key === "Enter") handleRename(session.id);
+                        if (e.key === "Escape") setRenamingId(null);
+                      }}
+                    />
+                    <Button 
+                      size="icon" 
+                      variant="ghost" 
+                      className="h-7 w-7 text-green-600 hover:bg-green-50"
+                      onClick={() => handleRename(session.id)}
+                    >
+                      <Check className="w-4 h-4" />
+                    </Button>
+                  </div>
+                ) : (
+                  <p className="text-sm font-semibold truncate leading-tight">
+                    {session.name}
+                  </p>
+                )}
+                <p className="text-[10px] text-slate-400 mt-0.5 font-medium uppercase tracking-wider">
+                  {new Date(session.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                </p>
+              </div>
+
+              {/* Actions */}
+              {!renamingId && (
+                <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity" onClick={e => e.stopPropagation()}>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 text-slate-400 hover:text-violet-600 hover:bg-violet-50 rounded-lg"
+                      onClick={() => { setRenamingId(session.id); setRenameValue(session.name); }}
+                    >
+                      <Edit3 className="w-3.5 h-3.5" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg"
+                      onClick={() => deleteSession(session.id)}
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </Button>
+                </div>
+              )}
+            </div>
+          ))
         )}
       </div>
 
-      {/* Session list */}
-      <div className="flex-1 overflow-y-auto">
-        {isLoading ? (
-            <p className="p-4 text-sm text-gray-400 text-center">Loading…</p>
-        ) : sessions.length === 0 ? (
-            <p className="p-4 text-sm text-gray-400 text-center">No chats yet. Start one!</p>
-        ) : (
-            sessions.map((session: ChatSession) => (
-                <div
-                    key={session.id}
-                    onClick={() => onSelectSession(session)}
-                    className={`group mx-2 my-1 px-3 py-2.5 rounded-lg cursor-pointer transition-colors ${
-                        activeSessionId === session.id
-                            ? "bg-gray-200 text-gray-900"
-                            : "hover:bg-gray-200/50 text-gray-700"
-                    }`}
-                >
-                    {renamingId === session.id ? (
-                        <div
-                            className="flex gap-1"
-                            onClick={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}
-                        >
-                            <input
-                                autoFocus
-                                type="text"
-                                value={renameValue}
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRenameValue(e.target.value)}
-                                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                                    if (e.key === "Enter") handleRename(session.id);
-                                    if (e.key === "Escape") setRenamingId(null);
-                                }}
-                                className="flex-1 text-sm border border-violet-300 bg-white rounded px-2 py-1 focus:outline-none"
-                            />
-                            <button
-                                onClick={() => handleRename(session.id)}
-                                className="text-xs text-violet-600 font-medium"
-                            >
-                                Save
-                            </button>
-                        </div>
-                    ) : (
-                        <>
-                            <div className="flex items-center justify-between gap-2">
-                                <span className="text-sm font-medium truncate flex-1">
-                                    {session.name}
-                                </span>
-                                <div
-                                    className="hidden group-hover:flex gap-1 shrink-0"
-                                    onClick={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}
-                                >
-                                    <button onClick={() => { setRenamingId(session.id); setRenameValue(session.name); }} className="text-gray-400 hover:text-gray-600">✏️</button>
-                                    <button onClick={() => deleteSession(session.id)} className="text-gray-400 hover:text-red-500">🗑️</button>
-                                </div>
-                            </div>
-                        </>
-                    )}
-                </div>
-            ))
-        )}
-      </div>
+      <style jsx>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #e2e8f0;
+          border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: #cbd5e1;
+        }
+      `}</style>
     </aside>
   );
 }

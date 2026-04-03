@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { User, Edit, Save, X, Heart, Target, Calendar, Activity, Moon, Brain, Droplets } from 'lucide-react';
+import { User, Edit, Save, X, Heart, Target, Calendar, Activity, Moon, Brain, Droplets, AlertCircle } from 'lucide-react';
 import { useUser } from '@clerk/nextjs';
 import { dbHelpers, type HealthEntry, type UserProfile as UserProfileType } from '@/lib/supabase';
 import { useToast } from '@/components/hooks/use-toast';
@@ -265,7 +265,15 @@ export function UserProfile({ entries, userProfile: dbUserProfile, onProfileUpda
               </Avatar>
               <div>
                 <CardTitle className="text-2xl">{profile.name}</CardTitle>
-                <p className="text-slate-600">{profile.email}</p>
+                <div className="flex flex-col gap-1">
+                  <p className="text-slate-600 font-medium">{profile.email || "No email provided"}</p>
+                  {!profile.email && (
+                    <Badge variant="destructive" className="w-fit text-[10px] py-0 px-2 animate-pulse">
+                      <AlertCircle className="h-3 w-3 mr-1" />
+                      Email Missing - AI Agent Disabled
+                    </Badge>
+                  )}
+                </div>
                 {healthMetrics && (
                   <div className="flex items-center gap-4 mt-2">
                     <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">

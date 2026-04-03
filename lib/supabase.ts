@@ -335,5 +335,43 @@ export const dbHelpers = {
     const { data, error } = await supabase
       .rpc('get_journal_insights', { journal_id_param: journalId });
     return { data, error };
+  },
+
+  // Email logs management
+  async logEmail(emailData: { 
+    user_id: string; 
+    subject: string; 
+    body: string; 
+    status: 'pending' | 'approved' | 'sent' | 'rejected' 
+  }) {
+    const { data, error } = await supabaseAdmin
+      .from('email_logs')
+      .insert([emailData])
+      .select()
+      .maybeSingle();
+    return { data, error };
+  },
+
+  async updateEmailLogStatus(id: string, status: 'approved' | 'sent' | 'rejected', error_message?: string) {
+    const { data, error } = await supabaseAdmin
+      .from('email_logs')
+      .update({ 
+        status, 
+        error_message, 
+        updated_at: new Date().toISOString() 
+      })
+      .eq('id', id)
+      .select()
+      .maybeSingle();
+    return { data, error };
+  },
+
+  async getEmailLogs(userId: string) {
+    const { data, error } = await supabase
+      .from('email_logs')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false });
+    return { data, error };
   }
 };

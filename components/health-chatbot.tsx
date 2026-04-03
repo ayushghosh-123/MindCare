@@ -7,9 +7,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Bot, Send, User } from 'lucide-react';
+import { Bot, Send, User, Mail, AlertCircle, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { type HealthEntry } from '@/lib/supabase';
+import { useAgent } from '@/components/hooks/use-agent';
+import { EmailReviewPanel } from '@/components/EmailReviewPanel';
+import { useToast } from '@/components/hooks/use-toast';
 
 interface Message {
   id: string;
@@ -66,8 +69,25 @@ export function HealthChatbot({ className, userId }: HealthChatbotProps) {
     },
   ]);
   const [input, setInput] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
   const [sessionId] = useState(() => `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
+  const { toast } = useToast();
+  
+  const { 
+    status, 
+    result, 
+    reviewPayload, 
+    error: agentError, 
+    sendEmailReport 
+  } = useAgent();
+
+  const [emailDraft, setEmailDraft] = useState<{
+    sessionId: string;
+    subject: string;
+    body: string;
+    evaluation?: any;
+  } | null>(null);
+
+  const isTyping = status === 'loading' || status === 'resuming';
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const currentUserId = userId || user?.id;
@@ -90,7 +110,6 @@ export function HealthChatbot({ className, userId }: HealthChatbotProps) {
     setMessages(prev => [...prev, userMessage]);
     const userInput = input;
     setInput('');
-    setIsTyping(true);
 
     try {
       // Call the real agent — main_agent routes to chat/data/report automatically
@@ -109,8 +128,6 @@ export function HealthChatbot({ className, userId }: HealthChatbotProps) {
 
       const data = await res.json();
 
-      // data.status === "complete" for chat and data queries (no HITL needed)
-      // data.status === "interrupted" only for journaling/report (email step)
       const responseText =
         data.status === 'complete'
           ? data.response
@@ -127,16 +144,22 @@ export function HealthChatbot({ className, userId }: HealthChatbotProps) {
       setMessages(prev => [...prev, botMessage]);
     } catch (err) {
       console.error('[HealthChatbot] Agent error:', err);
-      const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        type: 'bot',
-        content: 'Sorry, I had trouble processing that. Please try again.',
-        timestamp: new Date(),
-        suggestions: ['How can I improve my sleep?', 'Show my health trends'],
-      };
-      setMessages(prev => [...prev, errorMessage]);
-    } finally {
-      setIsTyping(false);
+      // ... error handling
+    }
+  };
+
+  const handleSendEmailReport = async () => {
+    if (!currentUserId) return;
+    
+    toast({
+      title: "Generating Report",
+      description: "AI is analyzing your wellness data...",
+      variant: "info"
+    });
+
+    const draft = await sendEmailReport(sessionId);
+    if (draft) {
+      setEmailDraft(draft);
     }
   };
 
@@ -169,6 +192,17 @@ export function HealthChatbot({ className, userId }: HealthChatbotProps) {
 
         {/* Messages */}
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          {emailDraft && (
+            <div className="mx-auto w-full sticky top-0 z-50 mb-10 animate-in fade-in slide-in-from-top-4 duration-500">
+               <EmailReviewPanel
+                 initialSubject={emailDraft.subject}
+                 initialBody={emailDraft.body}
+                 evaluation={emailDraft.evaluation}
+                 sessionId={emailDraft.sessionId}
+                 onComplete={() => setEmailDraft(null)}
+               />
+            </div>
+          )}
           {messages.map((message) => (
             <div
               key={message.id}
@@ -273,6 +307,16 @@ export function HealthChatbot({ className, userId }: HealthChatbotProps) {
               className="bg-rose-600 hover:bg-rose-700"
             >
               <Send className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={handleSendEmailReport}
+              disabled={isTyping || !currentUserId}
+              className="border-rose-200 text-rose-600 hover:bg-rose-50"
+              title="Send Wellness Email"
+            >
+              <Mail className="h-4 w-4" />
             </Button>
           </div>
           <p className="text-xs text-slate-400 mt-1.5 text-center">

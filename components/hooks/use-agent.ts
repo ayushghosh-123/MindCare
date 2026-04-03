@@ -47,6 +47,8 @@ interface UseAgentReturn {
   result: AgentCompleteResponse | null;
   reviewPayload: HumanReviewPayload | null;
   error: string | null;
+  currentStage: string | null;
+  sendEmailReport: (sessionId: string) => Promise<{ sessionId: string; subject: string; body: string; evaluation?: any } | null>;
 }
 
 // ── Hook ──────────────────────────────────────────────────────────────────────
@@ -58,6 +60,7 @@ export function useAgent(): UseAgentReturn {
   const [reviewPayload, setReviewPayload] = useState<HumanReviewPayload | null>(null);
   const [threadId, setThreadId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [currentStage, setCurrentStage] = useState<string | null>(null);
 
   // ── Start a new graph run ─────────────────────────────────────────────────
   const invoke = useCallback(async (request: AgentRequest) => {
@@ -136,6 +139,51 @@ export function useAgent(): UseAgentReturn {
     [threadId]
   );
 
+
+  const sendEmailReport = async (sessionId: string) => {
+    setStatus("loading");
+    setCurrentStage("Classifying request...");
+    try {
+      const token = await getToken();
+      
+      // Artificial delay to show the stages to the user
+      const stages = ["Fetching Wellness Data...", "Analyzing Sentiment...", "Drafting Report...", "Checking Safety..."];
+      let stageIdx = 0;
+      const interval = setInterval(() => {
+        if (stageIdx < stages.length) {
+          setCurrentStage(stages[stageIdx]);
+          stageIdx++;
+        }
+      }, 1500);
+
+      const response = await fetch("/api/agent/email", {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        credentials: "include",
+        body: JSON.stringify({ sessionId })
+      });
+
+      clearInterval(interval);
+      const data = await response.json();
+      if (data.success) {
+        return { 
+          sessionId: data.sessionId, 
+          subject: data.data.subject, 
+          body: data.data.body,
+          evaluation: data.data.evaluation
+        };
+      } else {
+        throw new Error(data.error || "Failed to trigger email agent");
+      }
+    } catch (err: any) {
+      setError(err.message);
+      return null;
+    }
+  };
+
   const approve = useCallback(
     (editedResponse?: string) => resume(true, editedResponse),
     [resume]
@@ -149,7 +197,8 @@ export function useAgent(): UseAgentReturn {
     setReviewPayload(null);
     setThreadId(null);
     setError(null);
+    setCurrentStage(null);
   }, []);
 
-  return { invoke, approve, reject, reset, status, result, reviewPayload, error };
+  return { invoke, approve, reject, reset, status, result, reviewPayload, error, currentStage, sendEmailReport };
 }

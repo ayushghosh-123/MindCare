@@ -132,11 +132,13 @@ export default function ChatbotPage() {
               isSending={isSending}
               isLoading={isLoading}
               agentStatus={agent.status}
+              currentStage={agent.currentStage}
               reviewPayload={agent.reviewPayload}
               agentResult={agent.result}
               onApprove={agent.approve}
               onReject={agent.reject}
               onSendMessage={sendMessage}
+              onSendEmailReport={activeSession ? () => agent.sendEmailReport(activeSession.id) : undefined}
             />
           </div>
 

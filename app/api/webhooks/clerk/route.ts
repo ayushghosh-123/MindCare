@@ -43,13 +43,14 @@ export async function POST(req: Request) {
     const { id, email_addresses, first_name, last_name, username, image_url } =
       event.data;
 
-    // Get primary email — this is the Gmail the user signed up with
-    const primaryEmail = email_addresses.find(
-      (e) => e.id === event.data.primary_email_address_id
-    );
+    // 1. Find primary email — fallback to first address if id is missing or mismatched
+    const primaryEmail = 
+      email_addresses.find((e) => e.id === event.data.primary_email_address_id) || 
+      email_addresses[0];
 
     if (!primaryEmail) {
-      return Response.json({ error: "No primary email" }, { status: 400 });
+      console.error("[webhook] Critical failure: User has no email addresses available.");
+      return Response.json({ error: "No email address found" }, { status: 400 });
     }
 
     const fullName =

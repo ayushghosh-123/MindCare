@@ -7,6 +7,7 @@ import { AgentState, SentimentType } from "../types/state";
 import { sendWellnessSummaryEmail } from "../tools/emailTool";
 import { dbHelpers } from "@/lib/supabase";
 import { saveChatMessage } from "../tools/supbaseTool";
+import { createClerkClient } from "@clerk/backend";
 
 export async function emailAgentNode(
   state: AgentState
@@ -44,10 +45,31 @@ export async function emailAgentNode(
       const { data: user } = await dbHelpers.getUser(state.userId);
       recipientEmail = user?.email || null;
       userName = user?.full_name || "there";
+      
+      // Fallback 1: Clerk API (Best for Production)
+      if (!recipientEmail) {
+        console.warn(`[emailAgent] Email missing in DB for ${state.userId}. Fetching from Clerk.`);
+        try {
+          const clerk = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
+          const clerkUser = await clerk.users.getUser(state.userId);
+          recipientEmail = clerkUser.emailAddresses[0]?.emailAddress;
+          userName = clerkUser.firstName || userName;
+          if (recipientEmail) console.log(`[emailAgent] Found email in Clerk: ${recipientEmail}`);
+        } catch (err) {
+          console.error(`[emailAgent] Clerk fallback failed:`, err);
+        }
+      }
     } else {
       // If we have state.email, we should still try to get the user's name for a nice greeting
       const { data: user } = await dbHelpers.getUser(state.userId);
       userName = user?.full_name || "there";
+    }
+
+    if (!recipientEmail) {
+      recipientEmail = process.env.GMAIL_USER || process.env.EMAIL_FROM || null;
+      if (recipientEmail) {
+        console.log(`[emailAgent] Using ENV fallback recipient: ${recipientEmail}`);
+      }
     }
 
     if (!recipientEmail) {

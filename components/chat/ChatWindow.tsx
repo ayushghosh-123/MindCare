@@ -4,10 +4,11 @@
 
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { Mic, MicOff, Volume2, VolumeX, AlertCircle } from "lucide-react";
+import { Mic, MicOff, Volume2, VolumeX, AlertCircle, Mail } from "lucide-react";
 import { Chat } from "@/lib/supabase";
 import { MessageBubble } from "./MessageBubble";
 import { AgentReviewPanel } from "@/components/journal/AgentReviewPanel";
+import { EmailReviewPanel } from "@/components/EmailReviewPanel";
 import { useVoiceAgent, getVoiceModeInfo } from "@/components/hooks/use-voice-agent-v2";
 import type { HumanReviewPayload } from "@/agents/nodes/evaluateAgent";
 
@@ -25,11 +26,13 @@ interface ChatWindowProps {
   isSending: boolean;
   isLoading: boolean;
   agentStatus: string;
+  currentStage: string | null;
   reviewPayload: HumanReviewPayload | null;
   agentResult?: AgentCompleteResult | null;
   onApprove: (edited?: string) => void;
   onReject: () => void;
   onSendMessage: (text: string) => void;
+  onSendEmailReport?: () => Promise<{ sessionId: string; subject: string; body: string; evaluation?: any } | null>;
 }
 
 export function ChatWindow({
@@ -38,13 +41,23 @@ export function ChatWindow({
   isSending,
   isLoading,
   agentStatus,
+  currentStage,
   reviewPayload,
   agentResult,
   onApprove,
   onReject,
   onSendMessage,
+  onSendEmailReport,
 }: ChatWindowProps) {
   const [input, setInput] = useState("");
+  const [emailDraft, setEmailDraft] = useState<{
+    sessionId: string;
+    subject: string;
+    body: string;
+    evaluation?: any;
+    error?: string | null;
+  } | null>(null);
+
   const [voiceMode, setVoiceMode] = useState<"full" | "fallback">("fallback");
   const bottomRef = useRef<HTMLDivElement>(null);
   const lastSpokenResponseRef = useRef("");
@@ -141,20 +154,40 @@ export function ChatWindow({
             messages.map((msg) => <MessageBubble key={msg.id} message={msg} />)
           )}
 
+          {/* Email Review Panel */}
+          {emailDraft && (
+            <div className="flex justify-center my-6 sticky top-4 z-50 animate-in fade-in slide-in-from-top-4 duration-500">
+               <EmailReviewPanel
+                 initialSubject={emailDraft.subject}
+                 initialBody={emailDraft.body}
+                 evaluation={emailDraft.evaluation}
+                 sessionId={emailDraft.sessionId}
+                 error={emailDraft.error}
+                 onComplete={() => setEmailDraft(null)}
+               />
+            </div>
+          )}
+
           {/* Typing indicator */}
           {isSending && (
              <div className="flex justify-start mb-6 w-full animate-in fade-in slide-in-from-bottom-2 duration-300">
                <div className="w-8 h-8 rounded-full border border-gray-200 bg-white flex items-center justify-center text-sm mr-4 shrink-0 shadow-sm">
                  🤖
                </div>
-               <div className="bg-white border text-gray-800 rounded-2xl px-5 py-4 shadow-sm flex items-center gap-2">
-                 {[0, 150, 300].map((delay) => (
-                   <span
-                     key={delay}
-                     className="w-2 h-2 bg-violet-400 rounded-full animate-bounce"
-                     style={{ animationDelay: `${delay}ms` }}
-                   />
-                 ))}
+               <div className="bg-white border text-gray-800 rounded-2xl px-5 py-4 shadow-sm flex flex-col gap-2">
+                 <div className="flex items-center gap-2">
+                   {[0, 150, 300].map((delay) => (
+                     <span
+                       key={delay}
+                       className="w-1.5 h-1.5 bg-violet-400 rounded-full animate-bounce"
+                       style={{ animationDelay: `${delay}ms` }}
+                     />
+                   ))}
+                 </div>
+                 {/* Progress Stage Message */}
+                 <p className="text-xs font-medium text-slate-500 animate-in fade-in slide-in-from-left-2 duration-300">
+                    {currentStage || (isSending ? "AI is thinking..." : "")}
+                 </p>
                </div>
              </div>
           )}
@@ -309,6 +342,7 @@ export function ChatWindow({
                  )}
                </button>
               )}
+
 
               <button
                 type="button"

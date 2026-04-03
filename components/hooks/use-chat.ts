@@ -14,6 +14,7 @@ interface UseChatReturn {
   startNewSession: (session: ChatSession) => void;    // begin a fresh session
   sendMessage: (text: string) => Promise<void>;
   agent: ReturnType<typeof useAgent>;                 // exposed for HITL panel in ChatWindow
+  currentStage: string | null;                        // exposed for progress indicator
 }
 
 export function useChat(): UseChatReturn {
@@ -185,5 +186,6 @@ export function useChat(): UseChatReturn {
     startNewSession,
     sendMessage,
     agent,
+    currentStage: agent.currentStage,
   };
 }
