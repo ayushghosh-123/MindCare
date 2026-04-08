@@ -206,7 +206,7 @@ export function JournalManager({
         </div>
         <Button 
           onClick={() => setShowCreateJournal(true)}
-          className="bg-[#D3D3FF] hover:bg-[#BDBDFE]"
+          className="bg-[#4338CA] hover:bg-[#5558E3] shadow-lg hover:shadow-[0_0_20px_rgba(67,56,202,0.6)] transition-all duration-300"
         >
           <Plus className="h-4 w-4 mr-2" />
           New Journal
@@ -257,10 +257,10 @@ export function JournalManager({
               </div>
             </div>
             <div className="flex gap-3 justify-end">
-              <Button variant="outline" onClick={() => setShowCreateJournal(false)}>
+              <Button variant="outline" onClick={() => setShowCreateJournal(false)} className="border-slate-300 text-slate-700 hover:bg-slate-100 hover:border-slate-400 transition-all duration-300">
                 Cancel
               </Button>
-              <Button onClick={createJournal} className="bg-[#D3D3FF] hover:bg-[#BDBDFE]">
+              <Button onClick={createJournal} className="bg-[#6366F1] hover:bg-[#4F46E5] text-white shadow-lg hover:shadow-[0_0_20px_rgba(99,102,241,0.6)] transition-all duration-300">
                 Create Journal
               </Button>
             </div>
@@ -330,7 +330,7 @@ export function JournalManager({
               </div>
               <Button 
                 onClick={() => setShowCreateEntry(true)}
-                className="bg-[#D3D3FF] hover:bg-[#BDBDFE]"
+                className="bg-[#1e0ce6] hover:bg-[#5558E3] text-white shadow-lg hover:shadow-[0_0_20px_rgba(67,56,202,0.6)] transition-all duration-300"
               >
                 <Plus className="h-4 w-4 mr-2" />
                 New Entry
@@ -340,9 +340,9 @@ export function JournalManager({
           <CardContent>
             {entries.length === 0 ? (
               <div className="text-center py-8">
-                <BookOpen className="h-12 w-12 text-slate-400 mx-auto mb-4" />
+                <BookOpen className="h-12 w-12 text-slate-600 mx-auto mb-4" />
                 <p className="text-slate-500 mb-2">No entries yet</p>
-                <p className="text-sm text-slate-400">Start writing your first entry</p>
+                <p className="text-sm text-slate-600">Start writing your first entry</p>
               </div>
             ) : (
               <div className="space-y-4">
@@ -455,7 +455,7 @@ export function JournalManager({
                     placeholder="Add tag..."
                     onKeyPress={(e) => e.key === 'Enter' && addTag()}
                   />
-                  <Button onClick={addTag} size="sm">Add</Button>
+                  <Button onClick={addTag} size="sm" className="bg-[#6366F1] hover:bg-[#4F46E5] text-white shadow-md hover:shadow-[0_0_15px_rgba(99,102,241,0.6)] transition-all duration-300">Add</Button>
                 </div>
                 {entryTags.length > 0 && (
                   <div className="flex flex-wrap gap-1 mt-2">
@@ -474,10 +474,10 @@ export function JournalManager({
               </div>
             </div>
             <div className="flex gap-3 justify-end">
-              <Button variant="outline" onClick={() => setShowCreateEntry(false)}>
+              <Button variant="outline" onClick={() => setShowCreateEntry(false)} className="border-slate-300 text-slate-700 hover:bg-slate-100 hover:border-slate-400 transition-all duration-300">
                 Cancel
               </Button>
-              <Button onClick={createEntry} className="bg-[#D3D3FF] hover:bg-[#BDBDFE]">
+              <Button onClick={createEntry} className="bg-[#6366F1] hover:bg-[#4F46E5] text-white shadow-lg hover:shadow-[0_0_20px_rgba(99,102,241,0.6)] transition-all duration-300">
                 Create Entry
               </Button>
             </div>

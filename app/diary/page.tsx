@@ -240,7 +240,7 @@ export default function DiaryPage() {
               </div>
             </div>
             {!isWriting && (
-              <Button onClick={() => setIsWriting(true)} className="bg-[#D3D3FF] hover:bg-[#BDBDFE] shadow-md">
+              <Button onClick={() => setIsWriting(true)} className="bg-[#6366F1] hover:bg-[#4F46E5] text-white shadow-lg hover:shadow-[0_0_20px_rgba(99,102,241,0.6)] transition-all duration-300">
                 <Plus className="h-4 w-4 mr-2" /> New Entry
               </Button>
             )}
@@ -314,7 +314,7 @@ export default function DiaryPage() {
                       <Button
                         onClick={saveEntry}
                         disabled={!entryContent.trim() || loading}
-                        className="bg-[#D3D3FF] hover:bg-[#BDBDFE] shadow-md"
+                        className="bg-[#6366F1] hover:bg-[#4F46E5] text-white shadow-lg hover:shadow-[0_0_20px_rgba(99,102,241,0.6)] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         <Save className="h-4 w-4 mr-2" /> Save Entry
                       </Button>
@@ -474,7 +474,7 @@ export default function DiaryPage() {
                       </div>
                       <h3 className="text-xl font-semibold text-slate-700 mb-2">Ready to start writing?</h3>
                       <p className="text-slate-500 mb-6 text-center max-w-sm">Capture your daily thoughts, track your mood, and discover AI-powered insights.</p>
-                      <Button onClick={() => setIsWriting(true)} className="bg-[#D3D3FF] hover:bg-[#BDBDFE] shadow-md">
+                      <Button onClick={() => setIsWriting(true)} className="bg-[#6366F1] hover:bg-[#4F46E5] text-white shadow-lg hover:shadow-[0_0_20px_rgba(99,102,241,0.6)] transition-all duration-300">
                         <Plus className="h-4 w-4 mr-2" /> Write First Entry
                       </Button>
                     </CardContent>
@@ -551,7 +551,7 @@ export default function DiaryPage() {
                   </div>
                   <h3 className="text-xl font-bold text-slate-800 mb-2">Select a Journal</h3>
                   <p className="text-slate-500 text-center mb-6">Choose an existing journal from the sidebar or click below to create a new one.</p>
-                  <Button onClick={createJournal} className="bg-[#D3D3FF] hover:bg-[#BDBDFE] shadow-md">
+                  <Button onClick={createJournal} className="bg-[#6366F1] hover:bg-[#4F46E5] text-white shadow-lg hover:shadow-[0_0_20px_rgba(99,102,241,0.6)] transition-all duration-300">
                     <Plus className="h-4 w-4 mr-2" /> Create New Journal
                   </Button>
                 </CardContent>
