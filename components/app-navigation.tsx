@@ -5,8 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Home, BookOpen, MessageSquare, BarChart3, User, Plus, Menu, X, Heart } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
 interface AppNavigationProps {
   currentView: string;
@@ -69,7 +69,7 @@ export function AppNavigation({
           variant="outline"
           size="sm"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="bg-white/90 backdrop-blur-sm"
+          className="bg-[#F8F8FF]/90 backdrop-blur-sm"
         >
           {isMobileMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
         </Button>
@@ -85,15 +85,15 @@ export function AppNavigation({
 
       {/* Navigation Sidebar */}
       <div className={cn(
-        "fixed left-0 top-0 h-full w-64 bg-white border-r border-slate-200 z-30 transform transition-transform duration-300 ease-in-out",
+        "fixed left-0 top-0 h-full w-64 bg-[#F8F8FF] border-r border-slate-200 z-30 transform transition-transform duration-300 ease-in-out",
         isMobileMenuOpen ? "translate-x-0" : "-translate-x-full",
         "lg:translate-x-0 lg:static lg:block",
         className
       )}>
         <div className="p-6">
           <div className="flex items-center gap-3 mb-8">
-            <div className="p-2 bg-rose-100 rounded-lg">
-              <Heart className="h-6 w-6 text-rose-600" />
+            <div className="p-2 bg-[#D3D3FF]/30 rounded-lg">
+              <Heart className="h-6 w-6 text-[#8A8AFF]" />
             </div>
             <div>
               <h2 className="text-xl font-bold text-slate-800">Reflect & Connect</h2>
@@ -113,7 +113,7 @@ export function AppNavigation({
                   className={cn(
                     "flex items-center gap-3 w-full p-4 rounded-lg transition-colors",
                     isActive 
-                      ? "bg-rose-600 text-white" 
+                      ? "bg-[#D3D3FF] text-white" 
                       : "text-slate-700 hover:bg-slate-100"
                   )}
                   onClick={() => {
@@ -126,7 +126,7 @@ export function AppNavigation({
                     <div className="font-medium">{item.label}</div>
                     <div className={cn(
                       "text-xs",
-                      isActive ? "text-rose-100" : "text-slate-500"
+                      isActive ? "text-[#D3D3FF]" : "text-slate-500"
                     )}>
                       {item.description}
                     </div>
@@ -145,7 +145,7 @@ export function AppNavigation({
           <div className="mt-8">
             <Link
               href="/diary"
-              className="flex items-center justify-center w-full p-3 bg-rose-600 hover:bg-rose-700 text-white rounded-lg transition-colors"
+              className="flex items-center justify-center w-full p-3 bg-[#D3D3FF] hover:bg-[#BDBDFE] text-white rounded-lg transition-colors"
               onClick={() => {
                 onViewChange('diary');
                 setIsMobileMenuOpen(false);

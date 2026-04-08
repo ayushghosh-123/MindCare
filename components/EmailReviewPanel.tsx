@@ -83,7 +83,7 @@ export function EmailReviewPanel({
   // ── Error State UI ────────────────────────────────────────────────────────
   if (error) {
     return (
-      <Card className="w-full max-w-2xl mx-auto shadow-2xl border-t-8 border-amber-500 bg-white/90 backdrop-blur-sm">
+      <Card className="w-full max-w-2xl mx-auto shadow-2xl border-t-8 border-amber-500 bg-[#F8F8FF]/90 backdrop-blur-sm">
         <CardHeader>
           <CardTitle className="text-2xl font-bold flex items-center gap-2 text-amber-600">
             <AlertCircle className="h-6 w-6" />
@@ -92,12 +92,12 @@ export function EmailReviewPanel({
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="bg-amber-50 border border-amber-100 p-4 rounded-xl text-amber-900">
-             <p className="font-semibold text-lg mb-2">Wait, there's a small issue!</p>
+             <p className="font-semibold text-lg mb-2">Wait, there&s a small issue!</p>
              <p className="text-sm opacity-90 leading-relaxed">
                {error}
              </p>
           </div>
-          <div className="p-4 bg-slate-50 rounded-xl space-y-3">
+          <div className="p-4 bg-[#F0F0FF] rounded-xl space-y-3">
              <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">How to fix this:</p>
              <ul className="text-sm text-slate-600 space-y-2 list-disc list-inside px-1">
                 <li>Go to your <strong>Profile</strong> tab</li>
@@ -109,7 +109,7 @@ export function EmailReviewPanel({
         <CardFooter>
           <Button 
             variant="outline" 
-            className="w-full h-12 text-slate-600 border-slate-300 hover:bg-slate-50 rounded-xl"
+            className="w-full h-12 text-slate-600 border-slate-300 hover:bg-[#F0F0FF] rounded-xl"
             onClick={() => handleAction('reject')}
             disabled={loading}
           >
@@ -121,11 +121,11 @@ export function EmailReviewPanel({
   }
 
   return (
-    <Card className="w-full max-w-2xl mx-auto shadow-2xl border-t-8 border-rose-600 bg-white/80 backdrop-blur-sm">
+    <Card className="w-full max-w-2xl mx-auto shadow-2xl border-t-8 border-[#D3D3FF] bg-[#F8F8FF]/80 backdrop-blur-sm">
       <CardHeader className="border-b pb-4 mb-4">
         <div className="flex justify-between items-start">
           <div className="space-y-1">
-            <CardTitle className="text-2xl font-bold flex items-center gap-2 text-rose-600">
+            <CardTitle className="text-2xl font-bold flex items-center gap-2 text-[#8A8AFF]">
               <Send className="h-6 w-6" />
               Review Your Wellness Update
             </CardTitle>
@@ -162,10 +162,10 @@ export function EmailReviewPanel({
               value={currentBody} 
               onChange={(e) => setCurrentBody(e.target.value)} 
               rows={12}
-              className="text-slate-800 leading-relaxed font-monofont p-4 border-2 border-rose-200 focus:border-rose-500 rounded-xl"
+              className="text-slate-800 leading-relaxed font-monofont p-4 border-2 border-[#D3D3FF]/50 focus:border-[#8A8AFF] rounded-xl"
             />
           ) : (
-            <div className="bg-slate-50 p-6 rounded-xl text-slate-700 whitespace-pre-wrap leading-relaxed border-2 border-dashed border-slate-200 italic shadow-inner">
+            <div className="bg-[#F0F0FF] p-6 rounded-xl text-slate-700 whitespace-pre-wrap leading-relaxed border-2 border-dashed border-slate-200 italic shadow-inner">
               {currentBody}
             </div>
           )}
@@ -197,7 +197,7 @@ export function EmailReviewPanel({
            </Button>
         </div>
         <Button 
-          className="w-full sm:w-auto min-w-[200px] bg-rose-600 hover:bg-rose-700 text-white font-black text-lg py-6 shadow-lg transform active:scale-95 transition-all" 
+          className="w-full sm:w-auto min-w-[200px] bg-[#D3D3FF] hover:bg-[#BDBDFE] text-white font-black text-lg py-6 shadow-lg transform active:scale-95 transition-all" 
           onClick={() => handleAction('approved')} 
           disabled={loading}
         >

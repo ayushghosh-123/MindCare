@@ -10,7 +10,7 @@ import {
   User,
   Menu,
   X,
-  Brain,
+  Leaf,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -21,7 +21,7 @@ export function MainNavbar() {
   const navItems = [
     { name: "Home", href: "/", icon: <Home size={18} /> },
     { name: "Diary", href: "/diary", icon: <BookOpen size={18} /> },
-    { name: "AI Assistant", href: "/chatbot", icon: <Brain size={18} /> },
+    { name: "AI Assistant", href: "/chatbot", icon: <Leaf size={18} /> },
     { name: "Analytics", href: "/analytics", icon: <BarChart3 size={18} /> },
     { name: "Profile", href: "/profile", icon: <User size={18} /> },
   ];
@@ -30,7 +30,7 @@ export function MainNavbar() {
     <>
       {/* 🌟 DESKTOP TOP CAPSULE NAV */}
       <nav className="hidden md:flex justify-center py-4 z-50 bg-transparent">
-        <div className="flex items-center gap-6 px-8 py-3 bg-white shadow-md rounded-full border border-gray-200">
+        <div className="flex items-center gap-6 px-8 py-3 bg-[#F8F8FF] shadow-md rounded-full border border-gray-200">
           {navItems.map((item) => (
             <Link
               href={item.href}
@@ -57,7 +57,7 @@ export function MainNavbar() {
 
       {/* 🌟 MOBILE FLOATING CAPSULE NAV */}
       <div className="md:hidden fixed bottom-4 left-1/2 -translate-x-1/2 w-[90%] z-50">
-        <div className="flex items-center justify-between px-5 py-3 bg-white shadow-xl rounded-full border border-gray-300">
+        <div className="flex items-center justify-between px-5 py-3 bg-[#F8F8FF] shadow-xl rounded-full border border-gray-300">
           {navItems.map((item) => (
             <Link
               href={item.href}
@@ -72,7 +72,7 @@ export function MainNavbar() {
 
       {/* OPTIONAL: MOBILE MENU BUTTON (if needed) */}
       <button
-        className="md:hidden fixed top-4 right-4 bg-white shadow-md p-2 rounded-full border border-gray-200"
+        className="md:hidden fixed top-4 right-4 bg-[#F8F8FF] shadow-md p-2 rounded-full border border-gray-200"
         onClick={() => setOpen(!open)}
       >
         {open ? <X size={22} /> : <Menu size={22} />}
@@ -80,7 +80,7 @@ export function MainNavbar() {
 
       {/* OPTIONAL: FULL MOBILE MENU (if open) */}
       {open && (
-        <div className="md:hidden fixed top-16 right-4 bg-white w-48 rounded-xl shadow-xl border border-gray-200 p-4">
+        <div className="md:hidden fixed top-16 right-4 bg-[#F8F8FF] w-48 rounded-xl shadow-xl border border-gray-200 p-4">
           {navItems.map((item) => (
             <Link
               href={item.href}

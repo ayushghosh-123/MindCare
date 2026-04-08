@@ -72,7 +72,7 @@ export function ChatSidebar({
   }
 
   return (
-    <aside className="w-full h-full bg-white flex flex-col border-r border-slate-100">
+    <aside className="w-full h-full bg-[#F8F8FF] flex flex-col border-r border-slate-100">
       {/* Header */}
       <div className="p-4 space-y-4">
         <div className="flex items-center justify-between">
@@ -96,7 +96,7 @@ export function ChatSidebar({
             placeholder="Search conversations..."
             value={searchQuery}
             onChange={(e) => handleSearch(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 bg-slate-50 border-none rounded-xl text-sm focus:ring-2 focus:ring-violet-500/20 transition-all placeholder:text-slate-400"
+            className="w-full pl-9 pr-4 py-2 bg-[#F0F0FF] border-none rounded-xl text-sm focus:ring-2 focus:ring-violet-500/20 transition-all placeholder:text-slate-400"
           />
         </div>
       </div>
@@ -115,7 +115,7 @@ export function ChatSidebar({
                 if (e.key === "Enter") handleCreate();
                 if (e.key === "Escape") setShowNewInput(false);
               }}
-              className="w-full bg-white border-none rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-violet-500/20"
+              className="w-full bg-[#F8F8FF] border-none rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-violet-500/20"
             />
             <div className="flex gap-2">
               <Button 
@@ -147,7 +147,7 @@ export function ChatSidebar({
           </div>
         ) : sessions.length === 0 ? (
           <div className="text-center py-10 px-4">
-             <div className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center mx-auto mb-3">
+             <div className="w-12 h-12 bg-[#F0F0FF] rounded-2xl flex items-center justify-center mx-auto mb-3">
                 <MessageSquare className="w-6 h-6 text-slate-300" />
              </div>
              <p className="text-sm font-medium text-slate-500">No chats found</p>
@@ -162,12 +162,12 @@ export function ChatSidebar({
                 "group relative flex items-center gap-3 px-3 py-3 rounded-xl cursor-pointer transition-all duration-200",
                 activeSessionId === session.id
                   ? "bg-violet-50 text-violet-700 border border-violet-100 shadow-sm shadow-violet-100/50"
-                  : "hover:bg-slate-50 text-slate-600 hover:text-slate-900 border border-transparent"
+                  : "hover:bg-[#F0F0FF] text-slate-600 hover:text-slate-900 border border-transparent"
               )}
             >
               <div className={cn(
                 "p-2 rounded-lg transition-colors",
-                activeSessionId === session.id ? "bg-white" : "bg-slate-100 group-hover:bg-white"
+                activeSessionId === session.id ? "bg-[#F8F8FF]" : "bg-slate-100 group-hover:bg-[#F8F8FF]"
               )}>
                 <span className="text-base font-emoji">
                   {AGENT_EMOJI[session.agent_type || "chat"] || "💬"}
@@ -179,7 +179,7 @@ export function ChatSidebar({
                   <div className="flex items-center gap-1" onClick={e => e.stopPropagation()}>
                     <input
                       autoFocus
-                      className="w-full text-sm bg-white border border-violet-200 rounded px-2 py-1 outline-none ring-2 ring-violet-500/20"
+                      className="w-full text-sm bg-[#F8F8FF] border border-violet-200 rounded px-2 py-1 outline-none ring-2 ring-violet-500/20"
                       value={renameValue}
                       onChange={e => setRenameValue(e.target.value)}
                       onKeyDown={e => {
@@ -220,7 +220,7 @@ export function ChatSidebar({
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-8 w-8 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg"
+                      className="h-8 w-8 text-slate-400 hover:text-[#8A8AFF] hover:bg-[#D3D3FF]/10 rounded-lg"
                       onClick={() => deleteSession(session.id)}
                     >
                       <Trash2 className="w-3.5 h-3.5" />

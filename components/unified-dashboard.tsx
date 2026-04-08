@@ -8,6 +8,7 @@ import { dbHelpers, type HealthEntry } from '@/lib/supabase';
 import { useToast } from '@/components/hooks/use-toast';
 import type { ChangeEvent } from 'react';
 import { calculateHealthScore } from '@/lib/health-calculators';
+// import { CommunityWall } from './community-wall';
 
 interface UnifiedDashboardTodayProps {
   userId: string;
@@ -261,30 +262,33 @@ export function UnifiedDashboardToday({ userId, className }: UnifiedDashboardTod
   return (
     <div className={cn('space-y-6', className)}>
 
-      {/* Header / Welcome */}
-      <Card>
-        <CardContent className="p-6 flex items-center justify-between">
-          <div>
-            <h2 className="text-xl font-semibold text-slate-800">Today&apos;s Health</h2>
-            <p className="text-sm text-slate-500">Log your sleep, water, exercise & mood for today.</p>
-          </div>
+      {/* 🚀 CONSOLIDATED HEADER */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Card className="md:col-span-3 border-none bg-gradient-to-r from-[#D3D3FF] to-[#E6E6FF] shadow-lg">
+          <CardContent className="p-6 flex items-center justify-between text-slate-800">
+            <div>
+              <h2 className="text-2xl font-bold tracking-tight">Today's Overview</h2>
+              <p className="text-slate-600 flex items-center gap-1 mt-1">
+                <Calendar className="h-4 w-4" /> {todayIsoDate} — Welcome back!
+              </p>
+            </div>
+          </CardContent>
+        </Card>
 
-          {/* Current health score preview */}
-          <div className="flex flex-col gap-2">
-            <div className={cn('rounded-full px-4 py-3 font-bold', getHealthScoreColor(currentScore))}>
-              <div className="text-center text-lg">{currentScore}</div>
-              <div className="text-xs text-slate-600 text-center">
-                {todayEntry ? 'Preview' : 'Current'}
-              </div>
+        <Card className="border-[#D3D3FF] border-2 shadow-sm">
+          <CardContent className="p-4 flex flex-col items-center justify-center h-full">
+            <div className="text-center">
+              <div className="text-3xl font-black text-[#8A8AFF]">{currentScore}</div>
+              <div className="text-[10px] uppercase font-bold text-slate-500 tracking-tighter">Health Score</div>
             </div>
             {storedScore !== undefined && storedScore !== currentScore && (
-              <div className="text-xs text-slate-500 text-center">
+              <div className="text-xs text-slate-500 text-center mt-1">
                 Saved: {storedScore}
               </div>
             )}
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </div>
 
       {/* Two-column layout */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -414,7 +418,7 @@ export function UnifiedDashboardToday({ userId, className }: UnifiedDashboardTod
                 <button
                   onClick={handleSave}
                   disabled={saving}
-                  className="w-full sm:w-auto px-6 py-2.5 bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition disabled:opacity-50 font-medium"
+                  className="w-full sm:w-auto px-6 py-2.5 bg-gradient-to-r from-[#8A8AFF] to-[#6B6BCC] hover:opacity-90 text-white rounded-lg transition disabled:opacity-50 font-bold shadow-md shadow-[#8A8AFF]/30 border-0"
                 >
                   {todayEntry ? (saving ? 'Updating...' : 'Update Today') : (saving ? 'Saving...' : 'Save Today')}
                 </button>
@@ -432,7 +436,7 @@ export function UnifiedDashboardToday({ userId, className }: UnifiedDashboardTod
                       stress_level: ''
                     });
                   }}
-                  className="w-full sm:w-auto px-6 py-2.5 border border-slate-200 rounded-lg text-slate-700 hover:bg-slate-50 font-medium"
+                  className="w-full sm:w-auto px-6 py-2.5 border border-slate-200 rounded-lg text-slate-700 hover:bg-[#F0F0FF] font-medium"
                 >
                   Clear
                 </button>
@@ -443,6 +447,11 @@ export function UnifiedDashboardToday({ userId, className }: UnifiedDashboardTod
               </div>
             </CardContent>
           </Card>
+        </div>
+
+        {/* Right Column: Community & Feed */}
+        <div className="space-y-6">
+          {/* <CommunityWall /> */}
         </div>
       </div>
     </div>

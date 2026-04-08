@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Bot, Send, User, Mail, AlertCircle, X } from 'lucide-react';
+import { Leaf, Send, User, Mail, AlertCircle, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { type HealthEntry } from '@/lib/supabase';
 import { useAgent } from '@/components/hooks/use-agent';
@@ -84,7 +84,7 @@ export function HealthChatbot({ className, userId }: HealthChatbotProps) {
     sessionId: string;
     subject: string;
     body: string;
-    evaluation?: any;
+    evaluation?: never;
   } | null>(null);
 
   const isTyping = status === 'loading' || status === 'resuming';
@@ -178,8 +178,8 @@ export function HealthChatbot({ className, userId }: HealthChatbotProps) {
     <Card className={cn('h-[600px] flex flex-col', className)}>
       <CardHeader className="pb-3">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-rose-100 rounded-lg">
-            <Bot className="h-5 w-5 text-rose-600" />
+          <div className="p-2 bg-[#D3D3FF]/30 rounded-lg">
+            <Leaf className="h-5 w-5 text-[#8A8AFF]" />
           </div>
           <div>
             <CardTitle className="text-lg">Health Assistant</CardTitle>
@@ -213,8 +213,8 @@ export function HealthChatbot({ className, userId }: HealthChatbotProps) {
             >
               {message.type === 'bot' && (
                 <Avatar className="h-8 w-8 shrink-0">
-                  <AvatarFallback className="bg-rose-100 text-rose-600">
-                    <Bot className="h-4 w-4" />
+                  <AvatarFallback className="bg-[#D3D3FF]/30 text-[#8A8AFF]">
+                    <Leaf className="h-4 w-4" />
                   </AvatarFallback>
                 </Avatar>
               )}
@@ -223,7 +223,7 @@ export function HealthChatbot({ className, userId }: HealthChatbotProps) {
                 className={cn(
                   'max-w-[80%] rounded-lg p-3',
                   message.type === 'user'
-                    ? 'bg-rose-600 text-white'
+                    ? 'bg-[#D3D3FF] text-white'
                     : 'bg-slate-100 text-slate-800'
                 )}
               >
@@ -241,7 +241,7 @@ export function HealthChatbot({ className, userId }: HealthChatbotProps) {
                       <Badge
                         key={index}
                         variant="outline"
-                        className="cursor-pointer hover:bg-rose-50 hover:border-rose-300 text-xs"
+                        className="cursor-pointer hover:bg-[#D3D3FF]/10 hover:border-[#D3D3FF] text-xs"
                         onClick={() => handleSuggestionClick(suggestion)}
                       >
                         {suggestion}
@@ -269,8 +269,8 @@ export function HealthChatbot({ className, userId }: HealthChatbotProps) {
           {isTyping && (
             <div className="flex gap-3 justify-start">
               <Avatar className="h-8 w-8">
-                <AvatarFallback className="bg-rose-100 text-rose-600">
-                  <Bot className="h-4 w-4" />
+                <AvatarFallback className="bg-[#D3D3FF]/30 text-[#8A8AFF]">
+                  <Leaf className="h-4 w-4" />
                 </AvatarFallback>
               </Avatar>
               <div className="bg-slate-100 rounded-lg p-3">
@@ -304,7 +304,7 @@ export function HealthChatbot({ className, userId }: HealthChatbotProps) {
             <Button
               onClick={handleSendMessage}
               disabled={!input.trim() || isTyping || !currentUserId}
-              className="bg-rose-600 hover:bg-rose-700"
+              className="bg-[#D3D3FF] hover:bg-[#BDBDFE]"
             >
               <Send className="h-4 w-4" />
             </Button>
@@ -313,7 +313,7 @@ export function HealthChatbot({ className, userId }: HealthChatbotProps) {
               size="icon"
               onClick={handleSendEmailReport}
               disabled={isTyping || !currentUserId}
-              className="border-rose-200 text-rose-600 hover:bg-rose-50"
+              className="border-[#D3D3FF]/50 text-[#8A8AFF] hover:bg-[#D3D3FF]/10"
               title="Send Wellness Email"
             >
               <Mail className="h-4 w-4" />

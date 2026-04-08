@@ -18,7 +18,7 @@ export default function SignInPage() {
   if (!isLoaded) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-rose-600"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#D3D3FF]"></div>
       </div>
     );
   }

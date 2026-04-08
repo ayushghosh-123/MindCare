@@ -127,7 +127,7 @@ export function EntryList({ entries, onEdit, onDelete }: EntryListProps) {
             )}
 
             {entry.notes && (
-              <div className="bg-slate-50 rounded-lg p-3">
+              <div className="bg-[#F0F0FF] rounded-lg p-3">
                 <p className="text-sm text-slate-700">{entry.notes}</p>
               </div>
             )}

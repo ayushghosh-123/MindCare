@@ -133,7 +133,7 @@ export function ChatWindow({
   const isFallbackMode = voiceMode === "fallback";
 
   return (
-    <div className="flex flex-col h-full bg-white relative">
+    <div className="flex flex-col h-full bg-[#F8F8FF] relative">
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto px-4 pb-32 pt-4">
@@ -171,10 +171,10 @@ export function ChatWindow({
           {/* Typing indicator */}
           {isSending && (
              <div className="flex justify-start mb-6 w-full animate-in fade-in slide-in-from-bottom-2 duration-300">
-               <div className="w-8 h-8 rounded-full border border-gray-200 bg-white flex items-center justify-center text-sm mr-4 shrink-0 shadow-sm">
+               <div className="w-8 h-8 rounded-full border border-gray-200 bg-[#F8F8FF] flex items-center justify-center text-sm mr-4 shrink-0 shadow-sm">
                  🤖
                </div>
-               <div className="bg-white border text-gray-800 rounded-2xl px-5 py-4 shadow-sm flex flex-col gap-2">
+               <div className="bg-[#F8F8FF] border text-gray-800 rounded-2xl px-5 py-4 shadow-sm flex flex-col gap-2">
                  <div className="flex items-center gap-2">
                    {[0, 150, 300].map((delay) => (
                      <span
@@ -211,7 +211,7 @@ export function ChatWindow({
       </div>
 
       {/* Floating Input Area */}
-      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-white via-white to-transparent pt-6 pb-[5.5rem] md:pb-6 px-4 pointer-events-none">
+      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#F8F8FF] via-white to-transparent pt-6 pb-[5.5rem] md:pb-6 px-4 pointer-events-none">
         <div className="max-w-3xl mx-auto relative pointer-events-auto">
           {/* Voice Mode Info - Show when in fallback */}
           {isFallbackMode && isVoiceSupported && (
@@ -221,7 +221,7 @@ export function ChatWindow({
                 <div className="text-amber-900">
                   <p className="font-medium mb-1">Running in Browser Fallback Mode</p>
                   <p className="text-xs mb-2">To unlock the full OpenAI voice experience (Whisper STT → Agent → TTS), add this to <code className="bg-amber-100 px-1 rounded">.env.local</code>:</p>
-                  <div className="bg-white p-2 rounded text-xs font-mono text-gray-700 mb-2">
+                  <div className="bg-[#F8F8FF] p-2 rounded text-xs font-mono text-gray-700 mb-2">
                     <div>OPENAI_API_KEY=your_api_key_here</div>
                   </div>
                   <div className="text-xs space-y-1">
@@ -242,13 +242,13 @@ export function ChatWindow({
                   <p className="font-medium mb-1">Voice Recognition Issue</p>
                   <p className="text-xs mb-3">{voiceError}</p>
                   {networkStatus === "offline" && (
-                    <div className="text-xs mb-2 p-2 bg-white rounded border border-red-100">
+                    <div className="text-xs mb-2 p-2 bg-[#F8F8FF] rounded border border-red-100">
                       <p className="font-medium text-red-700">📡 No Internet Connection</p>
                       <p className="mt-1">Check your network and try again.</p>
                     </div>
                   )}
                   {isRetrying && retryCount > 0 && (
-                    <div className="text-xs mb-2 p-2 bg-white rounded border border-orange-100">
+                    <div className="text-xs mb-2 p-2 bg-[#F8F8FF] rounded border border-orange-100">
                       <p className="font-medium text-orange-700">🔄 Auto-retrying ({retryCount}/3)…</p>
                     </div>
                   )}
@@ -265,7 +265,7 @@ export function ChatWindow({
             </div>
           )}
 
-          <div className="relative flex items-end shadow-lg border border-gray-200 bg-white rounded-2xl overflow-hidden focus-within:ring-2 focus-within:ring-violet-200 focus-within:border-violet-400 transition-all">
+          <div className="relative flex items-end shadow-lg border border-gray-200 bg-[#F8F8FF] rounded-2xl overflow-hidden focus-within:ring-2 focus-within:ring-violet-200 focus-within:border-violet-400 transition-all">
             <textarea
               rows={1}
               value={input}
@@ -291,8 +291,8 @@ export function ChatWindow({
                 disabled={!isVoiceSupported || isSending}
                 className={`p-2 rounded-xl border transition-colors ${
                   isListening
-                    ? "bg-rose-50 text-rose-600 border-rose-200"
-                    : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
+                    ? "bg-[#D3D3FF]/10 text-[#8A8AFF] border-[#D3D3FF]/50"
+                    : "bg-[#F8F8FF] text-gray-600 border-gray-200 hover:bg-gray-50"
                 } disabled:bg-gray-100 disabled:text-gray-300 disabled:border-gray-100`}
                 title={
                   isVoiceSupported
@@ -312,7 +312,7 @@ export function ChatWindow({
                 className={`p-2 rounded-xl border transition-colors ${
                   autoSpeak
                     ? "bg-violet-50 text-violet-600 border-violet-200"
-                    : "bg-white text-gray-500 border-gray-200 hover:bg-gray-50"
+                    : "bg-[#F8F8FF] text-gray-500 border-gray-200 hover:bg-gray-50"
                 }`}
                 title={autoSpeak ? "Mute spoken replies" : "Enable spoken replies"}
                 aria-label={autoSpeak ? "Mute spoken replies" : "Enable spoken replies"}
@@ -363,7 +363,7 @@ export function ChatWindow({
           </div>
           <p className="text-[11px] text-gray-400 mt-2 text-center">{voiceHintText}</p>
           {voiceError && (
-            <p className="text-[11px] text-rose-500 mt-1 text-center">{voiceError}</p>
+            <p className="text-[11px] text-[#8A8AFF] mt-1 text-center">{voiceError}</p>
           )}
         </div>
       </div>

@@ -87,7 +87,7 @@ export function AgentReviewPanel({
       )}
 
       {/* Workflow Progress Steps */}
-      <div className="px-5 py-3 bg-white border-b border-gray-100">
+      <div className="px-5 py-3 bg-[#F8F8FF] border-b border-gray-100">
         <div className="flex flex-wrap gap-x-4 gap-y-2">
           {payload.steps.map((step, i) => {
             const isFinished = isComplete || step.completed;
@@ -162,7 +162,7 @@ export function AgentReviewPanel({
               if (isEditing) setEditedText(payload.responseToReview);
             }}
             disabled={isResuming || confirmed}
-            className="flex-1 border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 text-sm font-medium py-2.5 px-4 rounded-xl transition disabled:opacity-50"
+            className="flex-1 border border-gray-300 bg-[#F8F8FF] hover:bg-gray-50 text-gray-700 text-sm font-medium py-2.5 px-4 rounded-xl transition disabled:opacity-50"
           >
             {isEditing ? "↩ Cancel Edit" : "✏️ Edit Before Sending"}
           </button>
@@ -170,7 +170,7 @@ export function AgentReviewPanel({
           <button
             onClick={onReject}
             disabled={isResuming || confirmed}
-            className="flex-1 border border-red-200 bg-white hover:bg-red-50 text-red-500 text-sm font-medium py-2.5 px-4 rounded-xl transition disabled:opacity-50"
+            className="flex-1 border border-red-200 bg-[#F8F8FF] hover:bg-red-50 text-red-500 text-sm font-medium py-2.5 px-4 rounded-xl transition disabled:opacity-50"
           >
             ❌ Reject — Don't Email
           </button>

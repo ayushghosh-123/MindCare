@@ -8,6 +8,7 @@ import { dbHelpers, type HealthEntry, type UserProfile } from '@/lib/supabase';
 import { useToast } from '@/components/hooks/use-toast';
 import { MainNavbar } from '@/components/main-navbar';
 import { Button } from '@/components/ui/button';
+import { LoadingSkeleton } from '@/components/loading-skeleton';
 
 export default function ProfilePage() {
   const { user, isLoaded } = useUser();
@@ -92,7 +93,7 @@ export default function ProfilePage() {
   if (!isLoaded) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-rose-600"></div>
+        <LoadingSkeleton />
       </div>
     );
   }
@@ -114,7 +115,7 @@ export default function ProfilePage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       <MainNavbar />
       {/* Header */}
-      <div className="bg-white border-b border-slate-200 sticky top-0 z-10">
+      <div className="bg-[#F8F8FF] border-b border-slate-200 sticky top-0 z-10">
         <div className="container mx-auto px-4 sm:px-6 py-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-4">
@@ -133,11 +134,8 @@ export default function ProfilePage() {
           {/* <SupabaseConnectionTest /> */}
 
           {loading ? (
-            <div className="flex items-center justify-center py-12">
-              <div className="text-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-rose-600 mx-auto mb-4"></div>
-                <p className="text-slate-600">Loading your profile...</p>
-              </div>
+            <div className="flex items-center justify-center py-12 w-full">
+              <LoadingSkeleton />
             </div>
           ) : (
             <UserProfileComponent

@@ -203,7 +203,7 @@ export default function DiaryPage() {
   if (!isLoaded) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-rose-600" />
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#D3D3FF]" />
       </div>
     );
   }
@@ -230,7 +230,7 @@ export default function DiaryPage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       <MainNavbar />
       {/* Header */}
-      <div className="bg-white border-b border-slate-200 sticky top-0 z-10 shadow-sm">
+      <div className="bg-[#F8F8FF] border-b border-slate-200 sticky top-0 z-10 shadow-sm">
         <div className="container mx-auto px-4 sm:px-6 py-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-4">
@@ -240,7 +240,7 @@ export default function DiaryPage() {
               </div>
             </div>
             {!isWriting && (
-              <Button onClick={() => setIsWriting(true)} className="bg-rose-600 hover:bg-rose-700 shadow-md">
+              <Button onClick={() => setIsWriting(true)} className="bg-[#D3D3FF] hover:bg-[#BDBDFE] shadow-md">
                 <Plus className="h-4 w-4 mr-2" /> New Entry
               </Button>
             )}
@@ -257,7 +257,7 @@ export default function DiaryPage() {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-lg">Journals</CardTitle>
-                  <Button onClick={createJournal} size="sm" variant="outline" className="text-rose-600 border-rose-200 hover:bg-rose-50">
+                  <Button onClick={createJournal} size="sm" variant="outline" className="text-[#8A8AFF] border-[#D3D3FF]/50 hover:bg-[#D3D3FF]/10">
                     <Plus className="h-4 w-4" />
                   </Button>
                 </div>
@@ -265,7 +265,7 @@ export default function DiaryPage() {
               <CardContent>
                 {loading && journals.length === 0 ? (
                   <div className="text-center py-4">
-                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-rose-600 mx-auto" />
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#D3D3FF] mx-auto" />
                   </div>
                 ) : journals.length === 0 ? (
                   <div className="text-center py-8">
@@ -281,8 +281,8 @@ export default function DiaryPage() {
                         className={cn(
                           'p-3 rounded-xl cursor-pointer transition-all border',
                           selectedJournal?.id === journal.id
-                            ? 'bg-rose-50 border-rose-200 shadow-sm'
-                            : 'bg-white border-transparent hover:bg-slate-50 hover:border-slate-200'
+                            ? 'bg-[#D3D3FF]/10 border-[#D3D3FF]/50 shadow-sm'
+                            : 'bg-[#F8F8FF] border-transparent hover:bg-[#F0F0FF] hover:border-slate-200'
                         )}
                         onClick={() => setSelectedJournal(journal)}
                       >
@@ -305,8 +305,8 @@ export default function DiaryPage() {
           <div className="lg:col-span-3 space-y-6">
 
             {isWriting ? (
-              <Card className="shadow-lg border-rose-100">
-                <CardHeader className="bg-rose-50/50 border-b border-rose-100 rounded-t-xl">
+              <Card className="shadow-lg border-[#D3D3FF]/30">
+                <CardHeader className="bg-[#D3D3FF]/10/50 border-b border-[#D3D3FF]/30 rounded-t-xl">
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-rose-900">Write New Entry</CardTitle>
                     <div className="flex gap-2">
@@ -314,7 +314,7 @@ export default function DiaryPage() {
                       <Button
                         onClick={saveEntry}
                         disabled={!entryContent.trim() || loading}
-                        className="bg-rose-600 hover:bg-rose-700 shadow-md"
+                        className="bg-[#D3D3FF] hover:bg-[#BDBDFE] shadow-md"
                       >
                         <Save className="h-4 w-4 mr-2" /> Save Entry
                       </Button>
@@ -341,11 +341,11 @@ export default function DiaryPage() {
                       className="mt-1.5"
                     />
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-[#F0F0FF] p-4 rounded-xl border border-slate-100">
                     <div>
                       <Label className="text-slate-700 font-semibold">Mood</Label>
                       <Select value={entryMood} onValueChange={(v: typeof entryMood) => setEntryMood(v)}>
-                        <SelectTrigger className="mt-1.5 bg-white"><SelectValue /></SelectTrigger>
+                        <SelectTrigger className="mt-1.5 bg-[#F8F8FF]"><SelectValue /></SelectTrigger>
                         <SelectContent>
                           <SelectItem value="excellent">Excellent</SelectItem>
                           <SelectItem value="good">Good</SelectItem>
@@ -362,7 +362,7 @@ export default function DiaryPage() {
                           value={newTag}
                           onChange={(e) => setNewTag(e.target.value)}
                           placeholder="Add tag..."
-                          className="bg-white"
+                          className="bg-[#F8F8FF]"
                           onKeyPress={(e) => e.key === 'Enter' && addTag()}
                         />
                         <Button onClick={addTag} variant="secondary">Add</Button>
@@ -370,7 +370,7 @@ export default function DiaryPage() {
                       {entryTags.length > 0 && (
                         <div className="flex flex-wrap gap-2 mt-3">
                           {entryTags.map((tag, i) => (
-                            <Badge key={i} variant="outline" className="cursor-pointer bg-white hover:bg-rose-50 hover:text-rose-700 transition-colors py-1 px-2" onClick={() => removeTag(tag)}>
+                            <Badge key={i} variant="outline" className="cursor-pointer bg-[#F8F8FF] hover:bg-[#D3D3FF]/10 hover:text-rose-700 transition-colors py-1 px-2" onClick={() => removeTag(tag)}>
                               {tag} <span className="ml-1 opacity-50">×</span>
                             </Badge>
                           ))}
@@ -382,7 +382,7 @@ export default function DiaryPage() {
               </Card>
             ) : selectedJournal ? (
               <div className="space-y-6">
-                <Card className="bg-white shadow-sm border-slate-200">
+                <Card className="bg-[#F8F8FF] shadow-sm border-slate-200">
                   <CardHeader className="py-4">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                       <div className="flex items-center gap-3 w-full md:w-auto">
@@ -437,13 +437,13 @@ export default function DiaryPage() {
                             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-slate-400" />
                             <Input 
                               placeholder="Search entries..." 
-                              className="pl-9 bg-slate-50 border-slate-200"
+                              className="pl-9 bg-[#F0F0FF] border-slate-200"
                               value={searchQuery}
                               onChange={e => setSearchQuery(e.target.value)}
                             />
                           </div>
                           <Select value={filterMood} onValueChange={setFilterMood}>
-                            <SelectTrigger className="w-[130px] bg-slate-50 border-slate-200">
+                            <SelectTrigger className="w-[130px] bg-[#F0F0FF] border-slate-200">
                               <div className="flex items-center gap-2">
                                 <Filter className="w-3 h-3 text-slate-400" />
                                 <span className="truncate">
@@ -467,14 +467,14 @@ export default function DiaryPage() {
                 </Card>
 
                 {entries.length === 0 ? (
-                  <Card className="border-dashed border-2 bg-slate-50/50">
+                  <Card className="border-dashed border-2 bg-[#F0F0FF]/50">
                     <CardContent className="flex flex-col items-center justify-center py-16">
-                      <div className="p-4 bg-white rounded-full shadow-sm mb-4">
+                      <div className="p-4 bg-[#F8F8FF] rounded-full shadow-sm mb-4">
                         <FileText className="h-10 w-10 text-slate-300" />
                       </div>
                       <h3 className="text-xl font-semibold text-slate-700 mb-2">Ready to start writing?</h3>
                       <p className="text-slate-500 mb-6 text-center max-w-sm">Capture your daily thoughts, track your mood, and discover AI-powered insights.</p>
-                      <Button onClick={() => setIsWriting(true)} className="bg-rose-600 hover:bg-rose-700 shadow-md">
+                      <Button onClick={() => setIsWriting(true)} className="bg-[#D3D3FF] hover:bg-[#BDBDFE] shadow-md">
                         <Plus className="h-4 w-4 mr-2" /> Write First Entry
                       </Button>
                     </CardContent>
@@ -544,14 +544,14 @@ export default function DiaryPage() {
                 )}
               </div>
             ) : (
-              <Card className="border-dashed border-2 bg-slate-50/50">
+              <Card className="border-dashed border-2 bg-[#F0F0FF]/50">
                 <CardContent className="flex flex-col items-center justify-center py-20">
-                  <div className="p-4 bg-white rounded-full shadow-sm mb-4">
+                  <div className="p-4 bg-[#F8F8FF] rounded-full shadow-sm mb-4">
                     <BookOpen className="h-12 w-12 text-slate-300" />
                   </div>
                   <h3 className="text-xl font-bold text-slate-800 mb-2">Select a Journal</h3>
                   <p className="text-slate-500 text-center mb-6">Choose an existing journal from the sidebar or click below to create a new one.</p>
-                  <Button onClick={createJournal} className="bg-rose-600 hover:bg-rose-700 shadow-md">
+                  <Button onClick={createJournal} className="bg-[#D3D3FF] hover:bg-[#BDBDFE] shadow-md">
                     <Plus className="h-4 w-4 mr-2" /> Create New Journal
                   </Button>
                 </CardContent>

@@ -53,8 +53,8 @@ export function StatsOverview({ entries }: StatsOverviewProps) {
       title: 'Total Entries',
       value: totalEntries,
       icon: TrendingUp,
-      color: 'text-rose-600',
-      bgColor: 'bg-rose-50',
+      color: 'text-[#8A8AFF]',
+      bgColor: 'bg-[#D3D3FF]/10',
     },
   ];
 

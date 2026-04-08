@@ -119,14 +119,14 @@ export function SupabaseConnectionTest() {
       <CardContent className="space-y-4">
         {loading ? (
           <div className="text-center py-4">
-            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-rose-600 mx-auto"></div>
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#D3D3FF] mx-auto"></div>
             <p className="text-sm text-slate-600 mt-2">Running tests...</p>
           </div>
         ) : testResult ? (
           <>
             {/* Connection Status */}
             <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
+              <div className="flex items-center justify-between p-3 bg-[#F0F0FF] rounded-lg">
                 <span className="font-medium">Connection Status</span>
                 <Badge variant={testResult.connected ? 'default' : 'destructive'}>
                   {testResult.connected ? 'Connected' : 'Disconnected'}
@@ -144,31 +144,31 @@ export function SupabaseConnectionTest() {
               <div className="space-y-2">
                 <h4 className="font-medium text-sm">Table Accessibility</h4>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                  <div className="flex items-center justify-between p-2 bg-slate-50 rounded">
+                  <div className="flex items-center justify-between p-2 bg-[#F0F0FF] rounded">
                     <span className="text-sm">health_entries</span>
                     <Badge variant={testResult.tablesAccessible.health_entries ? 'default' : 'destructive'}>
                       {testResult.tablesAccessible.health_entries ? '✓' : '✗'}
                     </Badge>
                   </div>
-                  <div className="flex items-center justify-between p-2 bg-slate-50 rounded">
+                  <div className="flex items-center justify-between p-2 bg-[#F0F0FF] rounded">
                     <span className="text-sm">chats</span>
                     <Badge variant={testResult.tablesAccessible.chats ? 'default' : 'destructive'}>
                       {testResult.tablesAccessible.chats ? '✓' : '✗'}
                     </Badge>
                   </div>
-                  <div className="flex items-center justify-between p-2 bg-slate-50 rounded">
+                  <div className="flex items-center justify-between p-2 bg-[#F0F0FF] rounded">
                     <span className="text-sm">journal_entries</span>
                     <Badge variant={testResult.tablesAccessible.journal_entries ? 'default' : 'destructive'}>
                       {testResult.tablesAccessible.journal_entries ? '✓' : '✗'}
                     </Badge>
                   </div>
-                  <div className="flex items-center justify-between p-2 bg-slate-50 rounded">
+                  <div className="flex items-center justify-between p-2 bg-[#F0F0FF] rounded">
                     <span className="text-sm">users</span>
                     <Badge variant={testResult.tablesAccessible.users ? 'default' : 'destructive'}>
                       {testResult.tablesAccessible.users ? '✓' : '✗'}
                     </Badge>
                   </div>
-                  <div className="flex items-center justify-between p-2 bg-slate-50 rounded">
+                  <div className="flex items-center justify-between p-2 bg-[#F0F0FF] rounded">
                     <span className="text-sm">user_profiles</span>
                     <Badge variant={testResult.tablesAccessible.user_profiles ? 'default' : 'destructive'}>
                       {testResult.tablesAccessible.user_profiles ? '✓' : '✗'}
@@ -223,7 +223,7 @@ export function SupabaseConnectionTest() {
                 <div className="space-y-2 pt-4 border-t">
                   <h4 className="font-medium text-sm">User Data Isolation</h4>
                   <div className="space-y-2">
-                    <div className="flex items-center justify-between p-2 bg-slate-50 rounded">
+                    <div className="flex items-center justify-between p-2 bg-[#F0F0FF] rounded">
                       <span className="text-sm">Health Entries</span>
                       <div className="flex items-center gap-2">
                         <span className="text-xs text-slate-600">
@@ -236,7 +236,7 @@ export function SupabaseConnectionTest() {
                         </Badge>
                       </div>
                     </div>
-                    <div className="flex items-center justify-between p-2 bg-slate-50 rounded">
+                    <div className="flex items-center justify-between p-2 bg-[#F0F0FF] rounded">
                       <span className="text-sm">Chat Messages</span>
                       <div className="flex items-center gap-2">
                         <span className="text-xs text-slate-600">
@@ -249,7 +249,7 @@ export function SupabaseConnectionTest() {
                         </Badge>
                       </div>
                     </div>
-                    <div className="flex items-center justify-between p-2 bg-slate-50 rounded">
+                    <div className="flex items-center justify-between p-2 bg-[#F0F0FF] rounded">
                       <span className="text-sm">Journal Entries</span>
                       <div className="flex items-center gap-2">
                         <span className="text-xs text-slate-600">

@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 
+// connect with env variables and throw error if missing to prevent silent failures
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
@@ -11,6 +12,7 @@ if (!supabaseUrl || !supabaseAnonKey) {
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
+// Admin client for server-side operations (e.g. user sync, email logging) - only initialized if service role key is available
 export const supabaseAdmin =
   typeof window === 'undefined' && process.env.SUPABASE_SERVICE_ROLE_KEY
     ? createClient(supabaseUrl, process.env.SUPABASE_SERVICE_ROLE_KEY)
@@ -180,6 +182,15 @@ export const dbHelpers = {
       .select()
       .single();
     return { data, error };
+  },
+
+  async deleteJournal(journalId: string) {
+    const { error } = await supabase
+      .from('journals')
+      .delete()
+      .eq('id', journalId);
+
+    return { success: !error, error };
   },
 
   // Journal entries

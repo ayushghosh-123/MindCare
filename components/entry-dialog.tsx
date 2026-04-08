@@ -1,5 +1,6 @@
 'use client';
 
+// This component is responsible for rendering the dialog used to create and edit health entries. It includes form fields for date, mood, symptoms, notes, sleep hours, water intake, and exercise minutes. The form validates input before saving and calls the onSave callback with the entry data when submitted.
 import { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -14,6 +15,7 @@ import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import type { HealthEntry } from '@/lib/supabase';
 
+// Props for the EntryDialog component, which includes open state, entry data, and callbacks for opening/closing and saving the entry.
 interface EntryDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -21,6 +23,7 @@ interface EntryDialogProps {
   onSave: (entry: Partial<HealthEntry>) => void;
 }
 
+// The EntryDialog component renders a form inside a dialog for creating or editing health entries. It manages local state for form fields and handles form submission with validation before calling the onSave callback.
 export function EntryDialog({ open, onOpenChange, entry, onSave }: EntryDialogProps) {
   const [date, setDate] = useState<Date>(new Date());
   const [mood, setMood] = useState('');
@@ -30,6 +33,7 @@ export function EntryDialog({ open, onOpenChange, entry, onSave }: EntryDialogPr
   const [waterIntake, setWaterIntake] = useState('');
   const [exerciseMinutes, setExerciseMinutes] = useState('');
 
+  // When the dialog opens or the entry changes, populate the form fields with the entry data (if editing) or reset to defaults (if creating new).
   useEffect(() => {
     if (entry) {
       setDate(new Date(entry.entry_date));
@@ -44,6 +48,7 @@ export function EntryDialog({ open, onOpenChange, entry, onSave }: EntryDialogPr
     }
   }, [entry, open]);
 
+  // Resets the form fields to their default values for creating a new entry.
   const resetForm = () => {
     setDate(new Date());
     setMood('');
@@ -54,6 +59,7 @@ export function EntryDialog({ open, onOpenChange, entry, onSave }: EntryDialogPr
     setExerciseMinutes('');
   };
 
+  // Handles form submission by validating input and calling the onSave callback with the entry data if validation passes.
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -207,7 +213,7 @@ export function EntryDialog({ open, onOpenChange, entry, onSave }: EntryDialogPr
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button type="submit" className="bg-rose-500 hover:bg-rose-600">
+            <Button type="submit" className="bg-[#D3D3FF]/100 hover:bg-[#D3D3FF]">
               {entry ? 'Update' : 'Save'} Entry
             </Button>
           </div>

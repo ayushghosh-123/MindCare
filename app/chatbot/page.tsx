@@ -60,7 +60,7 @@ export default function ChatbotPage() {
 
   if (!isLoaded) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#F0F0FF] flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-600" />
       </div>
     );
@@ -69,7 +69,7 @@ export default function ChatbotPage() {
   if (!user) { router.push('/sign-in'); return null; }
 
   return (
-    <div className="flex flex-col h-[100dvh] overflow-hidden bg-white">
+    <div className="flex flex-col h-[100dvh] overflow-hidden bg-[#F8F8FF]">
       <MainNavbar />
       
       <div className="flex flex-1 overflow-hidden relative">
@@ -111,7 +111,7 @@ export default function ChatbotPage() {
         <div className="flex-1 flex flex-col h-full overflow-hidden relative">
           
           {/* Mobile menu toggle for sidebar (only shows on mobile) */}
-          <div className="md:hidden flex items-center justify-between px-4 py-2 border-b border-gray-100 bg-white shadow-sm z-10 sticky top-0">
+          <div className="md:hidden flex items-center justify-between px-4 py-2 border-b border-gray-100 bg-[#F8F8FF] shadow-sm z-10 sticky top-0">
             <button 
               className="p-2 text-gray-600 hover:bg-gray-100 rounded-md transition-colors"
               onClick={() => setSidebarOpen(true)}

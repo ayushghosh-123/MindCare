@@ -15,7 +15,7 @@ export function MessageBubble({ message }: { message: Chat }) {
     <div className={`flex w-full mb-6 relative animate-in fade-in slide-in-from-bottom-2 duration-300 ${isUser ? "justify-end" : "justify-start"}`}>
       
       {!isUser && (
-        <div className="w-8 h-8 rounded-full border border-gray-200 bg-gradient-to-br from-white to-gray-50 flex items-center justify-center text-sm mr-4 shrink-0 mt-0.5 shadow-sm">
+        <div className="w-8 h-8 rounded-full border border-gray-200 bg-gradient-to-br from-[#F8F8FF] to-gray-50 flex items-center justify-center text-sm mr-4 shrink-0 mt-0.5 shadow-sm">
           🤖
         </div>
       )}
@@ -25,7 +25,7 @@ export function MessageBubble({ message }: { message: Chat }) {
           className={`px-5 py-3.5 text-[15px] leading-relaxed whitespace-pre-line shadow-sm border ${
             isUser
               ? "bg-gradient-to-br from-violet-600 to-indigo-600 text-white rounded-2xl rounded-tr-sm border-transparent"
-              : "bg-white border-gray-100 text-gray-800 rounded-2xl rounded-tl-sm"
+              : "bg-[#F8F8FF] border-gray-100 text-gray-800 rounded-2xl rounded-tl-sm"
           }`}
         >
           {message.message}

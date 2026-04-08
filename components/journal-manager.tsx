@@ -188,7 +188,7 @@ export function JournalManager({
       <Card className={className}>
         <CardContent className="flex items-center justify-center py-12">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-rose-600 mx-auto mb-4"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#D3D3FF] mx-auto mb-4"></div>
             <p className="text-slate-600">Loading journals...</p>
           </div>
         </CardContent>
@@ -206,11 +206,12 @@ export function JournalManager({
         </div>
         <Button 
           onClick={() => setShowCreateJournal(true)}
-          className="bg-rose-600 hover:bg-rose-700"
+          className="bg-[#D3D3FF] hover:bg-[#BDBDFE]"
         >
           <Plus className="h-4 w-4 mr-2" />
           New Journal
         </Button>
+        
       </div>
 
       {/* Create Journal Modal */}
@@ -259,7 +260,7 @@ export function JournalManager({
               <Button variant="outline" onClick={() => setShowCreateJournal(false)}>
                 Cancel
               </Button>
-              <Button onClick={createJournal} className="bg-rose-600 hover:bg-rose-700">
+              <Button onClick={createJournal} className="bg-[#D3D3FF] hover:bg-[#BDBDFE]">
                 Create Journal
               </Button>
             </div>
@@ -329,7 +330,7 @@ export function JournalManager({
               </div>
               <Button 
                 onClick={() => setShowCreateEntry(true)}
-                className="bg-rose-600 hover:bg-rose-700"
+                className="bg-[#D3D3FF] hover:bg-[#BDBDFE]"
               >
                 <Plus className="h-4 w-4 mr-2" />
                 New Entry
@@ -476,7 +477,7 @@ export function JournalManager({
               <Button variant="outline" onClick={() => setShowCreateEntry(false)}>
                 Cancel
               </Button>
-              <Button onClick={createEntry} className="bg-rose-600 hover:bg-rose-700">
+              <Button onClick={createEntry} className="bg-[#D3D3FF] hover:bg-[#BDBDFE]">
                 Create Entry
               </Button>
             </div>

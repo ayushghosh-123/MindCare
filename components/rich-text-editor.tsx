@@ -91,7 +91,7 @@ export function RichTextEditor({
               <Eye className="h-4 w-4 mr-2" />
               {isPreview ? 'Edit' : 'Preview'}
             </Button>
-            <Button size="sm" className="bg-rose-600 hover:bg-rose-700">
+            <Button size="sm" className="bg-[#D3D3FF] hover:bg-[#BDBDFE]">
               <Save className="h-4 w-4 mr-2" />
               Save Draft
             </Button>
@@ -102,7 +102,7 @@ export function RichTextEditor({
         {!isPreview ? (
           <>
             <div className="border border-slate-200 rounded-lg mb-4">
-              <div className="flex flex-wrap gap-1 p-2 border-b border-slate-200 bg-slate-50">
+              <div className="flex flex-wrap gap-1 p-2 border-b border-slate-200 bg-[#F0F0FF]">
                 {formatButtons.map(({ icon: Icon, command, value, title }) => (
                   <Button
                     // unique, stable key combining command + value/title
@@ -134,7 +134,7 @@ export function RichTextEditor({
           </>
         ) : (
           <div
-            className="min-h-[400px] p-4 border border-slate-200 rounded-lg bg-slate-50 prose prose-sm max-w-none"
+            className="min-h-[400px] p-4 border border-slate-200 rounded-lg bg-[#F0F0FF] prose prose-sm max-w-none"
             dangerouslySetInnerHTML={{ __html: content }}
           />
         )}

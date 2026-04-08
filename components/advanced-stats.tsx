@@ -1,7 +1,7 @@
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { TrendingUp, TrendingDown, Activity, Moon, Droplets, Brain, Heart, Calendar, BarChart3, Target, Flame} from 'lucide-react';
+import { TrendingUp, TrendingDown, Activity, Moon, Droplets, Leaf, Heart, Calendar, BarChart3, Target, Flame} from 'lucide-react';
 import type { HealthEntry } from '@/lib/supabase';
 import { calculateDayStreak, calculateAggregateStats, calculateTrend } from '@/lib/health-calculators';
 
@@ -81,7 +81,7 @@ export function AdvancedStats({ entries }: AdvancedStatsProps) {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Heart className="h-5 w-5 text-rose-600" />
+            <Heart className="h-5 w-5 text-[#8A8AFF]" />
             Overall Health Score
           </CardTitle>
         </CardHeader>
@@ -123,7 +123,7 @@ export function AdvancedStats({ entries }: AdvancedStatsProps) {
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-slate-600 flex items-center gap-2">
-              <Brain className="h-4 w-4" />
+              <Leaf className="h-4 w-4" />
               Mood Trend
             </CardTitle>
           </CardHeader>
@@ -228,25 +228,25 @@ export function AdvancedStats({ entries }: AdvancedStatsProps) {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Calendar className="h-5 w-5 text-rose-600" />
+            <Calendar className="h-5 w-5 text-[#8A8AFF]" />
             This Week&apos;s Summary
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="text-center p-4 bg-slate-50 rounded-lg">
+            <div className="text-center p-4 bg-[#F0F0FF] rounded-lg">
               <div className="text-2xl font-bold text-slate-800 mb-1">
                 {last7Days.length}
               </div>
               <div className="text-sm text-slate-600">Days Tracked</div>
             </div>
-            <div className="text-center p-4 bg-slate-50 rounded-lg">
+            <div className="text-center p-4 bg-[#F0F0FF] rounded-lg">
               <div className="text-2xl font-bold text-slate-800 mb-1">
                 {last7Days.reduce((sum, entry) => sum + entry.exercise_minutes, 0)}
               </div>
               <div className="text-sm text-slate-600">Total Exercise (min)</div>
             </div>
-            <div className="text-center p-4 bg-slate-50 rounded-lg">
+            <div className="text-center p-4 bg-[#F0F0FF] rounded-lg">
               <div className="text-2xl font-bold text-slate-800 mb-1">
                 {last7Days.reduce((sum, entry) => sum + entry.water_intake, 0)}
               </div>

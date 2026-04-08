@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { User, Edit, Save, X, Heart, Target, Calendar, Activity, Moon, Brain, Droplets, AlertCircle } from 'lucide-react';
+import { User, Edit, Save, X, Heart, Target, Calendar, Activity, Moon, Leaf, Droplets, AlertCircle } from 'lucide-react';
 import { useUser } from '@clerk/nextjs';
 import { dbHelpers, type HealthEntry, type UserProfile as UserProfileType } from '@/lib/supabase';
 import { useToast } from '@/components/hooks/use-toast';
@@ -259,7 +259,7 @@ export function UserProfile({ entries, userProfile: dbUserProfile, onProfileUpda
             <div className="flex items-center gap-4">
               <Avatar className="h-16 w-16">
                 <AvatarImage src={user?.imageUrl} />
-                <AvatarFallback className="bg-rose-100 text-rose-600 text-xl">
+                <AvatarFallback className="bg-[#D3D3FF]/30 text-[#8A8AFF] text-xl">
                   <User className="h-8 w-8" />
                 </AvatarFallback>
               </Avatar>
@@ -313,7 +313,7 @@ export function UserProfile({ entries, userProfile: dbUserProfile, onProfileUpda
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <User className="h-5 w-5 text-rose-600" />
+            <User className="h-5 w-5 text-[#8A8AFF]" />
             Personal Information
           </CardTitle>
         </CardHeader>
@@ -376,7 +376,7 @@ export function UserProfile({ entries, userProfile: dbUserProfile, onProfileUpda
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Target className="h-5 w-5 text-rose-600" />
+            <Target className="h-5 w-5 text-[#8A8AFF]" />
             Health Goals
           </CardTitle>
         </CardHeader>
@@ -394,7 +394,7 @@ export function UserProfile({ entries, userProfile: dbUserProfile, onProfileUpda
               </div>
               <div className="space-y-2">
                 {profile.healthGoals.map((goal, index) => (
-                  <div key={index} className="flex items-center justify-between p-2 bg-slate-50 rounded">
+                  <div key={index} className="flex items-center justify-between p-2 bg-[#F0F0FF] rounded">
                     <span>{goal}</span>
                     <Button
                       variant="ghost"
@@ -443,7 +443,7 @@ export function UserProfile({ entries, userProfile: dbUserProfile, onProfileUpda
                 </div>
                 <div className="space-y-2">
                   {profile.medicalConditions.map((condition, index) => (
-                    <div key={index} className="flex items-center justify-between p-2 bg-slate-50 rounded">
+                    <div key={index} className="flex items-center justify-between p-2 bg-[#F0F0FF] rounded">
                       <span>{condition}</span>
                       <Button
                         variant="ghost"
@@ -490,7 +490,7 @@ export function UserProfile({ entries, userProfile: dbUserProfile, onProfileUpda
                 </div>
                 <div className="space-y-2">
                   {profile.medications.map((medication, index) => (
-                    <div key={index} className="flex items-center justify-between p-2 bg-slate-50 rounded">
+                    <div key={index} className="flex items-center justify-between p-2 bg-[#F0F0FF] rounded">
                       <span>{medication}</span>
                       <Button
                         variant="ghost"
@@ -524,7 +524,7 @@ export function UserProfile({ entries, userProfile: dbUserProfile, onProfileUpda
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Heart className="h-5 w-5 text-rose-600" />
+            <Heart className="h-5 w-5 text-[#8A8AFF]" />
             Emergency & Medical Contacts
           </CardTitle>
         </CardHeader>
@@ -592,7 +592,7 @@ export function UserProfile({ entries, userProfile: dbUserProfile, onProfileUpda
           </Button>
           <Button
             onClick={handleSave}
-            className="bg-rose-600 hover:bg-rose-700"
+            className="bg-[#D3D3FF] hover:bg-[#BDBDFE]"
             disabled={saving}
           >
             {saving ? 'Saving...' : 'Save Changes'}
