@@ -35,7 +35,10 @@ export function UnifiedDashboardToday({ userId, className }: UnifiedDashboardTod
     symptoms: '',
     notes: '',
     energy_level: '',
-    stress_level: ''
+    stress_level: '',
+    breakfast: '',
+    lunch: '',
+    dinner: ''
   });
 
   // Helper: today's date in YYYY-MM-DD (matches DATE column)
@@ -65,6 +68,21 @@ export function UnifiedDashboardToday({ userId, className }: UnifiedDashboardTod
 
       setTodayEntry(today);
 
+      let userNotes = today?.notes || '';
+      let bfast = '', lun = '', din = '';
+
+      if (today?.notes && today.notes.startsWith('{')) {
+        try {
+          const parsed = JSON.parse(today.notes);
+          userNotes = parsed.text || '';
+          bfast = parsed.breakfast || '';
+          lun = parsed.lunch || '';
+          din = parsed.dinner || '';
+        } catch (e) {
+          // Keep as text if failed to parse
+        }
+      }
+
       // If entry exists, prefill form
       if (today) {
         setForm({
@@ -73,9 +91,12 @@ export function UnifiedDashboardToday({ userId, className }: UnifiedDashboardTod
           water_intake: today.water_intake != null ? String(today.water_intake) : '',
           mood: today.mood || '',
           symptoms: today.symptoms || '',
-          notes: today.notes || '',
+          notes: userNotes,
           energy_level: today.energy_level != null ? String(today.energy_level) : '',
-          stress_level: today.stress_level != null ? String(today.stress_level) : ''
+          stress_level: today.stress_level != null ? String(today.stress_level) : '',
+          breakfast: bfast,
+          lunch: lun,
+          dinner: din
         });
       } else {
         // No entry yet — reset form to empty/defaults
@@ -87,7 +108,10 @@ export function UnifiedDashboardToday({ userId, className }: UnifiedDashboardTod
           symptoms: '',
           notes: '',
           energy_level: '',
-          stress_level: ''
+          stress_level: '',
+          breakfast: '',
+          lunch: '',
+          dinner: ''
         });
       }
     } catch (err) {
@@ -114,14 +138,26 @@ export function UnifiedDashboardToday({ userId, className }: UnifiedDashboardTod
     sleep_hours?: string | number;
     exercise_minutes?: string | number;
     water_intake?: string | number;
+    breakfast?: string;
+    lunch?: string;
+    dinner?: string;
   }) => {
     const sourceData = data || form;
+    
+    // Default to form data for meals if not explicitly passed
+    const bfast = 'breakfast' in sourceData ? sourceData.breakfast : form.breakfast;
+    const lun = 'lunch' in sourceData ? sourceData.lunch : form.lunch;
+    const din = 'dinner' in sourceData ? sourceData.dinner : form.dinner;
+
+    const mealsLogged = [bfast, lun, din]
+      .filter((m) => typeof m === 'string' && m.trim().length > 0).length;
 
     return calculateHealthScore({
       mood: String(sourceData.mood || ''),
       sleep_hours: parseFloat(String(sourceData.sleep_hours || '0')),
       exercise_minutes: parseFloat(String(sourceData.exercise_minutes || '0')),
-      water_intake: parseFloat(String(sourceData.water_intake || '0'))
+      water_intake: parseFloat(String(sourceData.water_intake || '0')),
+      meals_logged: mealsLogged
     });
   };
 
@@ -154,13 +190,20 @@ export function UnifiedDashboardToday({ userId, className }: UnifiedDashboardTod
       // Calculate the health score
       const healthScore = computeHealthScore();
 
+      const notesPayload = JSON.stringify({
+        text: form.notes,
+        breakfast: form.breakfast,
+        lunch: form.lunch,
+        dinner: form.dinner
+      });
+
       // Prepare payload (health_score is calculated but not stored in DB schema)
       const payload: Partial<HealthEntry> = {
         user_id: userId,
         entry_date: todayIsoDate,
         mood: form.mood ? (form.mood as HealthEntry['mood']) : undefined,
         symptoms: form.symptoms || undefined,
-        notes: form.notes || undefined,
+        notes: notesPayload,
         sleep_hours: form.sleep_hours ? parseFloat(form.sleep_hours) : 0,
         water_intake: form.water_intake ? parseFloat(form.water_intake) : 0,
         exercise_minutes: form.exercise_minutes ? parseInt(form.exercise_minutes) : 0,
@@ -251,12 +294,30 @@ export function UnifiedDashboardToday({ userId, className }: UnifiedDashboardTod
   // Compute current score from form (live preview)
   const currentScore = computeHealthScore();
 
+  let entryBreakfast = '';
+  let entryLunch = '';
+  let entryDinner = '';
+
+  if (todayEntry?.notes && todayEntry.notes.startsWith('{')) {
+    try {
+      const parsed = JSON.parse(todayEntry.notes);
+      entryBreakfast = parsed.breakfast || '';
+      entryLunch = parsed.lunch || '';
+      entryDinner = parsed.dinner || '';
+    } catch (e) {
+      // Keep empty
+    }
+  }
+
   // Calculate stored score from database entry (health_score is not stored, calculate from saved data)
   const storedScore = todayEntry ? computeHealthScore({
     mood: todayEntry.mood,
     sleep_hours: todayEntry.sleep_hours,
     exercise_minutes: todayEntry.exercise_minutes,
     water_intake: todayEntry.water_intake,
+    breakfast: entryBreakfast,
+    lunch: entryLunch,
+    dinner: entryDinner,
   }) : 0;
 
   return (
@@ -391,6 +452,40 @@ export function UnifiedDashboardToday({ userId, className }: UnifiedDashboardTod
                 </div>
               </div>
 
+              {/* Daily Meals */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+                <div>
+                  <label className="text-xs text-slate-600">Breakfast (optional)</label>
+                  <input
+                    type="text"
+                    value={form.breakfast}
+                    onChange={onChange('breakfast')}
+                    className="w-full p-2 border rounded mt-1"
+                    placeholder="e.g. Oatmeal w/ Berries"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs text-slate-600">Lunch (optional)</label>
+                  <input
+                    type="text"
+                    value={form.lunch}
+                    onChange={onChange('lunch')}
+                    className="w-full p-2 border rounded mt-1"
+                    placeholder="e.g. Chicken Caesar Salad"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs text-slate-600">Dinner (optional)</label>
+                  <input
+                    type="text"
+                    value={form.dinner}
+                    onChange={onChange('dinner')}
+                    className="w-full p-2 border rounded mt-1"
+                    placeholder="e.g. Salmon & Rice"
+                  />
+                </div>
+              </div>
+
               {/* Symptoms & Notes */}
               <div className="mb-3">
                 <label className="text-xs text-slate-600">Symptoms (optional)</label>
@@ -433,7 +528,10 @@ export function UnifiedDashboardToday({ userId, className }: UnifiedDashboardTod
                       symptoms: '',
                       notes: '',
                       energy_level: '',
-                      stress_level: ''
+                      stress_level: '',
+                      breakfast: '',
+                      lunch: '',
+                      dinner: ''
                     });
                   }}
                   className="w-full sm:w-auto px-6 py-2.5 border border-slate-200 rounded-lg text-slate-700 hover:bg-[#F0F0FF] font-medium"

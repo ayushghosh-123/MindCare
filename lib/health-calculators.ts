@@ -20,18 +20,21 @@ export function calculateHealthScore(params: {
   sleep_hours?: number;
   exercise_minutes?: number;
   water_intake?: number;
+  meals_logged?: number; // Added
 }): number {
   const moodVal = moodToScore(params.mood);
   const sleepVal = params.sleep_hours ?? 0;
   const exerciseVal = params.exercise_minutes ?? 0;
   const waterVal = params.water_intake ?? 0;
+  const mealsVal = params.meals_logged ?? 0;
 
-  const partMood = (moodVal / 5) * 30;
-  const partSleep = Math.min(sleepVal / 8, 1) * 25;
-  const partExercise = Math.min(exerciseVal / 60, 1) * 25; // Unified target: 60 mins
+  const partMood = (moodVal / 5) * 25;
+  const partSleep = Math.min(sleepVal / 8, 1) * 20;
+  const partExercise = Math.min(exerciseVal / 60, 1) * 20; // Unified target: 60 mins
   const partWater = Math.min(waterVal / 8, 1) * 20;
+  const partMeals = Math.min(mealsVal / 3, 1) * 15;
 
-  return Math.round(partMood + partSleep + partExercise + partWater);
+  return Math.round(partMood + partSleep + partExercise + partWater + partMeals);
 }
 
 /**
@@ -89,31 +92,53 @@ export function calculateAggregateStats(entries: HealthEntry[]) {
   }
 
   const count = entries.length;
-  const totalMood = entries.reduce((sum, e) => sum + moodToScore(e.mood), 0);
-  const totalSleep = entries.reduce((sum, e) => sum + (e.sleep_hours || 0), 0);
-  const totalExercise = entries.reduce((sum, e) => sum + (e.exercise_minutes || 0), 0);
-  const totalWater = entries.reduce((sum, e) => sum + (e.water_intake || 0), 0);
+  let totalMood = 0;
+  let totalSleep = 0;
+  let totalExercise = 0;
+  let totalWater = 0;
+  let totalMeals = 0;
+
+  entries.forEach(e => {
+    totalMood += moodToScore(e.mood);
+    totalSleep += (e.sleep_hours || 0);
+    totalExercise += (e.exercise_minutes || 0);
+    totalWater += (e.water_intake || 0);
+
+    if (e.notes && e.notes.startsWith('{')) {
+      try {
+        const parsed = JSON.parse(e.notes);
+        let m = 0;
+        if (parsed.breakfast) m++;
+        if (parsed.lunch) m++;
+        if (parsed.dinner) m++;
+        totalMeals += m;
+      } catch (err) {}
+    }
+  });
 
   const avgMood = totalMood / count;
   const avgSleep = totalSleep / count;
   const avgExercise = totalExercise / count;
   const avgWater = totalWater / count;
+  const avgMeals = totalMeals / count;
 
   // Aggregate health score is based on averages
   const healthScore = calculateHealthScore({
     mood: undefined, // Handled manually below since we have avgMood numeric
     sleep_hours: avgSleep,
     exercise_minutes: avgExercise,
-    water_intake: avgWater
+    water_intake: avgWater,
+    meals_logged: avgMeals
   });
 
   // Re-calculate the mood part since we have a float average
-  const partMood = (avgMood / 5) * 30;
-  const partSleep = Math.min(avgSleep / 8, 1) * 25;
-  const partExercise = Math.min(avgExercise / 60, 1) * 25;
+  const partMood = (avgMood / 5) * 25;
+  const partSleep = Math.min(avgSleep / 8, 1) * 20;
+  const partExercise = Math.min(avgExercise / 60, 1) * 20;
   const partWater = Math.min(avgWater / 8, 1) * 20;
+  const partMeals = Math.min(avgMeals / 3, 1) * 15;
   
-  const finalScore = Math.round(partMood + partSleep + partExercise + partWater);
+  const finalScore = Math.round(partMood + partSleep + partExercise + partWater + partMeals);
 
   return {
     avgMood,
@@ -125,9 +150,7 @@ export function calculateAggregateStats(entries: HealthEntry[]) {
   };
 }
 
-/**
- * Calculates a percentage trend between two halves of a value array.
- */
+/*** Calculates a percentage trend between two halves of a value array.***/
 export function calculateTrend(values: number[]) {
   if (values.length < 2) return 0;
   const firstHalf = values.slice(0, Math.floor(values.length / 2));
