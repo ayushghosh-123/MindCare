@@ -20,7 +20,7 @@ export function calculateHealthScore(params: {
   sleep_hours?: number;
   exercise_minutes?: number;
   water_intake?: number;
-  meals_logged?: number; // Added
+  meals_logged?: number;
 }): number {
   const moodVal = moodToScore(params.mood);
   const sleepVal = params.sleep_hours ?? 0;
@@ -30,8 +30,8 @@ export function calculateHealthScore(params: {
 
   const partMood = (moodVal / 5) * 25;
   const partSleep = Math.min(sleepVal / 8, 1) * 20;
-  const partExercise = Math.min(exerciseVal / 60, 1) * 20; // Unified target: 60 mins
-  const partWater = Math.min(waterVal / 8, 1) * 20;
+  const partExercise = Math.min(exerciseVal / 60, 1) * 20;
+  const partWater = Math.min(waterVal / 3, 1) * 20; // Target: 3 Litres
   const partMeals = Math.min(mealsVal / 3, 1) * 15;
 
   return Math.round(partMood + partSleep + partExercise + partWater + partMeals);
@@ -123,8 +123,8 @@ export function calculateAggregateStats(entries: HealthEntry[]) {
   const avgMeals = totalMeals / count;
 
   // Aggregate health score is based on averages
-  const healthScore = calculateHealthScore({
-    mood: undefined, // Handled manually below since we have avgMood numeric
+  const finalScore = calculateHealthScore({
+    mood: undefined,
     sleep_hours: avgSleep,
     exercise_minutes: avgExercise,
     water_intake: avgWater,
@@ -135,17 +135,17 @@ export function calculateAggregateStats(entries: HealthEntry[]) {
   const partMood = (avgMood / 5) * 25;
   const partSleep = Math.min(avgSleep / 8, 1) * 20;
   const partExercise = Math.min(avgExercise / 60, 1) * 20;
-  const partWater = Math.min(avgWater / 8, 1) * 20;
+  const partWater = Math.min(avgWater / 3, 1) * 20; // Target: 3 Litres
   const partMeals = Math.min(avgMeals / 3, 1) * 15;
   
-  const finalScore = Math.round(partMood + partSleep + partExercise + partWater + partMeals);
+  const aggregateFinalScore = Math.round(partMood + partSleep + partExercise + partWater + partMeals);
 
   return {
     avgMood,
     avgSleep,
     avgExercise,
     avgWater,
-    healthScore: finalScore,
+    healthScore: aggregateFinalScore,
     count
   };
 }

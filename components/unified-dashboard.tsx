@@ -394,7 +394,7 @@ export function UnifiedDashboardToday({ userId, className }: UnifiedDashboardTod
                 </div>
 
                 <div>
-                  <label className="text-xs text-slate-600">Water (cups)</label>
+                  <label className="text-xs text-slate-600">Water (litres)</label>
                   <input
                     type="number"
                     step="0.1"
@@ -402,7 +402,7 @@ export function UnifiedDashboardToday({ userId, className }: UnifiedDashboardTod
                     value={form.water_intake}
                     onChange={onChange('water_intake')}
                     className="w-full p-2 border rounded mt-1"
-                    placeholder="e.g. 5.0"
+                    placeholder="e.g. 3.0"
                   />
                 </div>
               </div>

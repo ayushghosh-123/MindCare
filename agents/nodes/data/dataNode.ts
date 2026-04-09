@@ -33,6 +33,10 @@ export async function dataNode(
       Object.entries(summary.moodCounts).sort(([, a], [, b]) => b - a)[0]?.[0] ??
       "not recorded";
 
+    const mealSummary = summary.recentMeals
+      .map(m => `- ${m.date}: ${[m.breakfast, m.lunch, m.dinner].filter(Boolean).join(', ')}`)
+      .join('\n');
+
     const summaryText = `
 Last ${summary.totalEntries} health entries summary:
 - Average sleep: ${summary.avgSleep} hours per night
@@ -41,6 +45,10 @@ Last ${summary.totalEntries} health entries summary:
 - Average energy level: ${summary.avgEnergy}/10
 - Average stress level: ${summary.avgStress}/10
 - Most common mood: ${topMood}
+
+Recent Diet & Nutrition:
+${mealSummary || 'No recent meal data recorded.'}
+
 - User's question: ${state.userMessage}
     `.trim();
 

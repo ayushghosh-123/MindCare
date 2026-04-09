@@ -57,13 +57,14 @@ export interface HealthSummary {
   avgStress: number;
   moodCounts: Record<string, number>;
   totalEntries: number;
+  recentMeals: { date: string, breakfast: string, lunch: string, dinner: string, snacks?: string }[];
 }
 
 // function to make the health_entry 
 export async function buildHealthSummary(userId: string): Promise<HealthSummary> {
   const entries = await fetchHealthEntries(userId, 14);
   if (entries.length === 0) {
-    return { avgSleep: 0, avgWater: 0, avgExercise: 0, avgEnergy: 0, avgStress: 0, moodCounts: {}, totalEntries: 0 };
+    return { avgSleep: 0, avgWater: 0, avgExercise: 0, avgEnergy: 0, avgStress: 0, moodCounts: {}, totalEntries: 0, recentMeals: [] };
   }
 
   const sum = entries.reduce(
@@ -78,7 +79,24 @@ export async function buildHealthSummary(userId: string): Promise<HealthSummary>
   );
 
   const moodCounts: Record<string, number> = {};
-  entries.forEach((e) => { if (e.mood) moodCounts[e.mood] = (moodCounts[e.mood] ?? 0) + 1; });
+  const recentMeals: HealthSummary['recentMeals'] = [];
+
+  entries.forEach((e) => { 
+    if (e.mood) moodCounts[e.mood] = (moodCounts[e.mood] ?? 0) + 1; 
+
+    // Extract meals from notes JSON
+    if (recentMeals.length < 5 && e.notes && e.notes.startsWith('{')) {
+      try {
+        const parsed = JSON.parse(e.notes);
+        recentMeals.push({
+          date: e.entry_date ? new Date(e.entry_date).toISOString().slice(0, 10) : 'Unknown',
+          breakfast: parsed.breakfast || '',
+          lunch: parsed.lunch || '',
+          dinner: parsed.dinner || ''
+        });
+      } catch (err) {}
+    }
+  });
 
   const n = entries.length;
   return {
@@ -89,6 +107,6 @@ export async function buildHealthSummary(userId: string): Promise<HealthSummary>
     avgStress: +(sum.stress / n).toFixed(1),
     moodCounts,
     totalEntries: n,
+    recentMeals
   };
 }
-

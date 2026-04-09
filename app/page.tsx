@@ -199,12 +199,12 @@ const LandingPage = ({ user }: { user: any }) => (
           </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-7xl mx-auto">
-          <FeatureCard imageUrl="https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&w=600&q=80" title="Mental Health Score" desc="Daily mood, anxiety level, and general stress rating." />
-          <FeatureCard imageUrl="https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?auto=format&fit=crop&w=600&q=80" title="Sleep Quality" desc="Track hours slept, perceived quality, and wakefulness." />
-          <FeatureCard imageUrl="https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=600&q=80" title="Nutrition & Diet" desc="Log meals, cravings, and track food-related reactions." />
-          <FeatureCard imageUrl="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=600&q=80" title="Physical Activity" desc="Record workouts, intensity, and duration for better insights." />
-          <FeatureCard imageUrl="https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=600&q=80" title="Energy Levels" desc="Monitor fatigue throughout the day to find peak performance times." />
-          <FeatureCard imageUrl="https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&w=600&q=80" title="Custom Notes" desc="Add detailed journal entries for context around your data." />
+          <FeatureCard imageUrl="/Image/mood.jpeg" title="Mental Health Score" desc="Daily mood, anxiety level, and general stress rating." />
+          <FeatureCard imageUrl="/Image/sleep.jpeg" title="Sleep Quality" desc="Track hours slept, perceived quality, and wakefulness." />
+          <FeatureCard imageUrl="/Image/nutrition.jpeg" title="Nutrition & Diet" desc="Log meals, cravings, and track food-related reactions." />
+          <FeatureCard imageUrl="/Image/physical_activity.jpeg" title="Physical Activity" desc="Record workouts, intensity, and duration for better insights." />
+          <FeatureCard imageUrl="/Image/energy.jpeg" title="Energy Levels" desc="Monitor fatigue throughout the day to find peak performance times." />
+          <FeatureCard imageUrl="/Image/custom_notes.jpeg" title="Custom Notes" desc="Add detailed journal entries for context around your data." />
         </div>
       </div>
     </section>
@@ -244,24 +244,6 @@ const LandingPage = ({ user }: { user: any }) => (
         </div>
       </div>
     </section>
-
-    {/* Testimonials */}
-    {/* <section className="py-24 px-6 bg-[#D3D3FF]/10">
-      <div className="container mx-auto">
-        <div className="text-center mb-12 sm:mb-16">
-          <p className="text-sm font-semibold text-[#8A8AFF] uppercase tracking-widest mb-2">Trusted By Users</p>
-          <h2 className="text-3xl sm:text-4xl font-bold text-slate-800 mb-4">Real Results, Real People</h2>
-          <p className="text-slate-600 max-w-4xl mx-auto text-base sm:text-lg">
-            See what others are saying about finding clarity and balance with Reflect & Connect.
-          </p>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 max-w-7xl mx-auto">
-          <TestimonialCard quote="I finally saw the link between my poor sleep and my anxiety levels. This diary is simple, but the insights are game-changing." name="Sarah L." title="Marketing Manager" />
-          <TestimonialCard quote="The best self-help tool I've used. Seeing my mood score trending up over a month has been incredibly motivating." name="Michael T." title="Software Developer" />
-          <TestimonialCard quote="It helped me track my triggers without feeling overwhelmed. It's a supportive, non-judgmental way to manage stress." name="Jessica M." title="Student & Freelancer" />
-        </div>
-      </div>
-    </section> */}
 
     {/* CTA */}
     <section className="py-16 sm:py-20 px-4 sm:px-6 bg-[#8A8AFF]/10">
