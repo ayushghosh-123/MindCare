@@ -1,14 +1,14 @@
 'use client';
 
 import { useAuth, useUser } from '@clerk/nextjs';
-import { LogIn, UserPlus, Activity, CheckCircle, Smile, Calendar, TrendingUp, Zap, Clock, Utensils, Moon, Leaf } from 'lucide-react';
+import { LogIn, UserPlus, Activity, CheckCircle, Smile, Calendar, TrendingUp, Leaf } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
-import { MainNavbar } from '@/components/main-navbar';
+import { MainNavbar } from '@/components/webcom/main-navbar';
 import { UnifiedDashboardToday } from '@/components/unified-dashboard';
-import { LoadingSkeleton } from '@/components/loading-skeleton';
-import { AnimatedButton, AnimatedSignInButton } from '@/components/animated-button';
+import { LoadingSkeleton } from '@/components/loader/loading-skeleton';
+import { AnimatedButton, AnimatedSignInButton } from '@/components/webcom/animated-button';
 import { motion } from 'framer-motion';
 
 // --- Reusable Sub-Components Moved Outside to Prevent Re-mounting ---

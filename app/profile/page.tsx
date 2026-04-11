@@ -6,9 +6,9 @@ import { useRouter } from 'next/navigation';
 import { UserProfile as UserProfileComponent } from '@/components/user-profile';
 import { dbHelpers, type HealthEntry, type UserProfile } from '@/lib/supabase';
 import { useToast } from '@/components/hooks/use-toast';
-import { MainNavbar } from '@/components/main-navbar';
+import { MainNavbar } from '@/components/webcom/main-navbar';
 import { Button } from '@/components/ui/button';
-import { LoadingSkeleton } from '@/components/loading-skeleton';
+import { LoadingSkeleton } from '@/components/loader/loading-skeleton';
 
 export default function ProfilePage() {
   const { user, isLoaded } = useUser();

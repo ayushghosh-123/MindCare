@@ -3,12 +3,12 @@
 import { useState, useEffect } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
-import { AdvancedStats } from '@/components/advanced-stats';
+import { AdvancedStats } from '@/components/status/advanced-stats';
 import { dbHelpers, type HealthEntry } from '@/lib/supabase';
 import { useToast } from '@/components/hooks/use-toast';
-import { MainNavbar } from '@/components/main-navbar';
+import { MainNavbar } from '@/components/webcom/main-navbar';
 import { Button } from '@/components/ui/button';
-import { LoadingSkeleton } from '@/components/loading-skeleton';
+import { LoadingSkeleton } from '@/components/loader/loading-skeleton';
 
 export default function AnalyticsPage() {
   const { user, isLoaded } = useUser();

@@ -146,7 +146,6 @@ export function ChatWindow({
             </div>
           ) : messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-[50vh] gap-3 text-center">
-              <span className="text-4xl text-gray-300">👋</span>
               <p className="text-lg text-gray-700 font-medium">
                 How can I help you today{user?.firstName ? `, ${user.firstName}` : ""}?
               </p>

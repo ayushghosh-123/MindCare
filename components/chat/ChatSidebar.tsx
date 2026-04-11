@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ChatSession } from "@/lib/supabase-chat";
+import { useUser, UserButton } from "@clerk/nextjs";
 import { useChatSessions } from "@/components/hooks/use-chat-session";
 import { 
   Search, 
@@ -21,6 +22,7 @@ interface ChatSidebarProps {
   activeSessionId: string | null;
   onSelectSession: (session: ChatSession) => void;
   onNewSession: (session: ChatSession) => void;
+  onClose?: () => void;
 }
 
 const AGENT_EMOJI: Record<string, string> = {
@@ -34,7 +36,9 @@ export function ChatSidebar({
   activeSessionId,
   onSelectSession,
   onNewSession,
+  onClose,
 }: ChatSidebarProps) {
+  const { user } = useUser();
   const {
     sessions,
     isLoading,
@@ -79,14 +83,26 @@ export function ChatSidebar({
           <h2 className="text-xl font-bold bg-gradient-to-r from-violet-600 to-indigo-600 bg-clip-text text-transparent">
             Chats
           </h2>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setShowNewInput(true)}
-            className="rounded-full hover:bg-violet-50 text-violet-600"
-          >
-            <Plus className="w-5 h-5" />
-          </Button>
+          <div className="flex items-center gap-1">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setShowNewInput(true)}
+              className="rounded-full hover:bg-violet-50 text-violet-600"
+            >
+              <Plus className="w-5 h-5" />
+            </Button>
+            {onClose && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={onClose}
+                className="md:hidden rounded-full hover:bg-gray-100 text-gray-500"
+              >
+                <X className="w-5 h-5" />
+              </Button>
+            )}
+          </div>
         </div>
 
         <div className="relative group">
@@ -230,6 +246,25 @@ export function ChatSidebar({
             </div>
           ))
         )}
+      </div>
+
+      {/* User Profile Footer */}
+      <div className="p-4 border-t border-slate-100 bg-white/50 backdrop-blur-sm">
+        <div className="flex items-center justify-between bg-white rounded-2xl p-3 shadow-sm border border-slate-100">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="flex-shrink-0">
+              <UserButton />
+            </div>
+            <div className="flex flex-col min-w-0">
+              <span className="text-sm font-semibold text-slate-700 truncate">
+                {user?.fullName || "Guest User"}
+              </span>
+              <span className="text-[10px] text-slate-400 font-medium truncate">
+                Mindcare Member
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
 
       <style jsx>{`

@@ -9,7 +9,7 @@ import { ChatWindow } from '@/components/chat/ChatWindow';
 import { Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ChatSession } from '@/lib/supabase-chat';
-import { MainNavbar } from '@/components/main-navbar';
+import { MainNavbar } from '@/components/webcom/main-navbar';
 import { useToast } from '@/components/hooks/use-toast';
 
 export default function ChatbotPage() {
@@ -76,7 +76,7 @@ export default function ChatbotPage() {
         {/* Mobile Sidebar Overlay */}
         {sidebarOpen && (
           <div 
-            className="fixed inset-0 bg-black/50 z-40 md:hidden transition-opacity"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 md:hidden transition-opacity"
             onClick={() => setSidebarOpen(false)}
           />
         )}
@@ -96,15 +96,8 @@ export default function ChatbotPage() {
             startNewSession(session);
             setSidebarOpen(false); // Close on mobile
           }}
+          onClose={() => setSidebarOpen(false)}
         />
-        
-        {/* Mobile Close Button */}
-        <button 
-          onClick={() => setSidebarOpen(false)}
-          className="md:hidden absolute top-4 right-4 text-gray-500 hover:text-gray-800"
-        >
-          <X className="w-5 h-5" />
-        </button>
         </div>
 
         {/* Main Chat Area (Right Pane) */}

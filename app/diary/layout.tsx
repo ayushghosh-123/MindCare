@@ -8,7 +8,7 @@ import { dbHelpers } from '@/lib/supabase';
 import { useUser } from '@clerk/nextjs';
 import { useToast } from '@/components/hooks/use-toast';
 import { Button } from '@/components/ui/button';
-import { MainNavbar } from '@/components/main-navbar';
+import { MainNavbar } from '@/components/webcom/main-navbar';
 
 
 // this layout will wrap all /diary routes and provide the sidebar and main navbar

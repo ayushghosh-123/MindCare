@@ -14,7 +14,7 @@ import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { dbHelpers, type JournalEntry } from '@/lib/supabase';
 import { useToast } from '@/components/hooks/use-toast';
-import { RichTextEditor } from '@/components/rich-text-editor';
+import { RichTextEditor } from '@/components/journal/rich-text-editor';
 
 import { useDiary } from '@/components/journal/DiaryContext';
 import { useAgent } from '@/components/hooks/use-agent';
