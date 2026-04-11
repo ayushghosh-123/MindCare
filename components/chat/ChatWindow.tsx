@@ -4,6 +4,7 @@
 
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { useUser } from "@clerk/nextjs";
 import { Mic, MicOff, Volume2, VolumeX, AlertCircle, Mail } from "lucide-react";
 import { Chat } from "@/lib/supabase";
 import { MessageBubble } from "./MessageBubble";
@@ -49,6 +50,7 @@ export function ChatWindow({
   onSendMessage,
   onSendEmailReport,
 }: ChatWindowProps) {
+  const { user } = useUser();
   const [input, setInput] = useState("");
   const [emailDraft, setEmailDraft] = useState<{
     sessionId: string;
@@ -145,9 +147,8 @@ export function ChatWindow({
           ) : messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-[50vh] gap-3 text-center">
               <span className="text-4xl text-gray-300">👋</span>
-              <p className="text-lg text-gray-700 font-medium">How can I help you today?</p>
-              <p className="text-sm text-gray-500 max-w-sm">
-                Ask about your wellness, share how you&apos;re feeling, or request a daily report.
+              <p className="text-lg text-gray-700 font-medium">
+                How can I help you today{user?.firstName ? `, ${user.firstName}` : ""}?
               </p>
             </div>
           ) : (
