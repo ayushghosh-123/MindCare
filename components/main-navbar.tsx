@@ -3,15 +3,7 @@
 import { useState } from "react";
 import { useUser, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
-import {
-  Home,
-  BookOpen,
-  BarChart3,
-  User,
-  Menu,
-  X,
-  Leaf,
-} from "lucide-react";
+import {Home, BookOpen, BarChart3, User, Menu, X, Leaf} from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function MainNavbar() {
