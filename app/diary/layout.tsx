@@ -8,7 +8,6 @@ import { dbHelpers } from '@/lib/supabase';
 import { useUser } from '@clerk/nextjs';
 import { useToast } from '@/components/hooks/use-toast';
 import { Button } from '@/components/ui/button';
-import { MainNavbar } from '@/components/webcom/main-navbar';
 
 
 // this layout will wrap all /diary routes and provide the sidebar and main navbar
@@ -133,8 +132,7 @@ function DiaryLayoutContent({ children }: { children: React.ReactNode }) {
     <div className="flex min-h-screen bg-slate-50">
       <DiarySidebar />
       <div className="flex-1 flex flex-col min-w-0">
-        <MainNavbar />
-        
+          
         {/* Persistent Layout Header */}
         <div className="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-20 shadow-sm">
           <div className="container mx-auto px-4 sm:px-6 py-4 max-w-5xl">

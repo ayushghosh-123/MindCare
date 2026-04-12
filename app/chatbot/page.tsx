@@ -9,7 +9,6 @@ import { ChatWindow } from '@/components/chat/ChatWindow';
 import { Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ChatSession } from '@/lib/supabase-chat';
-import { MainNavbar } from '@/components/webcom/main-navbar';
 import { useToast } from '@/components/hooks/use-toast';
 
 export default function ChatbotPage() {
@@ -43,20 +42,7 @@ export default function ChatbotPage() {
     }
   }, [error, toast]);
 
-  // Ensure user is synced to Supabase when they visit Chat
-  useEffect(() => {
-    if (isLoaded && user) {
-      (async () => {
-        const token = await getToken();
 
-        fetch('/api/users/sync', {
-          method: 'POST',
-          credentials: 'include',
-          headers: token ? { Authorization: `Bearer ${token}` } : undefined,
-        }).catch((err) => console.error('Failed to sync user in chat:', err));
-      })();
-    }
-  }, [getToken, isLoaded, user]);
 
   if (!isLoaded) {
     return (
@@ -70,7 +56,6 @@ export default function ChatbotPage() {
 
   return (
     <div className="flex flex-col h-[100dvh] overflow-hidden bg-[#F8F8FF]">
-      <MainNavbar />
       
       <div className="flex flex-1 overflow-hidden relative">
         {/* Mobile Sidebar Overlay */}

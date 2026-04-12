@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation';
 import { UserProfile as UserProfileComponent } from '@/components/user-profile';
 import { dbHelpers, type HealthEntry, type UserProfile } from '@/lib/supabase';
 import { useToast } from '@/components/hooks/use-toast';
-import { MainNavbar } from '@/components/webcom/main-navbar';
 import { Button } from '@/components/ui/button';
 import { LoadingSkeleton } from '@/components/loader/loading-skeleton';
 
@@ -30,19 +29,7 @@ export default function ProfilePage() {
     try {
       setLoading(true);
       
-      // 1. Ensure user exists in our database using the server-side sync route
-      const token = await getToken();
-      const syncResponse = await fetch('/api/users/sync', {
-        method: 'POST',
-        credentials: 'include',
-        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
-      });
 
-      if (!syncResponse.ok) {
-        const syncPayload = await syncResponse.json().catch(() => null);
-        console.warn('User synchronization warning:', syncPayload?.error ?? 'User sync failed');
-        // Continue anyway as the user may exist even if sync returns an error
-      }
 
       // 2. Load health entries
       const { data: entriesData, error: entriesError } = await dbHelpers.getUserHealthEntries(user.id);
@@ -113,7 +100,7 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
-      <MainNavbar />
+      
       {/* Header */}
       <div className="bg-[#F8F8FF] border-b border-slate-200 sticky top-0 z-10">
         <div className="container mx-auto px-4 sm:px-6 py-4">

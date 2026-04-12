@@ -6,8 +6,6 @@ import { useRouter } from 'next/navigation';
 import { AdvancedStats } from '@/components/status/advanced-stats';
 import { dbHelpers, type HealthEntry } from '@/lib/supabase';
 import { useToast } from '@/components/hooks/use-toast';
-import { MainNavbar } from '@/components/webcom/main-navbar';
-import { Button } from '@/components/ui/button';
 import { LoadingSkeleton } from '@/components/loader/loading-skeleton';
 
 export default function AnalyticsPage() {
@@ -56,7 +54,7 @@ export default function AnalyticsPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
-      <MainNavbar />
+      
       {/* Header */}
       <div className="bg-[#F8F8FF] border-b border-slate-200 sticky top-0 z-10">
         <div className="container mx-auto px-4 sm:px-6 py-4">
