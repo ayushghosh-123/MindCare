@@ -3,11 +3,13 @@
 import { useState } from "react";
 import { useUser, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {Home, BookOpen, BarChart3, User, Menu, X, Leaf} from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function MainNavbar() {
   const { user } = useUser();
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
   const navItems = [
@@ -17,6 +19,11 @@ export function MainNavbar() {
     { name: "Analytics", href: "/analytics", icon: <BarChart3 size={18} /> },
     { name: "Profile", href: "/profile", icon: <User size={18} /> },
   ];
+
+  const hideNavbarForUnauthenticated = !user && (pathname === '/' || pathname?.startsWith('/sign'));
+  if (hideNavbarForUnauthenticated) {
+    return null;
+  }
 
   return (
     <>

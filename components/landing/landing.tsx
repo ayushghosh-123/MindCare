@@ -4,6 +4,7 @@ import { LogIn, UserPlus, Activity, Smile, Calendar, TrendingUp, Leaf, CheckCirc
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { AnimatedButton, AnimatedSignInButton } from '@/components/webcom/animated-button';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { motion } from 'framer-motion';
 
 // --- Sub-components for Landing Page ---
@@ -153,7 +154,7 @@ export const LandingPage = ({ user }: { user: any }) => (
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          A Smarter Way to Track Your <span className="text-[#8A8AFF]">Well-being</span>
+          A Smarter Way to  <span className="text-[#8A8AFF]">Understand Your Mind</span>
         </motion.h1>
         <motion.p
           className="text-slate-700 max-w-5xl mx-auto mb-12 text-lg sm:text-2xl font-light"
@@ -161,7 +162,7 @@ export const LandingPage = ({ user }: { user: any }) => (
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3, duration: 0.6 }}
         >
-          Stress, Anxiety or Depression - Mind Care helps you connect the dots between your daily actions and your long-term health, building a truly balanced life.
+          MindCare helps you track your daily habits, emotions, and routines and turns them into clear, meaningful insights so you can understand why you feel the way you do.
         </motion.p>
 
         <motion.div
@@ -177,6 +178,10 @@ export const LandingPage = ({ user }: { user: any }) => (
             <AnimatedSignInButton text="Existing User?" className="w-full sm:w-auto" />
           </Link>
         </motion.div>
+
+        <p className='p-5 text-slate-700 max-w-5xl mx-auto mb-12 text-lg sm:text-2xl font-light'>
+          Takes less than a minute. No pressure, just awareness 
+        </p>
       </div>
     </section>
 
@@ -234,6 +239,57 @@ export const LandingPage = ({ user }: { user: any }) => (
           <HowCard step="2" icon={<TrendingUp className="h-8 w-8" />} title="Review Insights" desc="Our dashboard visualizes your data, revealing trends and patterns you might have missed." />
           <HowCard step="3" icon={<CheckCircle className="h-8 w-8" />} title="Take Action" desc="Use your insights to make informed, positive adjustments to your lifestyle and routine." />
         </div>
+      </div>
+    </section>
+
+    {/* FAQ Section */}
+    <section className="py-24 px-6 bg-slate-100/80">
+      <div className="container mx-auto max-w-5xl">
+        <div className="text-center mb-12">
+          <p className="text-sm font-semibold text-[#8A8AFF] uppercase tracking-widest mb-2">Frequently Asked Questions</p>
+          <h2 className="text-3xl sm:text-4xl font-bold text-slate-900">Your questions, answered</h2>
+          <p className="text-slate-600 max-w-3xl mx-auto text-base sm:text-lg mt-3">
+            Everything you need to know before starting your MindCare journey.
+          </p>
+        </div>
+
+        <Accordion type="single" collapsible className="space-y-4">
+          <AccordionItem value="item-1" className="rounded-3xl border border-slate-200 bg-white shadow-sm">
+            <AccordionTrigger className="px-6 py-5 text-left text-base sm:text-lg font-semibold text-slate-800">
+              WHAT IS MINDCARE?
+            </AccordionTrigger>
+            <AccordionContent className="px-6 pb-5 pt-0 text-slate-600 text-xl">
+              MindCare is a simple yet powerful platform that helps you understand your mental clarity. It lets you log how you feel, track what you do, and see how everything connects — all in one place.
+Use it anytime to move beyond guesswork and start seeing what truly affects your mental health.
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-2" className="rounded-3xl border border-slate-200 bg-white shadow-sm">
+            <AccordionTrigger className="px-6 py-5 text-left text-base sm:text-lg font-semibold text-slate-800">
+              WHY USE MINDCARE?
+            </AccordionTrigger>
+            <AccordionContent className="px-6 pb-5 pt-0 text-slate-600 text-xl">
+              Because awareness changes everything. MindCare helps you see patterns in your emotions, build resilience, and improve your daily focus.
+              Stop guessing — start understanding what truly impacts your well-being.
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-3" className="rounded-3xl border border-slate-200 bg-white shadow-sm">
+            <AccordionTrigger className="px-6 py-5 text-left text-base sm:text-lg font-semibold text-slate-800">
+              WHAT YOU CAN TRACK?
+            </AccordionTrigger>
+            <AccordionContent className="px-6 pb-5 pt-0 text-slate-600 text-xl">
+             Track what truly matters. Monitor your mental health , sleep , diet , activity  and daily thoughts - all in one place.Everything is connected, helping you understand your life better.
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-4" className="rounded-3xl border border-slate-200 bg-white shadow-sm">
+            <AccordionTrigger className="px-6 py-5 text-left text-base sm:text-lg font-semibold text-slate-800">
+               HOW IT WORKS?
+            </AccordionTrigger>
+            <AccordionContent className="px-6 pb-5 pt-0 text-slate-600 text-xl">
+              Your journey to clarity in 3 simple steps. Log your day, discover patterns, and take meaningful action.
+              Small insights lead to real improvements.
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
       </div>
     </section>
 
