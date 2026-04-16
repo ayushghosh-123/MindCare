@@ -132,128 +132,396 @@ export function MindCareLanding() {
         {/* We use an absolute positioning context inside a relative wrapper to stack them naturally */}
         <div className="relative w-full max-w-5xl mx-auto h-[350px] sm:h-[450px] md:h-[550px] mt-16 md:mt-[100px] flex justify-center z-10">
           
-          {/* Card 1: Left Blue Sun */}
+          {/* Card 1: Left - Sleep */}
           <motion.div 
             initial={{ y: 200, rotate: -25, opacity: 0 }}
-            animate={{ y: 0, rotate: -8, opacity: 1 }}
+            animate={{ y: 0, rotate: -6, opacity: 1 }}
             transition={{ type: 'spring', stiffness: 80, damping: 15, delay: 0.3 }}
-            className="absolute left-[0%] md:left-[5%] bottom-0 w-[240px] md:w-[320px] h-[350px] md:h-[480px] bg-[#38BDF8] rounded-t-[50px] border-[6px] md:border-[8px] border-black overflow-hidden shadow-[12px_12px_0_#000] z-10"
+            className="absolute left-[0%] md:left-[5%] bottom-0 w-[240px] md:w-[320px] h-[350px] md:h-[480px] bg-[#E0E7FF] rounded-t-[50px] border-[6px] md:border-[8px] border-black overflow-hidden shadow-[12px_12px_0_#000] z-10"
           >
             {/* Top Shine */}
-            <div className="absolute top-3 left-6 right-6 h-4 bg-white/30 rounded-full" />
+            <div className="absolute top-3 left-6 right-6 h-4 bg-white/40 rounded-full" />
             
-            {/* Confetti Details */}
-            <div className="absolute top-[40px] left-[25px] w-3 h-8 bg-[#EF4444] border-[3px] border-black rounded-full rotate-45" />
-            <div className="absolute top-[42px] right-[40px] w-4 h-4 bg-[#FACC15] border-[3px] border-black rounded-full" />
-            <div className="absolute top-[100px] left-[50px] w-6 h-6 bg-[#9333EA] border-[3px] border-black rounded-full" />
+            {/* Soft Floating Wrapper */}
+            <motion.div animate={{ y: [0, -6, 0] }} transition={{ repeat: Infinity, duration: 5, ease: "easeInOut" }} className="w-full h-full relative">
+              {/* Moon & Stars Details */}
+              <div className="absolute top-[40px] left-[40px] w-4 h-4 bg-[#FEF08A] border-[3px] border-black rounded-sm rotate-45" />
+              <div className="absolute top-[60px] right-[50px] w-6 h-6 bg-[#FEF08A] border-[3px] border-black rounded-sm rotate-[12deg]" />
+              <div className="absolute top-[140px] left-[30px] w-3 h-3 bg-[#FEF08A] border-[3px] border-black rounded-full" />
+              <div className="absolute top-[100px] right-[20px] w-5 h-5 bg-white border-[3px] border-black rounded-full" />
+              
+              {/* Custom SVG Sleep Character */}
+              <svg viewBox="0 0 200 200" className="absolute bottom-16 left-1/2 -translate-x-1/2 w-[90%] h-auto overflow-visible" fill="none">
+                 {/* Face Base */}
+                 <circle cx="100" cy="100" r="70" fill="#FFF" stroke="#000" strokeWidth="8" />
+                 
+                 {/* Closed Eyes */}
+                 <path d="M 60 100 Q 75 115 90 100" stroke="#000" strokeWidth="6" strokeLinecap="round" />
+                 <path d="M 110 100 Q 125 115 140 100" stroke="#000" strokeWidth="6" strokeLinecap="round" />
+                 
+                 {/* Gentle Smile */}
+                 <path d="M 90 125 C 95 130, 105 130, 110 125" stroke="#000" strokeWidth="5" strokeLinecap="round" />
+                 
+                 {/* Rosy Cheeks */}
+                 <ellipse cx="50" cy="115" rx="8" ry="5" fill="#FBCFE8" />
+                 <ellipse cx="150" cy="115" rx="8" ry="5" fill="#FBCFE8" />
 
-            {/* Custom SVG Sun Sticker */}
-            <svg viewBox="0 0 200 200" className="absolute bottom-4 left-1/2 -translate-x-1/2 w-[120%] h-auto overflow-visible" fill="none">
-              <path d="M100 0 L125 35 L170 25 L150 65 L190 90 L150 115 L170 155 L125 145 L100 180 L75 145 L30 155 L50 115 L10 90 L50 65 L30 25 L75 35 Z" fill="#FDE047" stroke="#000" strokeWidth="8" strokeLinejoin="round" />
-              {/* Smile Face */}
-              <path d="M65 95 C75 115, 125 115, 135 95" stroke="#000" strokeWidth="6" strokeLinecap="round" />
-              <ellipse cx="60" cy="100" rx="10" ry="6" fill="#F472B6" />
-              <ellipse cx="140" cy="100" rx="10" ry="6" fill="#F472B6" />
-              {/* Closed Eyes */}
-              <path d="M 65 75 Q 75 65 85 75" stroke="#000" strokeWidth="6" strokeLinecap="round" />
-              <path d="M 115 75 Q 125 65 135 75" stroke="#000" strokeWidth="6" strokeLinecap="round" />
-            </svg>
-            
-            {/* Cloud overlap sticker at base */}
-            <svg viewBox="0 0 300 100" className="absolute bottom-[-10px] left-[-20px] w-[120%] h-auto" fill="white">
-              <path d="M20 80 Q40 40 70 50 Q100 20 150 30 Q200 10 250 40 Q280 60 270 90 Z" stroke="#000" strokeWidth="8" strokeLinejoin="round"/>
-            </svg>
+                 {/* Zzz marks */}
+                 <path d="M140 50 L160 50 L140 70 L160 70" stroke="#000" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
+                 <path d="M165 20 L180 20 L165 35 L180 35" stroke="#000" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+
+                 {/* Small Moon */}
+                 <path d="M 30 50 A 15 15 0 1 0 50 20 A 10 10 0 1 1 30 50 Z" fill="#FDE047" stroke="#000" strokeWidth="4" strokeLinejoin="round" />
+              </svg>
+            </motion.div>
           </motion.div>
 
-          {/* Card 3: Right Coral Flower (Rendered before center so center stacks on top) */}
+          {/* Card 3: Right - Physical Activity (Rendered before center so center stacks on top) */}
           <motion.div 
             initial={{ y: 200, rotate: 20, opacity: 0 }}
-            animate={{ y: 0, rotate: 10, opacity: 1 }}
+            animate={{ y: 0, rotate: 8, opacity: 1 }}
             transition={{ type: 'spring', stiffness: 80, damping: 15, delay: 0.4 }}
-            className="absolute right-[0%] md:right-[5%] bottom-0 w-[240px] md:w-[320px] h-[350px] md:h-[480px] bg-[#FF7162] rounded-t-[50px] border-[6px] md:border-[8px] border-black overflow-hidden shadow-[12px_12px_0_#000] z-20"
+            className="absolute right-[0%] md:right-[5%] bottom-0 w-[240px] md:w-[320px] h-[350px] md:h-[480px] bg-[#FED7AA] rounded-t-[50px] border-[6px] md:border-[8px] border-black overflow-hidden shadow-[12px_12px_0_#000] z-20"
           >
              <div className="absolute top-3 left-6 right-6 h-4 bg-white/30 rounded-full" />
              
-             {/* Star Sparkle */}
-             <svg viewBox="0 0 100 100" className="absolute top-10 right-10 w-20 h-20 rotate-12" fill="#0EA5E9">
-               <path d="M50 5 L60 40 L95 50 L60 60 L50 95 L40 60 L5 50 L40 40 Z" stroke="#000" strokeWidth="6" strokeLinejoin="round"/>
-             </svg>
-             <div className="absolute top-[80px] left-[40px] w-5 h-5 bg-[#FDE047] border-[3px] border-black rounded-full" />
+             <motion.div animate={{ y: [0, -8, 0] }} transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }} className="w-full h-full relative">
+               {/* Motion Lines */}
+               <svg viewBox="0 0 100 100" className="absolute top-10 right-10 w-20 h-20 rotate-12" fill="none">
+                 <path d="M20 20 L40 30 M20 40 L50 40 M20 60 L40 50" stroke="#000" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round"/>
+               </svg>
+               <div className="absolute top-[80px] left-[50px] w-4 h-4 bg-white border-[3px] border-black rounded-full" />
+               <div className="absolute top-[130px] right-[40px] w-3 h-3 bg-[#F97316] border-[3px] border-black rounded-full" />
 
-             {/* Cartoon Sunflower Sticker */}
-             <svg viewBox="0 0 200 200" className="absolute bottom-[-20px] right-[-20px] w-[130%] h-auto overflow-visible" fill="none">
-               <path d="M100 20 C130 -10, 150 10, 160 40 C190 30, 200 60, 180 80 C210 110, 190 140, 160 140 C170 170, 140 190, 110 170 C90 200, 60 190, 40 160 C10 170, -10 140, 10 110 C-20 80, 0 50, 30 60 C20 30, 50 0, 80 20 C90 -10, 120 -10, 100 20 Z" fill="#FDE047" stroke="#000" strokeWidth="8" strokeLinejoin="round" />
-               <circle cx="100" cy="100" r="50" fill="#4ADE80" stroke="#000" strokeWidth="8" />
-               {/* Sly Eyes */}
-               <ellipse cx="80" cy="85" rx="10" ry="16" fill="#fff" stroke="#000" strokeWidth="4" />
-               <ellipse cx="120" cy="85" rx="10" ry="16" fill="#fff" stroke="#000" strokeWidth="4" />
-               <circle cx="75" cy="85" r="4" fill="#000" />
-               <circle cx="115" cy="85" r="4" fill="#000" />
-               {/* Nose */}
-               <circle cx="100" cy="108" r="6" fill="#EF4444" stroke="#000" strokeWidth="3" />
-               {/* Smirk */}
-               <path d="M85 125 C 95 130, 105 130, 115 120" stroke="#000" strokeWidth="4" strokeLinecap="round" />
-               {/* Freckles/Cheeks */}
-               <circle cx="70" cy="115" r="3" fill="#15803D" />
-               <circle cx="130" cy="115" r="3" fill="#15803D" />
-               <circle cx="60" cy="110" r="1.5" fill="#000" />
-               <circle cx="140" cy="110" r="1.5" fill="#000" />
-             </svg>
+               {/* Cartoon Running Blob */}
+               <svg viewBox="0 0 200 200" className="absolute bottom-16 right-[-10px] w-[90%] h-auto overflow-visible" fill="none">
+                  {/* Arms (Thick strokes placed behind body) */}
+                  <path d="M120 100 C 140 80, 160 70, 170 40" stroke="#000" strokeWidth="12" strokeLinecap="round" />
+                  <path d="M80 110 C 50 120, 20 120, 10 90" stroke="#000" strokeWidth="12" strokeLinecap="round" />
+                  
+                  {/* Legs (Thick strokes placed behind body) */}
+                  <path d="M90 150 C 70 170, 40 170, 20 190" stroke="#000" strokeWidth="12" strokeLinecap="round" />
+                  <path d="M120 140 C 140 160, 150 190, 140 210" stroke="#000" strokeWidth="12" strokeLinecap="round" />
+
+                  {/* Body Blob */}
+                  <path d="M100 80 C 130 80, 140 130, 110 160 C 80 180, 60 130, 70 90 C 75 70, 90 80, 100 80 Z" fill="#FDBA74" stroke="#000" strokeWidth="8" strokeLinejoin="round" />
+                  
+                  {/* Head */}
+                  <circle cx="120" cy="50" r="30" fill="#FFF" stroke="#000" strokeWidth="8" />
+                  
+                  {/* Face */}
+                  <circle cx="115" cy="45" r="4" fill="#000" />
+                  <circle cx="135" cy="45" r="4" fill="#000" />
+                  {/* Happy open mouth */}
+                  <path d="M 115 55 C 120 70, 135 70, 140 55 Z" fill="#EF4444" stroke="#000" strokeWidth="4" strokeLinejoin="round" />
+                  
+                  {/* Sweat drop */}
+                  <path d="M 160 20 C 170 30, 165 45, 155 40 C 145 35, 155 15, 160 20 Z" fill="#60A5FA" stroke="#000" strokeWidth="3" />
+               </svg>
+             </motion.div>
           </motion.div>
 
-          {/* Card 2: Center Pink Peace Sign (Tallest & frontmost) */}
+          {/* Card 2: Center - Nutrition (Tallest) */}
           <motion.div 
             initial={{ y: 250, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ type: 'spring', stiffness: 80, damping: 15, delay: 0.5 }}
-            className="absolute left-1/2 -translate-x-1/2 bottom-0 w-[270px] md:w-[350px] h-[380px] md:h-[550px] bg-[#F472B6] rounded-t-[50px] md:rounded-t-[70px] border-[6px] md:border-[8px] border-black shadow-[16px_16px_0_#000] z-30 flex flex-col items-center justify-end overflow-visible"
+            className="absolute left-1/2 -translate-x-1/2 bottom-0 w-[270px] md:w-[350px] h-[380px] md:h-[550px] bg-[#D9F99D] rounded-t-[50px] md:rounded-t-[70px] border-[6px] md:border-[8px] border-black shadow-[16px_16px_0_#000] z-30 flex flex-col items-center justify-end overflow-visible"
           >
             <div className="absolute top-3 left-6 right-6 h-4 bg-white/30 rounded-full" />
             
-            {/* Background Hand-drawn Daisies */}
-            <svg viewBox="0 0 100 100" className="absolute top-[20%] right-[-10px] w-20 h-20 md:w-24 md:h-24 rotate-[25deg]" fill="#A3E635">
-              <path d="M50 0 A 20 20 0 0 1 70 20 A 20 20 0 0 1 100 50 A 20 20 0 0 1 70 80 A 20 20 0 0 1 50 100 A 20 20 0 0 1 30 80 A 20 20 0 0 1 0 50 A 20 20 0 0 1 30 20 A 20 20 0 0 1 50 0 Z" stroke="#000" strokeWidth="6" strokeLinejoin="round"/>
-              <circle cx="50" cy="50" r="15" fill="#FDE047" stroke="#000" strokeWidth="6" />
-            </svg>
-            <svg viewBox="0 0 100 100" className="absolute bottom-[40%] left-[-20px] w-16 h-16 md:w-20 md:h-20 -rotate-[15deg]" fill="#A3E635">
-              <path d="M50 0 A 20 20 0 0 1 70 20 A 20 20 0 0 1 100 50 A 20 20 0 0 1 70 80 A 20 20 0 0 1 50 100 A 20 20 0 0 1 30 80 A 20 20 0 0 1 0 50 A 20 20 0 0 1 30 20 A 20 20 0 0 1 50 0 Z" stroke="#000" strokeWidth="6" strokeLinejoin="round"/>
-              <circle cx="50" cy="50" r="15" fill="#FDE047" stroke="#000" strokeWidth="6" />
-            </svg>
-            <svg viewBox="0 0 100 100" className="absolute top-[10%] left-[15%] w-12 h-12" fill="#FDE047">
-              <path d="M50 5 L60 30 L95 50 L60 70 L50 95 L40 70 L5 50 L40 30 Z" stroke="#000" strokeWidth="6" strokeLinejoin="round"/>
-            </svg>
+            <motion.div animate={{ y: [0, -10, 0] }} transition={{ repeat: Infinity, duration: 4.5, ease: "easeInOut" }} className="w-full h-full relative z-10">
+               {/* Background Mini Leaves */}
+               <svg viewBox="0 0 100 100" className="absolute top-[20%] right-[5%] w-16 h-16 rotate-[25deg]" fill="#4ADE80">
+                 <path d="M50 0 C 70 20, 80 40, 50 100 C 20 40, 30 20, 50 0 Z" stroke="#000" strokeWidth="6" strokeLinejoin="round"/>
+               </svg>
+               <svg viewBox="0 0 100 100" className="absolute bottom-[40%] left-[5%] w-12 h-12 -rotate-[15deg]" fill="#4ADE80">
+                 <path d="M50 0 C 70 20, 80 40, 50 100 C 20 40, 30 20, 50 0 Z" stroke="#000" strokeWidth="6" strokeLinejoin="round"/>
+               </svg>
+               <div className="absolute top-[15%] left-[15%] w-4 h-4 bg-white border-[3px] border-black rounded-full" />
 
-            {/* Huge Gloved Peace Hand Pattern */}
-            <svg viewBox="0 0 200 250" className="w-[85%] h-auto mb-[60px] md:mb-[80px] overflow-visible" fill="white">
-               {/* Wrist & Sleeve */}
-               <path d="M75 190 L125 190 L125 260 L75 260 Z" fill="#0EA5E9" stroke="#000" strokeWidth="8" />
-               {/* Cuff Line */}
-               <path d="M60 190 L140 190" stroke="#000" strokeWidth="10" strokeLinecap="round"/>
-               {/* Base Palm */}
-               <rect x="50" y="100" width="100" height="90" rx="35" stroke="#000" strokeWidth="8" />
-               {/* Back Fingers UP */}
-               <rect x="58" y="10" width="35" height="110" rx="17.5" stroke="#000" strokeWidth="8" />
-               <rect x="98" y="30" width="35" height="90" rx="17.5" stroke="#000" strokeWidth="8" />
-               {/* Folded Pinky/Ring */}
-               <rect x="135" y="120" width="40" height="30" rx="15" stroke="#000" strokeWidth="8" fill="white" transform="rotate(15 135 120)" />
-               <rect x="125" y="150" width="40" height="30" rx="15" stroke="#000" strokeWidth="8" fill="white" transform="rotate(10 125 150)" />
-               {/* Big Thumb Crossing Palm */}
-               <rect x="25" y="125" width="85" height="35" rx="17.5" stroke="#000" strokeWidth="8" fill="white" transform="rotate(-30 25 125)" />
-               
-               {/* Glove Creases */}
-               <path d="M75 160 L75 185" stroke="#000" strokeWidth="6" strokeLinecap="round" />
-               <path d="M115 160 L115 185" stroke="#000" strokeWidth="6" strokeLinecap="round" />
-            </svg>
-
-            {/* IT'S OK - Sticker Ribbon overlapping the hand */}
-            <div className="absolute bottom-8 bg-[#000] border-[4px] border-white px-6 py-2 transform rotate-[-4deg] shadow-[6px_6px_0_rgba(255,255,255,0.4)]">
-               <span className="text-xl md:text-2xl font-black text-[#38BDF8] tracking-widest font-heading">IT'S OK</span>
-            </div>
+               {/* Huge Apple Doodle */}
+               <svg viewBox="0 0 200 200" className="absolute bottom-24 left-1/2 -translate-x-1/2 w-[85%] h-auto overflow-visible" fill="white">
+                  {/* Stem */}
+                  <path d="M 100 70 C 90 40, 95 20, 110 30" fill="none" stroke="#000" strokeWidth="8" strokeLinecap="round" />
+                  {/* Leaf */}
+                  <path d="M 110 35 C 140 10, 170 30, 140 60 C 120 50, 110 40, 110 35 Z" fill="#4ADE80" stroke="#000" strokeWidth="8" strokeLinejoin="round" />
+                  {/* Apple Body */}
+                  <path d="M 100 75 C 140 50, 190 80, 180 140 C 170 180, 110 190, 100 175 C 90 190, 30 180, 20 140 C 10 80, 60 50, 100 75 Z" fill="#FECACA" stroke="#000" strokeWidth="8" strokeLinejoin="round" />
+                  
+                  {/* Happy Face */}
+                  <circle cx="70" cy="130" r="6" fill="#000" />
+                  <circle cx="130" cy="130" r="6" fill="#000" />
+                  <ellipse cx="50" cy="140" rx="8" ry="4" fill="#F87171" />
+                  <ellipse cx="150" cy="140" rx="8" ry="4" fill="#F87171" />
+                  <path d="M 90 140 C 90 155, 110 155, 110 140 Z" fill="#EF4444" stroke="#000" strokeWidth="4" strokeLinejoin="round" />
+               </svg>
+            </motion.div>
             
           </motion.div>
         </div>
       </main>
+
+      <FeaturesSection />
+      <HowItWorksSection />
+      <BenefitsSection />
+      <CTASection handleStart={handleStart} />
+      <Footer />
     </div>
   );
 }
 
+function FeaturesSection() {
+  const features = [
+    {
+      title: "Find Clarity",
+      desc: "Untangle your thoughts with guided video sessions.",
+      color: "bg-[#E0E7FF]",
+      doodle: (
+        <svg viewBox="0 0 100 100" fill="none" className="w-16 h-16 mb-4 overflow-visible">
+          <path d="M 30 50 C 10 50, 10 30, 30 30 C 35 15, 60 15, 70 30 C 90 30, 90 50, 70 50 C 70 70, 30 70, 30 50 Z" stroke="#000" strokeWidth="5" strokeLinejoin="round" fill="#E0E7FF"/>
+          <path d="M 40 40 L 60 40 M 45 50 L 55 50" stroke="#000" strokeWidth="5" strokeLinecap="round"/>
+        </svg>
+      )
+    },
+    {
+      title: "Build Resilience",
+      desc: "Develop long-term coping mechanisms, step-by-step.",
+      color: "bg-[#FED7AA]",
+      doodle: (
+        <svg viewBox="0 0 100 100" fill="none" className="w-16 h-16 mb-4 overflow-visible">
+          <path d="M 50 15 L 80 25 L 80 50 C 80 75, 50 90, 50 90 C 50 90, 20 75, 20 50 L 20 25 Z" stroke="#000" strokeWidth="5" strokeLinejoin="round" fill="#FED7AA"/>
+          <path d="M 50 15 L 50 90 M 20 35 L 80 35" stroke="#000" strokeWidth="5" strokeLinecap="round"/>
+        </svg>
+      )
+    },
+    {
+      title: "Deepen Understanding",
+      desc: "Track emotional patterns without the clinical dashboard feel.",
+      color: "bg-[#D9F99D]",
+      doodle: (
+        <svg viewBox="0 0 100 100" fill="none" className="w-16 h-16 mb-4 overflow-visible">
+          <path d="M 20 50 C 20 50, 40 30, 50 30 C 60 30, 80 50, 80 50 C 80 50, 60 70, 50 70 C 40 70, 20 50, 20 50 Z" stroke="#000" strokeWidth="5" strokeLinejoin="round" fill="#D9F99D"/>
+          <circle cx="50" cy="50" r="10" stroke="#000" strokeWidth="5" fill="#FFF"/>
+        </svg>
+      )
+    }
+  ];
+
+  return (
+    <section className="relative py-32 px-6 max-w-7xl mx-auto z-10 w-full mt-20">
+      <div className="text-center mb-20">
+        <h2 className="text-4xl md:text-5xl font-bold text-black tracking-tight leading-[1.1]" style={{ fontFamily: 'var(--font-heading)' }}>
+          Not a dashboard.<br/>A companion.
+        </h2>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
+        {features.map((f, i) => (
+          <motion.div 
+            key={i}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ delay: i * 0.15 }}
+            className={`group relative bg-white border-[4px] border-black rounded-[32px] p-8 md:p-10 shadow-[8px_8px_0_#000] hover:shadow-[4px_4px_0_#000] hover:translate-y-[4px] hover:translate-x-[4px] transition-all cursor-crosshair overflow-hidden`}
+          >
+            {/* Background Blob */}
+            <div className={`absolute -right-10 -top-10 w-32 h-32 rounded-full opacity-20 ${f.color}`} />
+            
+            <div className="relative z-10 flex flex-col items-start text-left">
+              <div className="p-3 bg-slate-50 border-[3px] border-black rounded-2xl mb-6 shadow-[3px_3px_0_#000] group-hover:-rotate-6 transition-transform">
+                {f.doodle}
+              </div>
+              <h3 className="text-2xl font-black text-black mb-3">{f.title}</h3>
+              <p className="text-black/80 font-bold text-lg leading-snug">{f.desc}</p>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function HowItWorksSection() {
+  const steps = [
+    {
+      num: "01",
+      title: "Hit Play.",
+      desc: "Choose a session based on how you feel right now. No overthinking.",
+      color: "bg-[#E0E7FF]"
+    },
+    {
+      num: "02",
+      title: "Breathe.",
+      desc: "Follow the guided video. Let the visuals ground your mind.",
+      color: "bg-[#FED7AA]"
+    },
+    {
+      num: "03",
+      title: "Reflect.",
+      desc: "Jot down a few thoughts. Or don't. Progress happens naturally.",
+      color: "bg-[#D9F99D]"
+    }
+  ];
+
+  return (
+    <section className="relative py-28 px-6 w-full bg-[#FAFAFA] border-y-[4px] border-black overflow-hidden">
+      {/* Background doodles */}
+      <div className="absolute top-20 left-[10%] opacity-20 pointer-events-none">
+        <svg viewBox="0 0 100 100" fill="none" className="w-24 h-24 rotate-12">
+          <path d="M10 50 Q 30 10, 50 50 T 90 50" stroke="#000" strokeWidth="6" strokeLinecap="round" />
+        </svg>
+      </div>
+
+      <div className="max-w-4xl mx-auto z-10 relative">
+        <h2 className="text-4xl md:text-6xl font-bold text-black tracking-tight text-center mb-24" style={{ fontFamily: 'var(--font-heading)' }}>
+          How it works
+        </h2>
+
+        <div className="relative pb-10">
+          {/* Vertical Line */}
+          <div className="absolute left-[26px] md:left-1/2 top-0 bottom-0 w-[6px] bg-black -translate-x-1/2 rounded-full" />
+          
+          <div className="space-y-16 md:space-y-24 pt-4">
+            {steps.map((step, i) => (
+              <motion.div 
+                key={i}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                className={`relative flex flex-col md:flex-row items-start ${i % 2 === 0 ? 'md:flex-row-reverse' : ''} gap-8 md:gap-16`}
+              >
+                {/* Center Node */}
+                <div className="absolute left-[26px] md:left-1/2 top-6 w-14 h-14 -translate-x-1/2 -translate-y-1/2 bg-white border-[5px] border-black rounded-full z-10 flex items-center justify-center shadow-[4px_4px_0_#000]">
+                  <div className={`w-4 h-4 rounded-full ${step.color} border-[3px] border-black`} />
+                </div>
+
+                {/* Content Card */}
+                <div className={`w-full md:w-1/2 pl-16 md:pl-0 ${i % 2 === 0 ? 'md:pl-16' : 'md:pr-16 md:text-right'}`}>
+                   <div className={`${step.color} border-[4px] border-black p-8 md:p-10 rounded-[32px] shadow-[8px_8px_0_#000] rotate-[-1deg] hover:rotate-[1deg] transition-transform text-left ${i % 2 === 0 ? 'md:text-left' : 'md:text-right'}`}>
+                     <span className="inline-block px-4 py-1.5 bg-white border-[3px] border-black rounded-full text-sm font-black mb-6 shadow-[3px_3px_0_#000]">Step {step.num}</span>
+                     <h3 className="text-3xl lg:text-4xl font-black text-black mb-3">{step.title}</h3>
+                     <p className="text-black/80 font-bold text-lg md:text-xl leading-snug">{step.desc}</p>
+                   </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function BenefitsSection() {
+  return (
+    <section className="relative py-40 px-6 max-w-5xl mx-auto z-10 w-full text-center">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        className="text-[2rem] md:text-[3.5rem] lg:text-[4.2rem] font-bold text-black leading-[1.1]"
+        style={{ fontFamily: 'var(--font-heading)' }}
+      >
+        We believe that feeling <span className="bg-[#E0E7FF] px-2 md:px-4 py-1 border-[4px] border-black rounded-[14px] md:rounded-[20px] shadow-[6px_6px_0_#000] inline-block -rotate-2 mx-1 whitespace-nowrap">calm</span><br className="hidden md:block" /> doesn't require a 10-step routine.<br /> It just requires <span className="bg-[#D9F99D] px-2 md:px-4 py-1 border-[4px] border-black rounded-[14px] md:rounded-[20px] shadow-[6px_6px_0_#000] inline-block rotate-1 mx-1 mt-3 md:mt-0 whitespace-nowrap">understanding.</span>
+      </motion.div>
+      
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ delay: 0.3 }}
+        className="mt-20 text-center"
+      >
+        <div className="w-16 h-16 mx-auto bg-white border-[4px] border-black rounded-full flex items-center justify-center animate-bounce shadow-[6px_6px_0_#000]">
+          <svg viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+      </motion.div>
+    </section>
+  );
+}
+
+function CTASection({ handleStart }: { handleStart: () => void }) {
+  return (
+    <section className="relative py-20 px-6 max-w-5xl mx-auto z-10 w-full text-center mb-10">
+      <div className="bg-[#FED7AA] border-[5px] border-black py-16 px-6 md:p-24 rounded-[40px] shadow-[16px_16px_0_#000] relative overflow-hidden">
+        {/* Wavy background lines */}
+        <div className="absolute top-0 left-0 w-full h-full opacity-20 pointer-events-none object-cover">
+          <svg viewBox="0 0 400 100" preserveAspectRatio="none" className="w-full h-full">
+            <path d="M0,20 Q100,-20 200,20 T400,20" fill="none" stroke="#000" strokeWidth="8" />
+            <path d="M0,80 Q100,40 200,80 T400,80" fill="none" stroke="#000" strokeWidth="8" />
+          </svg>
+        </div>
+
+        <h2 className="text-[3rem] md:text-[4.5rem] font-bold text-black tracking-tight relative z-10 mb-6 leading-[1.0]" style={{ fontFamily: 'var(--font-heading)' }}>
+          Ready to feel better?
+        </h2>
+        <p className="text-xl md:text-2xl font-bold text-black/80 relative z-10 max-w-2xl mx-auto mb-12">
+          Join over 1k+ happy users who have transformed how they handle their daily emotions.
+        </p>
+
+        <button 
+          onClick={handleStart}
+          className="bg-[#1A1A1A] text-white px-10 py-5 rounded-[20px] text-xl md:text-2xl font-black flex items-center gap-3 mx-auto transition-transform shadow-[8px_8px_0_rgba(255,255,255,0.4)] relative z-10 border-4 border-transparent hover:border-white group"
+        >
+          Start for free <Zap className="w-6 h-6 fill-white stroke-black stroke-[1.5] group-hover:scale-110 transition-transform" />
+        </button>
+      </div>
+    </section>
+  );
+}
+
+function Footer() {
+  return (
+    <footer className="bg-[#0a0a0a] text-white pt-24 pb-12 px-6 w-full border-t-[5px] border-black">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-16 border-b-[2px] border-white/10 pb-20">
+        
+        {/* Brand */}
+        <div className="col-span-1 md:col-span-2 space-y-6">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-white flex items-center justify-center p-2 border-2 border-transparent rounded-full">
+               <svg viewBox="0 0 24 24" fill="black"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            </div>
+            <span className="font-black text-white tracking-tight text-2xl">MindCare</span>
+          </div>
+          <p className="text-white/60 font-bold max-w-sm text-xl leading-snug">
+            Take care of your mind.<br/>It's the only one you have.
+          </p>
+        </div>
+
+        <div className="space-y-6">
+          <h4 className="font-black text-sm tracking-widest uppercase text-white/40">Product</h4>
+          <ul className="space-y-4 font-bold text-white/80 text-lg">
+            <li><a href="#" className="hover:text-white transition-colors">Features</a></li>
+            <li><a href="#" className="hover:text-white transition-colors">Pricing</a></li>
+            <li><a href="#" className="hover:text-white transition-colors">Wall of Love</a></li>
+          </ul>
+        </div>
+
+        <div className="space-y-6">
+          <h4 className="font-black text-sm tracking-widest uppercase text-white/40">Legal</h4>
+          <ul className="space-y-4 font-bold text-white/80 text-lg">
+            <li><a href="#" className="hover:text-white transition-colors">Privacy</a></li>
+            <li><a href="#" className="hover:text-white transition-colors">Terms</a></li>
+            <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between mt-10 text-white/40 font-bold text-base">
+        <p>© 2026 MindCare. All rights reserved.</p>
+        <div className="flex gap-6 mt-6 md:mt-0">
+           <a href="#" className="hover:text-white transition-colors">
+              <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3.81l.53-4H14V7a1 1 0 0 1 1-1h3z"></path></svg>
+           </a>
+           <a href="#" className="hover:text-white transition-colors">
+              <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>
+           </a>
+        </div>
+      </div>
+    </footer>
+  );
+}
