@@ -272,71 +272,109 @@ export function MindCareLanding() {
 }
 
 function FeaturesSection() {
-  const features = [
-    {
-      title: "Find Clarity",
-      desc: "Untangle your thoughts with guided video sessions.",
-      color: "bg-[#E0E7FF]",
-      doodle: (
-        <svg viewBox="0 0 100 100" fill="none" className="w-16 h-16 mb-4 overflow-visible">
-          <path d="M 30 50 C 10 50, 10 30, 30 30 C 35 15, 60 15, 70 30 C 90 30, 90 50, 70 50 C 70 70, 30 70, 30 50 Z" stroke="#000" strokeWidth="5" strokeLinejoin="round" fill="#E0E7FF"/>
-          <path d="M 40 40 L 60 40 M 45 50 L 55 50" stroke="#000" strokeWidth="5" strokeLinecap="round"/>
-        </svg>
-      )
-    },
-    {
-      title: "Build Resilience",
-      desc: "Develop long-term coping mechanisms, step-by-step.",
-      color: "bg-[#FED7AA]",
-      doodle: (
-        <svg viewBox="0 0 100 100" fill="none" className="w-16 h-16 mb-4 overflow-visible">
-          <path d="M 50 15 L 80 25 L 80 50 C 80 75, 50 90, 50 90 C 50 90, 20 75, 20 50 L 20 25 Z" stroke="#000" strokeWidth="5" strokeLinejoin="round" fill="#FED7AA"/>
-          <path d="M 50 15 L 50 90 M 20 35 L 80 35" stroke="#000" strokeWidth="5" strokeLinecap="round"/>
-        </svg>
-      )
-    },
-    {
-      title: "Deepen Understanding",
-      desc: "Track emotional patterns without the clinical dashboard feel.",
-      color: "bg-[#D9F99D]",
-      doodle: (
-        <svg viewBox="0 0 100 100" fill="none" className="w-16 h-16 mb-4 overflow-visible">
-          <path d="M 20 50 C 20 50, 40 30, 50 30 C 60 30, 80 50, 80 50 C 80 50, 60 70, 50 70 C 40 70, 20 50, 20 50 Z" stroke="#000" strokeWidth="5" strokeLinejoin="round" fill="#D9F99D"/>
-          <circle cx="50" cy="50" r="10" stroke="#000" strokeWidth="5" fill="#FFF"/>
-        </svg>
-      )
-    }
-  ];
-
   return (
-    <section className="relative py-32 px-6 max-w-7xl mx-auto z-10 w-full mt-20">
-      <div className="text-center mb-20">
-        <h2 className="text-4xl md:text-5xl font-bold text-black tracking-tight leading-[1.1]" style={{ fontFamily: 'var(--font-heading)' }}>
-          Not a dashboard.<br/>A companion.
+    <section className="relative py-32 px-6 max-w-[72rem] mx-auto z-10 w-full mt-20">
+      
+      {/* Tiny Doodle Elements around the grid */}
+      <div className="absolute top-10 left-0 md:left-[5%] opacity-70 animate-pulse pointer-events-none">
+        <svg viewBox="0 0 50 50" fill="none" className="w-10 h-10">
+          <path d="M25 0 L25 50 M0 25 L50 25" stroke="#000" strokeWidth="4" strokeLinecap="round" />
+        </svg>
+      </div>
+      <div className="absolute bottom-10 right-0 md:right-[5%] opacity-70 pointer-events-none rotate-12">
+        <svg viewBox="0 0 50 50" fill="none" className="w-8 h-8">
+          <circle cx="25" cy="25" r="16" stroke="#000" strokeWidth="5" strokeDasharray="4 8" />
+        </svg>
+      </div>
+      <div className="absolute top-1/2 left-4 md:-left-4 opacity-70 pointer-events-none -rotate-12">
+        <svg viewBox="0 0 50 50" fill="none" className="w-6 h-6">
+          <path d="M10 10 L40 40 M40 10 L10 40" stroke="#000" strokeWidth="5" strokeLinecap="round" />
+        </svg>
+      </div>
+
+      <div className="text-center mb-32 relative z-10">
+        <h2 className="text-5xl md:text-[4.5rem] font-bold text-black tracking-tight leading-[1.1]" style={{ fontFamily: 'var(--font-heading)' }}>
+          Visualize your mind,<br/>not just data.
         </h2>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
-        {features.map((f, i) => (
-          <motion.div 
-            key={i}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ delay: i * 0.15 }}
-            className={`group relative bg-white border-[4px] border-black rounded-[32px] p-8 md:p-10 shadow-[8px_8px_0_#000] hover:shadow-[4px_4px_0_#000] hover:translate-y-[4px] hover:translate-x-[4px] transition-all cursor-crosshair overflow-hidden`}
-          >
-            {/* Background Blob */}
-            <div className={`absolute -right-10 -top-10 w-32 h-32 rounded-full opacity-20 ${f.color}`} />
-            
-            <div className="relative z-10 flex flex-col items-start text-left">
-              <div className="p-3 bg-slate-50 border-[3px] border-black rounded-2xl mb-6 shadow-[3px_3px_0_#000] group-hover:-rotate-6 transition-transform">
-                {f.doodle}
-              </div>
-              <h3 className="text-2xl font-black text-black mb-3">{f.title}</h3>
-              <p className="text-black/80 font-bold text-lg leading-snug">{f.desc}</p>
-            </div>
-          </motion.div>
-        ))}
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 auto-rows-fr">
+          
+        {/* Card 1: Understand Patterns */}
+        <div className="p-8 md:p-12 rounded-[2.5rem] bg-[#F7F4EB] min-h-[420px] flex flex-col relative group hover:scale-[1.02] transition-transform duration-500 ease-out border-[4px] border-black shadow-[6px_6px_0px_#000] rotate-[-1.5deg] md:-translate-y-4 md:translate-x-2 z-10 hover:z-20">
+          <div className="max-w-[85%] relative z-20">
+            <h3 className="text-3xl sm:text-4xl lg:text-[42px] font-black text-black mb-6 tracking-tight leading-tight" style={{ fontFamily: 'var(--font-heading)' }}>Understand your patterns</h3>
+            <p className="text-black text-xl leading-relaxed font-bold">Turning scattered thoughts and daily logs into gentle, meaningful insights.</p>
+          </div>
+          <div className="absolute -bottom-8 -right-8 origin-bottom-right group-hover:rotate-3 group-hover:scale-105 transition-all duration-500 ease-out z-10 pointer-events-none">
+            <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" className="w-52 h-52 sm:w-72 sm:h-72 text-black overflow-visible" strokeLinecap="round" strokeLinejoin="round">
+              {/* Added a white glow behind doodle so it pops when overlapping border */}
+              <circle cx="55" cy="55" r="35" fill="rgba(255,255,255,0.7)" className="blur-xl" />
+              <path d="M45 25 C30 25 20 40 25 55 C20 70 30 85 45 80 C60 85 75 75 75 60 C85 50 75 30 55 25" fill="#FCF8E8" stroke="#000" strokeWidth="4"/>
+              <path d="M45 25 C50 35 48 50 45 60" stroke="#000" strokeWidth="3"/>
+              <path d="M60 30 C58 45 65 55 60 70" stroke="#000" strokeWidth="3"/>
+              <path d="M35 45 C40 50 38 65 35 70" stroke="#000" strokeWidth="3"/>
+              <path d="M80 20 Q85 10 95 15 M85 30 Q95 25 100 35" stroke="#000" strokeWidth="3" />
+              <circle cx="85" cy="18" r="3" fill="#000" />
+              <circle cx="95" cy="25" r="3" fill="#000" />
+            </svg>
+          </div>
+        </div>
+
+        {/* Card 2: Sleep Better */}
+        <div className="p-8 md:p-12 rounded-[2.5rem] bg-[#E8ECF1] min-h-[420px] flex flex-col justify-end relative group hover:scale-[1.02] transition-transform duration-500 ease-out border-[4px] border-black shadow-[6px_6px_0px_#000] rotate-[2deg] md:translate-y-8 md:-translate-x-2 z-10 hover:z-20">
+          <div className="absolute -top-12 -left-8 md:-left-12 origin-top-left group-hover:-rotate-3 group-hover:-translate-y-2 transition-all duration-500 ease-out z-10 pointer-events-none">
+            <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" className="w-52 h-52 sm:w-72 sm:h-72 text-black overflow-visible" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="65" cy="50" r="30" fill="rgba(255,255,255,0.7)" className="blur-xl" />
+              <path d="M65 25 A 30 30 0 1 0 70 80 A 35 35 0 0 1 65 25 Z" fill="#E2E8F0" stroke="#000" strokeWidth="4" />
+              <path d="M30 55 Q 40 65 50 55" stroke="#000" strokeWidth="4"/> 
+              <path d="M55 40 L 65 40 L 55 30 L 65 30 M 70 25 L 75 25 L 70 20 L 75 20" stroke="#000" strokeWidth="3"/>
+              <path d="M10 20 L 15 25 L 10 30 M 15 25 L 5 25" stroke="#000" strokeWidth="3"/>
+              <path d="M20 80 L 23 85 L 20 90" stroke="#000" strokeWidth="3"/>
+            </svg>
+          </div>
+          <div className="max-w-[85%] relative z-20 self-end text-right mt-40 md:mt-0">
+            <h3 className="text-3xl sm:text-4xl lg:text-[42px] font-black text-black mb-6 tracking-tight leading-tight" style={{ fontFamily: 'var(--font-heading)' }}>Sleep better</h3>
+            <p className="text-black text-xl leading-relaxed font-bold">Because rest matters. Discover how your mind truly recovers, day after day.</p>
+          </div>
+        </div>
+
+        {/* Card 3: Eat & Feel Right */}
+        <div className="p-8 md:p-12 rounded-[2.5rem] bg-[#F3EBEA] min-h-[420px] flex flex-col justify-end relative group hover:scale-[1.02] transition-transform duration-500 ease-out border-[4px] border-black shadow-[6px_6px_0px_#000] rotate-[1.5deg] md:-translate-y-2 md:translate-x-4 z-10 hover:z-20">
+          <div className="absolute -top-10 -left-6 md:-left-10 origin-top-left group-hover:rotate-3 group-hover:scale-110 transition-all duration-500 ease-out z-10 pointer-events-none">
+            <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" className="w-52 h-52 sm:w-72 sm:h-72 text-black overflow-visible" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="50" cy="50" r="30" fill="rgba(255,255,255,0.7)" className="blur-xl" />
+              <path d="M50 35 C 30 30 20 40 25 70 C 30 85 45 90 50 85 C 55 90 70 85 75 70 C 80 40 70 30 50 35 Z" fill="#FDEAE8" stroke="#000" strokeWidth="4"/>
+              <path d="M50 35 C 50 25 55 20 55 15 M 55 25 C 65 15 75 25 60 30 Z" stroke="#000" strokeWidth="4"/>
+              <path d="M40 60 L 40 65 M 60 60 L 60 65" stroke="#000" strokeWidth="4"/>
+              <path d="M45 75 Q 50 80 55 75" stroke="#000" strokeWidth="4"/>
+            </svg>
+          </div>
+          <div className="max-w-[85%] relative z-20 self-end text-right mt-40 md:mt-0">
+            <h3 className="text-3xl sm:text-4xl lg:text-[42px] font-black text-black mb-6 tracking-tight leading-tight" style={{ fontFamily: 'var(--font-heading)' }}>Eat & feel right</h3>
+            <p className="text-black text-xl leading-relaxed font-bold">A gentle look at how what you consume shapes how you feel inside.</p>
+          </div>
+        </div>
+
+        {/* Card 4: Move Your Mind */}
+        <div className="p-8 md:p-12 rounded-[2.5rem] bg-[#EAEFEC] min-h-[420px] flex flex-col relative group hover:scale-[1.02] transition-transform duration-500 ease-out border-[4px] border-black shadow-[6px_6px_0px_#000] rotate-[-1deg] md:translate-y-4 md:-translate-x-4 z-10 hover:z-20">
+          <div className="max-w-[85%] relative z-20">
+            <h3 className="text-3xl sm:text-4xl lg:text-[42px] font-black text-black mb-6 tracking-tight leading-tight" style={{ fontFamily: 'var(--font-heading)' }}>Move your mind</h3>
+            <p className="text-black text-xl leading-relaxed font-bold">Find the quiet connection between physical movement and mental clarity.</p>
+          </div>
+          <div className="absolute -bottom-8 -right-6 origin-bottom-right group-hover:-translate-y-2 group-hover:-rotate-3 transition-all duration-500 ease-out z-10 pointer-events-none">
+            <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" className="w-52 h-52 sm:w-72 sm:h-72 text-black overflow-visible" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="50" cy="50" r="30" fill="rgba(255,255,255,0.7)" className="blur-xl" />
+              <circle cx="50" cy="25" r="12" fill="#E5F0E8" stroke="#000" strokeWidth="4"/>
+              <path d="M45 40 L 40 65 M 55 40 L 60 65" stroke="#000" strokeWidth="4"/>
+              <path d="M40 65 Q 50 70 60 65" stroke="#000" strokeWidth="4"/>
+              <path d="M45 45 C 30 40 25 55 15 50 M 55 45 C 70 50 75 35 85 40" stroke="#000" strokeWidth="4"/>
+              <path d="M42 65 L 35 90 M 58 65 L 75 80 L 65 95" stroke="#000" strokeWidth="4"/>
+              <path d="M 10 30 L 25 35 M 5 70 L 20 75 M 85 80 L 95 75" stroke="#000" strokeWidth="2.5" />
+            </svg>
+          </div>
+        </div>
+
       </div>
     </section>
   );

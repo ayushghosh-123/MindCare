@@ -1,6 +1,6 @@
 'use client';
 
-import { LogIn, UserPlus, Activity, Smile, Calendar, TrendingUp, Leaf, CheckCircle } from 'lucide-react';
+import { LogIn, UserPlus, Activity, Smile, Calendar, TrendingUp, Leaf, CheckCircle, Sparkles, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { AnimatedButton, AnimatedSignInButton } from '@/components/webcom/animated-button';
@@ -108,36 +108,47 @@ export const HowCard = ({ step, icon, title, desc }: { step: string | number; ic
 
 
 
-
-export const FeatureCard = ({ imageUrl, title, desc }: { imageUrl: string; title: string; desc: string; }) => (
-  <motion.div
-    className="flex flex-col bg-white rounded-3xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-slate-100 overflow-hidden hover:shadow-[0_8px_30px_rgba(138,138,255,0.12)] transition-all duration-500 group"
-    initial={{ opacity: 0, scale: 0.95 }}
-    whileInView={{ opacity: 1, scale: 1 }}
-    viewport={{ once: true, amount: 0.2 }}
-  >
-    {/* Increased height to h-64 for a "bigger" photo presence */}
-    <div className="h-64 w-full overflow-hidden bg-slate-50/50 relative flex items-center justify-center p-8 border-b border-slate-50">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img 
-        src={imageUrl} 
-        alt={title} 
-        className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110" 
-      />
-    </div>
-    
-    <div className="p-6">
-      <h4 className="text-xl font-bold text-slate-800 mb-2 group-hover:text-[#8A8AFF] transition-colors leading-tight">
-        {title}
-      </h4>
-      <p className="text-sm text-slate-600 leading-relaxed font-medium">
-        {desc}
-      </p>
-    </div>
-  </motion.div>
+const BrainDoodle = () => (
+  <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-24 h-24 sm:w-32 sm:h-32 text-slate-900" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M45 25 C30 25 20 40 25 55 C20 70 30 85 45 80 C60 85 75 75 75 60 C85 50 75 30 55 25" fill="#FCF8E8" />
+    <path d="M45 25 C50 35 48 50 45 60" />
+    <path d="M60 30 C58 45 65 55 60 70" />
+    <path d="M35 45 C40 50 38 65 35 70" />
+    <path d="M80 20 Q85 10 95 15 M85 30 Q95 25 100 35" strokeWidth="1.5" />
+    <circle cx="85" cy="18" r="2" fill="black" />
+    <circle cx="95" cy="25" r="2" fill="black" />
+  </svg>
 );
 
+const SleepDoodle = () => (
+  <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-24 h-24 sm:w-32 sm:h-32 text-slate-900" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M65 25 A 30 30 0 1 0 70 80 A 35 35 0 0 1 65 25 Z" fill="#E2E8F0" />
+    <path d="M30 55 Q 40 65 50 55" /> 
+    <path d="M55 40 L 65 40 L 55 30 L 65 30 M 70 25 L 75 25 L 70 20 L 75 20" strokeWidth="1.5" />
+    <path d="M10 20 L 15 25 L 10 30 M 15 25 L 5 25" strokeWidth="1.5" />
+    <path d="M20 80 L 23 85 L 20 90" strokeWidth="1.5" />
+  </svg>
+);
 
+const FoodDoodle = () => (
+  <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-24 h-24 sm:w-32 sm:h-32 text-slate-900" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M50 35 C 30 30 20 40 25 70 C 30 85 45 90 50 85 C 55 90 70 85 75 70 C 80 40 70 30 50 35 Z" fill="#FDEAE8" />
+    <path d="M50 35 C 50 25 55 20 55 15 M 55 25 C 65 15 75 25 60 30 Z" />
+    <path d="M40 60 L 40 65 M 60 60 L 60 65" />
+    <path d="M45 75 Q 50 80 55 75" />
+  </svg>
+);
+
+const MoveDoodle = () => (
+  <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-24 h-24 sm:w-32 sm:h-32 text-slate-900" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="50" cy="25" r="12" fill="#E5F0E8" />
+    <path d="M45 37 L 40 65 M 55 37 L 60 65" />
+    <path d="M40 65 Q 50 70 60 65" />
+    <path d="M45 45 C 30 40 25 55 15 50 M 55 45 C 70 50 75 35 85 40" />
+    <path d="M42 65 L 35 90 M 58 65 L 75 80 L 65 95" />
+    <path d="M 10 30 L 25 35 M 5 70 L 20 75 M 85 80 L 95 75" strokeWidth="1.5" />
+  </svg>
+);
 
 export const LandingPage = ({ user }: { user: any }) => (
   <div className="min-h-screen bg-gradient-to-br from-[#F8F8FF] via-[#D3D3FF]/20 to-[#E6E6FF]">
@@ -185,23 +196,55 @@ export const LandingPage = ({ user }: { user: any }) => (
       </div>
     </section>
 
-    {/* Key Features */}
-    <section className="py-24 px-6 bg-slate-100/70">
-      <div className="container mx-auto">
-        <div className="text-center mb-16">
-          <p className="text-sm font-semibold text-[#8A8AFF] uppercase tracking-widest mb-2">Detailed Tracking</p>
-          <h2 className="text-3xl sm:text-4xl font-bold text-slate-800 mb-4">Track What Truly Matters</h2>
-          <p className="text-slate-600 max-w-4xl mx-auto text-base sm:text-lg">
-            Log a wide range of metrics in one place to understand how everything affects your overall well-being.
-          </p>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-7xl mx-auto">
-          <FeatureCard imageUrl="/Image/mood.jpeg" title="Mental Health Score" desc="Daily mood, anxiety level, and general stress rating." />
-          <FeatureCard imageUrl="/Image/sleep.jpeg" title="Sleep Quality" desc="Track hours slept, perceived quality, and wakefulness." />
-          <FeatureCard imageUrl="/Image/nutrition.jpeg" title="Nutrition & Diet" desc="Log meals, cravings, and track food-related reactions." />
-          <FeatureCard imageUrl="/Image/physical_activity.jpeg" title="Physical Activity" desc="Record workouts, intensity, and duration for better insights." />
-          <FeatureCard imageUrl="/Image/energy.jpeg" title="Energy Levels" desc="Monitor fatigue throughout the day to find peak performance times." />
-          <FeatureCard imageUrl="/Image/custom_notes.jpeg" title="Custom Notes" desc="Add detailed journal entries for context around your data." />
+    {/* Doodle Feature Grid - 2x2 */}
+    <section className="py-32 px-6 bg-[#FCFBFA]">
+      <div className="container mx-auto max-w-[64rem]">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 auto-rows-fr">
+          
+          {/* Card 1: Understand Patterns */}
+          <div className="p-8 md:p-12 rounded-[2.5rem] bg-[#F7F4EB] min-h-[380px] flex flex-col justify-between group hover:scale-[1.02] transition-transform duration-500 ease-out border border-[#EBE6DA]">
+            <div className="max-w-[280px]">
+              <h3 className="text-3xl font-extrabold text-[#1A1A1A] mb-4 tracking-tight leading-tight">Understand your patterns</h3>
+              <p className="text-[#4A4843] text-lg leading-relaxed font-medium">Turning scattered thoughts and daily logs into gentle, meaningful insights.</p>
+            </div>
+            <div className="self-end origin-bottom-right group-hover:rotate-2 group-hover:scale-105 transition-all duration-500 ease-out mt-8">
+              <BrainDoodle />
+            </div>
+          </div>
+
+          {/* Card 2: Sleep Better */}
+          <div className="p-8 md:p-12 rounded-[2.5rem] bg-[#E8ECF1] min-h-[380px] flex flex-col justify-between group hover:scale-[1.02] transition-transform duration-500 ease-out border border-[#DBE3EC]">
+            <div className="self-start origin-top-left group-hover:-rotate-3 group-hover:-translate-y-2 transition-all duration-500 ease-out mb-8">
+              <SleepDoodle />
+            </div>
+            <div className="max-w-[280px]">
+              <h3 className="text-3xl font-extrabold text-[#1A1A1A] mb-4 tracking-tight leading-tight">Sleep better</h3>
+              <p className="text-[#3F4852] text-lg leading-relaxed font-medium">Because rest matters. Discover how your mind truly recovers, day after day.</p>
+            </div>
+          </div>
+
+          {/* Card 3: Eat & Feel Right */}
+          <div className="p-8 md:p-12 rounded-[2.5rem] bg-[#F3EBEA] min-h-[380px] flex flex-col justify-between group hover:scale-[1.02] transition-transform duration-500 ease-out border border-[#EADBE3]">
+            <div className="self-start origin-top-left group-hover:rotate-3 group-hover:scale-110 transition-all duration-500 ease-out mb-8">
+              <FoodDoodle />
+            </div>
+            <div className="max-w-[280px]">
+              <h3 className="text-3xl font-extrabold text-[#1A1A1A] mb-4 tracking-tight leading-tight">Eat & feel right</h3>
+              <p className="text-[#4D3F3B] text-lg leading-relaxed font-medium">A gentle look at how what you consume shapes how you feel inside.</p>
+            </div>
+          </div>
+
+          {/* Card 4: Move Your Mind */}
+          <div className="p-8 md:p-12 rounded-[2.5rem] bg-[#EAEFEC] min-h-[380px] flex flex-col justify-between group hover:scale-[1.02] transition-transform duration-500 ease-out border border-[#D5DFD8]">
+            <div className="max-w-[280px]">
+              <h3 className="text-3xl font-extrabold text-[#1A1A1A] mb-4 tracking-tight leading-tight">Move your mind</h3>
+              <p className="text-[#3C4A42] text-lg leading-relaxed font-medium">Find the quiet connection between physical movement and mental clarity.</p>
+            </div>
+            <div className="self-end origin-bottom-right group-hover:-translate-y-2 group-hover:-rotate-3 transition-all duration-500 ease-out mt-8">
+              <MoveDoodle />
+            </div>
+          </div>
+
         </div>
       </div>
     </section>
