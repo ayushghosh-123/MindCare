@@ -3,11 +3,11 @@
 import { useUser } from '@clerk/nextjs';
 import { UnifiedDashboardToday } from '@/components/dashboard/unified-dashboard';
 import { LoadingSkeleton } from '@/components/loader/loading-skeleton';
-import { LandingPage } from '@/components/landing/landing';
+import { MindCareLanding } from '@/components/landing/MindCareLanding';
 
 // --- Dashboard Component (Authenticated View) ---
 const Dashboard = ({ user }: { user: any }) => (
-  <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 pb-20 md:pb-0">
+  <div className="min-h-screen bg-background pb-20 md:pb-0">
     <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 mt-4 md:mt-0">
       <UnifiedDashboardToday userId={user?.id || ''} />
     </main>
@@ -20,11 +20,11 @@ export default function Home() {
 
   if (!isLoaded) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#F0F0FF]">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <LoadingSkeleton />
       </div>
     );
   }
 
-  return user ? <Dashboard user={user} /> : <LandingPage user={user} />;
+  return user ? <Dashboard user={user} /> : <MindCareLanding />;
 }
