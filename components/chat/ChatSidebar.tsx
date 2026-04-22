@@ -4,17 +4,7 @@ import { useState } from "react";
 import { ChatSession } from "@/lib/supabase-chat";
 import { useUser, UserButton } from "@clerk/nextjs";
 import { useChatSessions } from "@/components/hooks/use-chat-session";
-import { 
-  Search, 
-  Plus, 
-  Trash2, 
-  Edit3, 
-  MessageSquare, 
-  X,
-  Check,
-  Loader2,
-  Mail
-} from "lucide-react";
+import { Search, Plus, Trash2, Edit3, MessageSquare, X, Check, Loader2} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 

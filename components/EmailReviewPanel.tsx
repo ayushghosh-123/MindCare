@@ -9,6 +9,7 @@ import { CheckCircle2, AlertCircle, Send, X, Edit, Info } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/components/hooks/use-toast";
 import { useAuth } from "@clerk/nextjs";
+import { cn } from "@/lib/utils";
 
 interface EmailReviewPanelProps {
   initialSubject: string;

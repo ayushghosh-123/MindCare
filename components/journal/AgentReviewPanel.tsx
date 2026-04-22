@@ -6,6 +6,7 @@
 "use client";
 import { useState } from "react";
 import type { HumanReviewPayload } from "@/agents/nodes/evaluateAgent";
+import { cn } from "@/lib/utils";
 
 interface AgentReviewPanelProps {
   payload: HumanReviewPayload;

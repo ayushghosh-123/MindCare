@@ -153,7 +153,7 @@ export function AdvancedStats({ entries }: AdvancedStatsProps) {
             className="bg-white p-8 sm:p-10 rounded-[2rem] sm:rounded-[2.5rem] shadow-xl shadow-[#2C2A4A]/5 border border-white/60 flex flex-col items-start gap-6 sm:gap-8 group"
           >
              <div className={cn("w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center text-[#1b0c53] group-hover:scale-110 transition-transform duration-500", stat.color)}>
-                {React.cloneElement(stat.icon as React.ReactElement, { size: 24 })}
+                {React.cloneElement(stat.icon as React.ReactElement<any>, { size: 24 })}
              </div>
              <div>
                 <div className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-[#5f559a]/40 mb-1 sm:mb-2">{stat.label}</div>

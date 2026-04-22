@@ -2,20 +2,15 @@
 
 import { useState } from 'react';
 import { useUser } from '@clerk/nextjs';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Save, BookOpen, Plus, Calendar, FileText, Search, Filter, Pencil, X, Check, Trash2, Sparkles } from 'lucide-react';
+import { Save, BookOpen,  Search, Filter, Pencil, X, Check, Trash2, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { format } from 'date-fns';
-import { cn } from '@/lib/utils';
 import { dbHelpers, type JournalEntry } from '@/lib/supabase';
 import { useToast } from '@/components/hooks/use-toast';
 import { RichTextEditor } from '@/components/journal/rich-text-editor';
-
 import { useDiary } from '@/components/journal/DiaryContext';
 import { useAgent } from '@/components/hooks/use-agent';
 import { AgentReviewPanel } from '@/components/journal/AgentReviewPanel';

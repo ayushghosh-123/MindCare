@@ -6,9 +6,9 @@ import { Toaster } from '@/components/ui/sonner';
 import { GlobalInitialization } from '@/components/webcom/GlobalInitialization';
 import { MainNavbar } from '@/components/webcom/main-navbar';
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
-const bricolage = Bricolage_Grotesque({ subsets: ['latin'], variable: '--font-bricolage' });
-const plusJakarta = Plus_Jakarta_Sans({ subsets: ['latin'], variable: '--font-plus-jakarta' });
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter', preload: false });
+const bricolage = Bricolage_Grotesque({ subsets: ['latin'], variable: '--font-bricolage', preload: false });
+const plusJakarta = Plus_Jakarta_Sans({ subsets: ['latin'], variable: '--font-plus-jakarta', preload: false });
 
 export const metadata: Metadata = {
   title: 'MindCare | AI Mental Wellness',

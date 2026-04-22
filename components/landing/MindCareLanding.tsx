@@ -256,7 +256,7 @@ export function MindCareLanding() {
                    className="p-8 sm:p-10 rounded-[2rem] sm:rounded-[2.5rem] bg-white border border-[#f3f3f3] shadow-lg shadow-[#2C2A4A]/5 flex flex-col items-start gap-6 sm:gap-8 group"
                  >
                    <div className={`w-14 h-14 sm:w-16 sm:h-16 ${feature.color} rounded-2xl flex items-center justify-center text-[#1b0c53] group-hover:scale-110 transition-transform duration-500`}>
-                     {React.cloneElement(feature.icon as React.ReactElement, { size: 24 })}
+                     {React.cloneElement(feature.icon as React.ReactElement<any>, { size: 24 })}
                    </div>
                    <div>
                      <h4 className="text-xl sm:text-2xl font-black text-[#1b0c53] mb-3 sm:mb-4 tracking-tight">{feature.title}</h4>
@@ -289,7 +289,7 @@ export function MindCareLanding() {
              ].map((step, i) => (
                <div key={i} className={`flex flex-col items-center text-center group ${i === 4 ? 'col-span-2 md:col-span-1' : ''}`}>
                  <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/10 rounded-2xl sm:rounded-3xl flex items-center justify-center mb-4 sm:mb-6 group-hover:bg-[#bdb2ff] group-hover:text-[#1b0c53] transition-all duration-500 border border-white/10 group-hover:scale-110">
-                   {React.cloneElement(step.icon, { size: 24 })}
+                   {React.cloneElement(step.icon as React.ReactElement<any>, { size: 24 })}
                  </div>
                  <h4 className="font-black text-lg sm:text-xl mb-1">{step.label}</h4>
                  <p className="text-white/40 text-[8px] sm:text-[10px] font-bold uppercase tracking-widest">{step.sub}</p>
