@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Save, BookOpen, Plus, Calendar, FileText, Search, Filter, Pencil, X, Check, Trash2 } from 'lucide-react';
+import { Save, BookOpen, Plus, Calendar, FileText, Search, Filter, Pencil, X, Check, Trash2, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
@@ -19,6 +19,7 @@ import { RichTextEditor } from '@/components/journal/rich-text-editor';
 import { useDiary } from '@/components/journal/DiaryContext';
 import { useAgent } from '@/components/hooks/use-agent';
 import { AgentReviewPanel } from '@/components/journal/AgentReviewPanel';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function DiaryPage() {
   const { user, isLoaded } = useUser();
@@ -120,11 +121,11 @@ export default function DiaryPage() {
 
   const getMoodColor = (mood: string) => {
     const colors: Record<string, string> = {
-      excellent: 'bg-green-100 text-green-800 border-green-200',
-      good: 'bg-blue-100 text-blue-800 border-blue-200',
-      neutral: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-      poor: 'bg-orange-100 text-orange-800 border-orange-200',
-      terrible: 'bg-red-100 text-red-800 border-red-200',
+      excellent: 'bg-green-50 text-green-700 border-green-200',
+      good: 'bg-blue-50 text-blue-700 border-blue-200',
+      neutral: 'bg-indigo-50 text-indigo-700 border-indigo-200',
+      poor: 'bg-orange-50 text-orange-700 border-orange-200',
+      terrible: 'bg-red-50 text-red-700 border-red-200',
     };
     return colors[mood] || colors.neutral;
   };
@@ -133,7 +134,7 @@ export default function DiaryPage() {
     const borders: Record<string, string> = {
       excellent: 'border-l-green-500',
       good: 'border-l-blue-500',
-      neutral: 'border-l-yellow-500',
+      neutral: 'border-l-indigo-500',
       poor: 'border-l-orange-500',
       terrible: 'border-l-red-500',
     };
@@ -142,8 +143,8 @@ export default function DiaryPage() {
 
   if (!isLoaded) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#D3D3FF]" />
+      <div className="min-h-screen bg-transparent flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#5f559a]" />
       </div>
     );
   }
@@ -167,229 +168,253 @@ export default function DiaryPage() {
   const sortedDates = Object.keys(groupedEntries).sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 max-w-5xl">
-      <div className="space-y-6">
+    <div className="container mx-auto px-4 sm:px-6 pt-10 pb-20 max-w-5xl text-slate-800">
+      <div className="space-y-12">
         {isWriting ? (
-          <Card className="shadow-lg border-[#D3D3FF]/30">
-            <CardHeader className="bg-[#D3D3FF]/10 border-b border-[#D3D3FF]/30 rounded-t-xl">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-slate-800">Write New Entry</CardTitle>
-                <div className="flex gap-2">
-                  <Button variant="ghost" onClick={() => setIsWriting(false)}>Cancel</Button>
-                  <Button
+          <div className="rounded-[1.5rem] sm:rounded-[3rem] bg-white/80 backdrop-blur-xl shadow-2xl shadow-[#2C2A4A]/5 overflow-hidden relative border-none animate-in fade-in zoom-in duration-500">
+            
+            <div className="bg-[#f9f9f9]/80 px-4 sm:px-8 py-4 sm:py-6 relative z-10">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                <h3 className="text-2xl sm:text-3xl font-black font-['Plus_Jakarta_Sans'] text-[#5f559a] tracking-tight">New Reflection</h3>
+                <div className="flex gap-2 sm:gap-4 w-full sm:w-auto">
+                  <button onClick={() => setIsWriting(false)} className="flex-1 sm:flex-none px-4 sm:px-6 py-2 sm:py-2.5 font-bold text-[#484550] rounded-full hover:bg-[#f3f3f3] transition-all text-sm">Cancel</button>
+                  <button
                     onClick={saveEntry}
                     disabled={!entryContent.trim() || loading}
-                    className="bg-[#6366F1] hover:bg-[#4F46E5] text-white shadow-lg hover:shadow-[0_0_20px_rgba(99,102,241,0.6)] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex-1 sm:flex-none bg-[#5f559a] text-white px-6 sm:px-8 py-2 sm:py-2.5 rounded-full font-bold flex items-center justify-center shadow-lg shadow-[#5f559a]/30 hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm"
                   >
-                    <Save className="h-4 w-4 mr-2" /> Save Entry
-                  </Button>
+                    <Save className="h-4 w-4 sm:h-5 sm:w-5 mr-2" /> Save
+                  </button>
                 </div>
               </div>
-            </CardHeader>
-            <CardContent className="space-y-6 pt-6">
-              <div>
-                <Label htmlFor="entry-title" className="text-slate-700 font-semibold">Entry Title</Label>
+            </div>
+            <div className="p-4 sm:p-8 md:p-10 space-y-6 sm:space-y-10 relative z-10 bg-white/40">
+              <div className="space-y-2 sm:space-y-3">
+                <Label htmlFor="entry-title" className="text-[#5f559a]/60 uppercase tracking-[0.2em] font-black text-[10px] px-2">The Focus</Label>
                 <Input
                   id="entry-title"
                   value={entryTitle}
                   onChange={(e) => setEntryTitle(e.target.value)}
-                  placeholder="What's on your mind today?"
-                  className="mt-1.5 focus-visible:ring-indigo-500 text-lg shadow-sm"
+                  placeholder="Session name..."
+                  className="mt-2 text-xl sm:text-2xl font-bold border-none bg-[#f3f3f3] rounded-xl sm:rounded-2xl shadow-inner h-14 sm:h-16 px-4 sm:px-6 focus-visible:ring-0 placeholder:text-slate-400"
                 />
               </div>
-              <div>
-                <Label className="text-slate-700 font-semibold">Content</Label>
-                <RichTextEditor
-                  content={entryContent}
-                  onChange={setEntryContent}
-                  placeholder="Start writing your thoughts, feelings, and experiences..."
-                  className="mt-1.5"
-                />
+              <div className="space-y-2 sm:space-y-3">
+                <Label className="text-[#5f559a]/60 uppercase tracking-[0.2em] font-black text-[10px] px-2">The Depths</Label>
+                <div className="mt-2 bg-[#f3f3f3] rounded-2xl sm:rounded-3xl p-2 sm:p-4 shadow-inner min-h-[300px] sm:min-h-[400px]">
+                  <RichTextEditor
+                    content={entryContent}
+                    onChange={setEntryContent}
+                    placeholder="Let it all out..."
+                    className="border-none bg-transparent"
+                  />
+                </div>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-[#F0F0FF] p-4 rounded-xl border border-slate-100">
-                <div>
-                  <Label className="text-slate-700 font-semibold">Mood</Label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-10">
+                <div className="bg-white/60 p-6 sm:p-8 rounded-[1.5rem] sm:rounded-[2rem] shadow-sm space-y-3 sm:space-y-4">
+                  <Label className="text-[#5f559a]/60 uppercase tracking-[0.2em] font-black text-[10px] px-2">Energy</Label>
                   <Select value={entryMood} onValueChange={(v: typeof entryMood) => setEntryMood(v)}>
-                    <SelectTrigger className="mt-1.5 bg-[#F8F8FF] shadow-sm"><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="excellent">Excellent</SelectItem>
-                      <SelectItem value="good">Good</SelectItem>
-                      <SelectItem value="neutral">Neutral</SelectItem>
-                      <SelectItem value="poor">Poor</SelectItem>
-                      <SelectItem value="terrible">Terrible</SelectItem>
+                    <SelectTrigger className="h-12 sm:h-14 bg-[#f3f3f3] border-none rounded-xl sm:rounded-2xl font-bold text-[#1a1c1c] focus:ring-0 text-sm">
+                       <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="border-none rounded-xl sm:rounded-2xl shadow-2xl bg-white p-2">
+                      <SelectItem value="excellent" className="font-bold cursor-pointer rounded-xl py-3 focus:bg-[#bdb2ff]/20">Feeling Radiant</SelectItem>
+                      <SelectItem value="good" className="font-bold cursor-pointer rounded-xl py-3 focus:bg-[#bdb2ff]/20">Good Energy</SelectItem>
+                      <SelectItem value="neutral" className="font-bold cursor-pointer rounded-xl py-3 focus:bg-[#bdb2ff]/20">Equilibrium</SelectItem>
+                      <SelectItem value="poor" className="font-bold cursor-pointer rounded-xl py-3 focus:bg-[#bdb2ff]/20">Low Vibration</SelectItem>
+                      <SelectItem value="terrible" className="font-bold cursor-pointer rounded-xl py-3 focus:bg-[#bdb2ff]/20">Deep Turmoil</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
-                <div>
-                  <Label className="text-slate-700 font-semibold">Tags</Label>
-                  <div className="flex gap-2 mt-1.5">
+                <div className="bg-white/60 p-6 sm:p-8 rounded-[1.5rem] sm:rounded-[2rem] shadow-sm space-y-3 sm:space-y-4">
+                  <Label className="text-[#5f559a]/60 uppercase tracking-[0.2em] font-black text-[10px] px-2">Themes</Label>
+                  <div className="flex gap-2 sm:gap-3">
                     <Input
                       value={newTag}
                       onChange={(e) => setNewTag(e.target.value)}
-                      placeholder="Add tag..."
-                      className="bg-[#F8F8FF] shadow-sm"
+                      placeholder="Zen, Focus..."
+                      className="bg-[#f3f3f3] h-12 sm:h-14 border-none rounded-xl sm:rounded-2xl shadow-inner font-bold text-[#1a1c1c] focus-visible:ring-0 text-sm"
                       onKeyPress={(e) => e.key === 'Enter' && addTag()}
                     />
-                    <Button onClick={addTag} variant="secondary">Add</Button>
+                    <button onClick={addTag} className="px-6 sm:px-8 font-black text-[10px] uppercase tracking-widest text-white bg-[#5f559a] rounded-xl sm:rounded-2xl hover:scale-105 transition-all shadow-lg">Map</button>
                   </div>
                   {entryTags.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mt-3">
-                      {entryTags.map((tag, i) => (
-                        <Badge key={i} variant="outline" className="cursor-pointer bg-[#F8F8FF] hover:bg-[#D3D3FF]/10 hover:text-indigo-700 transition-colors py-1 px-2" onClick={() => removeTag(tag)}>
-                          {tag} <span className="ml-1 opacity-50">×</span>
-                        </Badge>
-                      ))}
-                    </div>
+                     <div className="flex flex-wrap gap-2 mt-4 pt-4">
+                       {entryTags.map((tag, i) => (
+                         <div key={i} className="flex items-center gap-2 bg-[#bdb2ff] text-[#1b0c53] px-4 py-2 rounded-full font-black text-[10px] uppercase tracking-wider relative group">
+                           {tag} 
+                           <button onClick={() => removeTag(tag)} className="opacity-0 group-hover:opacity-100 transition-opacity bg-white/20 rounded-full p-0.5 ml-1">
+                             <X size={12} strokeWidth={3} />
+                           </button>
+                         </div>
+                       ))}
+                     </div>
                   )}
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         ) : selectedJournal ? (
-          <div className="space-y-6">
-            {/* Header Card matching Premium Sidebar Aesthetic */}
+          <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            {/* Header Card - More Classic Pro style */}
             <div 
-              className="relative overflow-hidden rounded-2xl shadow-xl transition-all duration-500 p-8 text-white min-h-[160px] flex flex-col justify-center"
-              style={{ backgroundColor: selectedJournal.color || '#6366F1' }}
+              className="relative rounded-[1.5rem] sm:rounded-[2rem] border-none transition-all duration-700 p-6 sm:p-8 md:p-12 min-h-[200px] sm:min-h-[250px] flex flex-col justify-center overflow-hidden shadow-xl shadow-[#2C2A4A]/5 group"
+              style={{ backgroundColor: selectedJournal.color || '#e5deff' }}
             >
-              <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-                <div className="flex-1 min-w-0">
+              <div className="absolute inset-0 bg-gradient-to-tr from-white/20 via-transparent to-transparent opacity-60" />
+              <div className="absolute -top-24 -right-24 w-80 h-80 bg-white/20 rounded-full blur-3xl pointer-events-none group-hover:bg-white/30 transition-all duration-1000" />
+
+              <div className="relative z-10 flex flex-col md:flex-row md:items-start justify-between gap-10">
+                <div className="flex-1 min-w-0 space-y-6">
                   {isEditingJournal ? (
-                    <div className="flex items-center gap-3 w-full md:max-w-md">
+                    <div className="flex items-center gap-2 sm:gap-4 w-full md:max-w-xl">
                       <Input
-                        value={editingJournalTitle}
-                        onChange={(e) => setEditingJournalTitle(e.target.value)}
-                        className="h-12 text-2xl font-bold px-3 bg-white/20 border-white/30 text-white placeholder:text-white/50 focus-visible:ring-white/50"
-                        autoFocus
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') saveJournalTitle();
-                          if (e.key === 'Escape') setIsEditingJournal(false);
-                        }}
+                         value={editingJournalTitle}
+                         onChange={(e) => setEditingJournalTitle(e.target.value)}
+                         className="h-16 sm:h-20 text-2xl sm:text-4xl md:text-5xl font-black px-6 sm:px-8 bg-white/80 border-none rounded-2xl sm:rounded-3xl shadow-2xl text-[#1a1c1c] focus-visible:ring-0"
+                         autoFocus
+                         onKeyDown={(e) => {
+                           if (e.key === 'Enter') saveJournalTitle();
+                           if (e.key === 'Escape') setIsEditingJournal(false);
+                         }}
                       />
-                      <button className="p-2 rounded-full bg-white/20 hover:bg-emerald-500 transition-colors" onClick={saveJournalTitle}>
-                        <Check className="w-6 h-6" />
-                      </button>
-                      <button className="p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors" onClick={() => setIsEditingJournal(false)}>
-                        <X className="w-6 h-6" />
-                      </button>
+                      <div className="flex flex-col gap-2">
+                        <button className="p-3 rounded-2xl bg-white shadow-xl hover:scale-110 active:scale-95 transition-all text-green-500" onClick={saveJournalTitle}>
+                          <Check className="w-6 h-6 stroke-[3]" />
+                        </button>
+                        <button className="p-3 rounded-2xl bg-white shadow-xl hover:scale-110 active:scale-95 transition-all text-red-500" onClick={() => setIsEditingJournal(false)}>
+                          <X className="w-6 h-6 stroke-[3]" />
+                        </button>
+                      </div>
                     </div>
                   ) : (
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-3">
-                        <h2 className="text-3xl md:text-4xl font-black tracking-tight truncate">{selectedJournal.title}</h2>
+                    <div className="space-y-4 sm:space-y-6">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
+                        <h2 className="text-3xl sm:text-4xl md:text-6xl font-black tracking-tighter text-[#1b0c53] leading-none drop-shadow-sm font-['Plus_Jakarta_Sans']">
+                          {selectedJournal.title}
+                        </h2>
                         <button 
-                          className="p-1.5 rounded-full bg-white/10 hover:bg-white/20 transition-colors opacity-70 hover:opacity-100"
+                          className="w-fit p-3 sm:p-4 rounded-full bg-white/40 hover:bg-white/80 shadow-sm hover:scale-110 active:rotate-12 transition-all text-[#1b0c53]"
                           onClick={() => {
                             setEditingJournalTitle(selectedJournal.title);
                             setIsEditingJournal(true);
                           }}
                         >
-                          <Pencil className="w-5 h-5" />
+                          <Pencil className="w-5 h-5 sm:w-6 sm:h-6" />
                         </button>
                       </div>
-                      <p className="text-lg text-white/80 font-medium max-w-2xl">{selectedJournal.description || 'A place for my thoughts and experiences'}</p>
+                      <p className="text-lg sm:text-xl text-[#1b0c53]/70 font-medium max-w-2xl leading-relaxed italic pr-0 sm:pr-12">
+                        {selectedJournal.description || 'Holding space for your thoughts, one entry at a time.'}
+                      </p>
                     </div>
                   )}
                 </div>
 
-                <div className="flex items-center gap-3 shrink-0">
+                <div className="shrink-0 pt-2">
                    <button
                     onClick={() => deleteJournal(selectedJournal.id)}
-                    className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-red-500/80 transition-all font-bold text-sm"
-                  >
-                    <Trash2 size={18} />
-                    <span>Delete Journal</span>
+                    className="flex items-center gap-2 px-8 py-3.5 rounded-full bg-[#2C2A4A]/10 hover:bg-red-500 hover:text-white transition-all font-black text-xs uppercase tracking-widest text-[#2C2A4A] shadow-sm active:scale-90"
+                   >
+                    <Trash2 size={16} strokeWidth={3} />
+                    <span>Purge Journal</span>
                   </button>
                 </div>
               </div>
-
-              <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-3xl pointer-events-none" />
             </div>
             
             {/* Filtering & Search Section */}
-            <Card className="bg-white/80 backdrop-blur-sm border-slate-200">
-              <CardHeader className="py-4">
+            <div className="px-4">
                   {entries.length > 0 && (
-                    <div className="flex flex-col md:flex-row gap-4">
-                      <div className="relative flex-1">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                    <div className="flex flex-col md:flex-row gap-8 items-center">
+                      <div className="relative flex-1 group w-full">
+                        <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-[#5f559a]/40 group-focus-within:text-[#5f559a] transition-colors" />
                         <Input 
-                          placeholder="Search entries..." 
-                          className="pl-10 bg-slate-50 border-slate-200 shadow-sm"
+                          placeholder="Search through history..." 
+                          className="pl-16 h-16 bg-[#f3f3f3] border-none rounded-[2rem] shadow-inner font-bold text-lg focus-visible:ring-0 placeholder:text-[#5f559a]/30"
                           value={searchQuery}
                           onChange={e => setSearchQuery(e.target.value)}
                         />
                       </div>
-                      <Select value={filterMood} onValueChange={setFilterMood}>
-                        <SelectTrigger className="w-full md:w-[180px] bg-slate-50 border-slate-200 shadow-sm">
-                          <div className="flex items-center gap-2">
-                            <Filter className="w-4 h-4 text-slate-400" />
-                            <span className="truncate">
-                              {filterMood === 'all' ? 'All Moods' : filterMood}
-                            </span>
-                          </div>
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="all">All Moods</SelectItem>
-                          <SelectItem value="excellent">Excellent</SelectItem>
-                          <SelectItem value="good">Good</SelectItem>
-                          <SelectItem value="neutral">Neutral</SelectItem>
-                          <SelectItem value="poor">Poor</SelectItem>
-                          <SelectItem value="terrible">Terrible</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <div className="flex items-center gap-4 w-full md:w-auto">
+                        <span className="text-xs font-black uppercase tracking-widest text-[#5f559a]/40 whitespace-nowrap hidden lg:block">Polarity:</span>
+                        <Select value={filterMood} onValueChange={setFilterMood}>
+                          <SelectTrigger className="w-full md:w-[240px] h-16 bg-[#f3f3f3] border-none rounded-[2rem] shadow-inner font-bold text-lg text-[#1a1c1c] focus:ring-0">
+                            <div className="flex items-center gap-3">
+                              <Filter className="w-5 h-5 text-[#5f559a]/40" />
+                              <span>{filterMood === 'all' ? 'All Frequencies' : filterMood}</span>
+                            </div>
+                          </SelectTrigger>
+                          <SelectContent className="border-none rounded-2xl shadow-2xl p-2">
+                            <SelectItem value="all" className="font-bold py-3">All Frequencies</SelectItem>
+                            <SelectItem value="excellent" className="font-bold py-3">Feeling Radiant</SelectItem>
+                            <SelectItem value="good" className="font-bold py-3">Good Energy</SelectItem>
+                            <SelectItem value="neutral" className="font-bold py-3">Equilibrium</SelectItem>
+                            <SelectItem value="poor" className="font-bold py-3">Low Vibration</SelectItem>
+                            <SelectItem value="terrible" className="font-bold py-3">Deep Turmoil</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
                     </div>
                   )}
-              </CardHeader>
-            </Card>
+            </div>
 
             {entries.length === 0 && !loading ? (
-              <Card className="border-dashed border-2 bg-slate-50">
-                <CardContent className="flex flex-col items-center justify-center py-16 text-center">
-                  <FileText className="h-12 w-12 text-slate-300 mb-4" />
-                  <h3 className="text-xl font-semibold text-slate-700 mb-2">Ready to start writing?</h3>
-                  <p className="text-slate-500 mb-6 max-w-sm">Capture your daily thoughts and get AI insights.</p>
-                  <Button onClick={() => setIsWriting(true)} className="bg-[#6366F1] hover:bg-[#4F46E5] text-white">
-                    <Plus className="h-4 w-4 mr-2" /> Write Your First Entry
-                  </Button>
-                </CardContent>
-              </Card>
+              <div className="bg-[#f3f3f3] rounded-[2rem] sm:rounded-[3rem] p-10 sm:p-20 text-center shadow-inner mt-10">
+                  <div className="w-20 h-20 sm:w-28 sm:h-28 mx-auto bg-white rounded-full flex items-center justify-center shadow-2xl shadow-[#bdb2ff]/40 mb-8 sm:mb-10 relative animate-bounce duration-[3000ms]">
+                    <Sparkles className="h-10 w-10 sm:h-12 sm:w-12 text-[#bdb2ff]" />
+                    <div className="absolute inset-0 bg-[#bdb2ff] rounded-full animate-ping opacity-10"></div>
+                  </div>
+                  <h3 className="text-3xl sm:text-4xl font-black font-['Plus_Jakarta_Sans'] text-[#1b0c53] mb-4 sm:mb-6 tracking-tight">The ink is waiting.</h3>
+                  <p className="text-[#484550] font-medium text-lg sm:text-xl mb-8 sm:mb-12 max-w-sm mx-auto opacity-70">Every great transformation begins with a single honest thought.</p>
+                  <button onClick={() => setIsWriting(true)} className="bg-[#5f559a] text-white px-8 sm:px-12 py-4 sm:py-5 rounded-full font-black text-base sm:text-lg shadow-2xl shadow-[#5f559a]/40 hover:scale-105 active:scale-95 transition-all">
+                    Initialize Reflection
+                  </button>
+              </div>
             ) : (
-              <div className="space-y-8">
-                {sortedDates.map((date) => (
-                  <div key={date} className="space-y-4">
-                    <div className="flex items-center gap-2 text-slate-500">
-                       <Calendar className="w-5 h-5" />
-                       <h3 className="font-semibold">{format(new Date(date), 'MMMM d, yyyy')}</h3>
+              <div className="space-y-16">
+                {sortedDates.map((date, i) => (
+                  <div key={date} className="space-y-8">
+                    <div className="flex items-center gap-3 sm:gap-5 mb-4 sm:mb-6 pl-2 sm:pl-4">
+                       <span className="hidden sm:block text-xs font-black text-[#5f559a]/40 uppercase tracking-[0.4em] transform -rotate-90 origin-left translate-y-8 select-none">Temporal Marker</span>
+                       <h3 className="text-xl sm:text-2xl font-black text-[#1b0c53] tracking-tighter bg-[#bdb2ff]/20 px-6 sm:px-8 py-2 sm:py-3 rounded-full shadow-sm">{format(new Date(date), 'MMMM d, yyyy')}</h3>
                     </div>
-                    <div className="grid grid-cols-1 gap-4">
+                    <div className="grid grid-cols-1 gap-8">
                       {groupedEntries[date].map((entry) => (
-                        <Card key={entry.id} className={cn("cursor-pointer hover:shadow-md transition-all border-l-4", getMoodBorder(entry.mood || 'neutral'))} onClick={() => setSelectedEntry(entry)}>
-                          <CardHeader className="pb-3 pt-5 flex flex-row items-center justify-between">
-                            <div className="flex items-center gap-3">
-                              <CardTitle className="text-lg font-bold text-slate-800">{entry.title || 'Untitled'}</CardTitle>
+                        <div 
+                          key={entry.id} 
+                          className="group cursor-pointer hover:translate-x-2 transition-all duration-500 bg-white shadow-xl shadow-[#2C2A4A]/5 rounded-[1.5rem] sm:rounded-[2.5rem] overflow-hidden p-6 sm:p-8 relative border-none"
+                          onClick={() => setSelectedEntry(entry)}
+                        >
+                          <div className="absolute top-0 left-0 w-2 h-full bg-[#bdb2ff]/30 group-hover:w-4 group-hover:bg-[#bdb2ff] transition-all" />
+                          
+                          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 sm:gap-6 mb-6 sm:mb-8">
+                            <div className="space-y-2 sm:space-y-3">
+                              <h4 className="text-2xl sm:text-3xl font-black text-[#1a1c1c] font-['Plus_Jakarta_Sans'] leading-tight tracking-tight group-hover:text-[#5f559a] transition-colors">{entry.title || 'Untitled Session'}</h4>
                               {entry.mood && (
-                                <Badge variant="outline" className={cn('capitalize text-[10px] px-2', getMoodColor(entry.mood))}>
-                                  {entry.mood}
-                                </Badge>
+                                <span className="inline-block uppercase tracking-[0.2em] font-black text-[8px] sm:text-[9px] px-3 sm:px-4 py-1.5 bg-[#f3f3f3] text-[#5f559a] rounded-full shadow-inner">
+                                  Polarity: {entry.mood}
+                                </span>
                               )}
                             </div>
-                            <span className="text-xs text-slate-400">{format(new Date(entry.created_at), 'h:mm a')}</span>
-                          </CardHeader>
-                          <CardContent>
-                            <p className="text-slate-600 line-clamp-2 text-sm leading-relaxed mb-4">
+                            <span className="text-[10px] sm:text-xs font-black text-[#484550]/40 uppercase tracking-widest whitespace-nowrap pt-1 sm:pt-2">{format(new Date(entry.created_at), 'h:mm a')}</span>
+                          </div>
+                          <div className="px-2">
+                            <p className="text-[#484550] font-medium leading-relaxed line-clamp-2 text-lg sm:text-xl opacity-80 mb-6 sm:mb-8">
                               {entry.content.replace(/<[^>]*>/g, '')}
                             </p>
-                            <div className="flex items-center justify-between text-[10px] text-slate-400 border-t pt-2">
-                              <span>{entry.word_count} words • {entry.reading_time} min read</span>
-                              <div className="flex gap-1">
-                                {entry.tags?.slice(0, 2).map((t, idx) => (
-                                  <span key={idx} className="bg-slate-100 px-1.5 py-0.5 rounded">#{t}</span>
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-4 text-[9px] sm:text-[10px] font-black uppercase tracking-widest pt-4 border-t border-[#f3f3f3]">
+                              <div className="flex gap-3">
+                                <span className="bg-[#f3f3f3] px-3 sm:px-4 py-2 rounded-full text-[#484550]/60">{entry.word_count} Tokens</span>
+                                <span className="bg-[#f3f3f3] px-3 sm:px-4 py-2 rounded-full text-[#484550]/60">{entry.reading_time} Min Processing</span>
+                              </div>
+                              <div className="flex flex-wrap gap-2 sm:ml-auto">
+                                {entry.tags?.slice(0, 3).map((t, idx) => (
+                                  <span key={idx} className="bg-[#bdb2ff] text-[#1b0c53] px-3 sm:px-4 py-2 rounded-full shadow-sm">#{t}</span>
                                 ))}
                               </div>
                             </div>
-                          </CardContent>
-                        </Card>
+                          </div>
+                        </div>
                       ))}
                     </div>
                   </div>
@@ -398,23 +423,31 @@ export default function DiaryPage() {
             )}
           </div>
         ) : (
-          <Card className="border-dashed border-2 bg-slate-50 py-20 text-center">
-            <CardContent className="flex flex-col items-center">
-              <BookOpen className="h-16 w-16 text-slate-200 mb-4" />
-              <h3 className="text-xl font-bold text-slate-800">Select a Journal</h3>
-              <p className="text-slate-500">Choose a journal from the sidebar to view entries or start writing.</p>
-            </CardContent>
-          </Card>
+          <div className="bg-[#f3f3f3] rounded-[2rem] sm:rounded-[4rem] p-12 sm:p-32 text-center flex flex-col items-center shadow-inner min-h-[400px] sm:min-h-[600px] justify-center relative overflow-hidden">
+             {/* Signature Design Detail */}
+            <div className="absolute top-0 right-0 w-32 sm:w-64 h-32 sm:h-64 bg-[#bdb2ff]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+            <div className="absolute bottom-0 left-0 w-32 sm:w-64 h-32 sm:h-64 bg-[#bdb2ff]/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
+
+            <div className="w-32 h-32 sm:w-40 sm:h-40 bg-white rounded-full shadow-2xl flex items-center justify-center mb-8 sm:mb-12 relative animate-pulse duration-[4000ms]">
+              <BookOpen className="h-12 w-12 sm:h-16 sm:w-16 text-[#5f559a]" strokeWidth={1.5} />
+              <div className="absolute -top-4 -right-6 sm:-right-8 bg-[#bdb2ff] text-[#1b0c53] text-[9px] sm:text-[10px] font-black uppercase tracking-widest px-4 sm:px-6 py-2 rounded-full shadow-xl rotate-12 scale-110">
+                Awaiting
+              </div>
+            </div>
+            <h3 className="text-3xl sm:text-5xl font-black font-['Plus_Jakarta_Sans'] text-[#1b0c53] mb-4 sm:mb-8 tracking-tighter leading-none">Select a Core Journal.</h3>
+            <p className="text-lg sm:text-xl font-medium text-[#484550] leading-relaxed max-w-md opacity-60 italic">Your mental digital archive is sorted and ready for exploration.</p>
+          </div>
         )}
 
         {/* AI AGENT STATUS CARDS */}
         {agent.status === 'loading' && (
-          <Card className="border-violet-200 bg-violet-50/50">
-            <CardContent className="py-4 flex items-center gap-3">
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-violet-600" />
-              <p className="text-sm font-medium text-violet-700">AI Analysis in progress...</p>
-            </CardContent>
-          </Card>
+          <div className="fixed bottom-24 right-8 z-[100] bg-white/90 backdrop-blur-2xl rounded-[2rem] shadow-2xl shadow-[#bdb2ff]/30 px-10 py-6 flex items-center gap-6 animate-in slide-in-from-right-10 duration-500">
+            <div className="w-10 h-10 border-[6px] border-[#bdb2ff] border-r-transparent rounded-full animate-spin" />
+            <div>
+              <p className="text-[10px] font-black text-[#5f559a]/40 uppercase tracking-[0.2em] mb-1">Active Reasoning</p>
+              <p className="text-lg font-black text-[#1b0c53] font-['Plus_Jakarta_Sans']">Parsing Nuance...</p>
+            </div>
+          </div>
         )}
 
         {agent.reviewPayload && (
@@ -429,12 +462,12 @@ export default function DiaryPage() {
         )}
 
         {agent.status === 'complete' && agent.result && !agent.reviewPayload && (
-          <Card className="border-emerald-200 bg-emerald-50/50">
-            <CardContent className="pt-5">
-              <p className="text-[10px] font-bold text-emerald-700 uppercase mb-2">✨ AI Insight Generated</p>
-              <div className="text-sm text-slate-700 whitespace-pre-wrap">{agent.result.response}</div>
-            </CardContent>
-          </Card>
+          <div className="glass-card rounded-3xl border-none shadow-md p-6 lg:p-8 relative mt-10">
+            <div className="absolute -top-4 -left-4 bg-[#e5deff] border border-white/80 rounded-full px-5 py-2 text-sm font-bold text-[#5f559a] shadow-sm flex items-center gap-2">
+              ✨ AI Insight Generated
+            </div>
+            <div className="text-lg font-medium tracking-wide text-slate-800 leading-relaxed whitespace-pre-wrap mt-4">{agent.result.response}</div>
+          </div>
         )}
       </div>
     </div>

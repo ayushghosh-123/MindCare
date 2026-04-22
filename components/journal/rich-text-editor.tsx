@@ -91,7 +91,7 @@ export function RichTextEditor({
               <Eye className="h-4 w-4 mr-2" />
               {isPreview ? 'Edit' : 'Preview'}
             </Button>
-            <Button size="sm" className="bg-[#D3D3FF] hover:bg-[#BDBDFE]">
+            <Button size="sm" className="bg-[#e5deff] hover:bg-[#bdb2ff]">
               <Save className="h-4 w-4 mr-2" />
               Save Draft
             </Button>

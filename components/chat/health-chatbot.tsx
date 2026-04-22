@@ -178,8 +178,8 @@ export function HealthChatbot({ className, userId }: HealthChatbotProps) {
     <Card className={cn('h-[600px] flex flex-col', className)}>
       <CardHeader className="pb-3">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-[#D3D3FF]/30 rounded-lg">
-            <Leaf className="h-5 w-5 text-[#8A8AFF]" />
+          <div className="p-2 bg-[#e5deff]/30 rounded-lg">
+            <Leaf className="h-5 w-5 text-[#5f559a]" />
           </div>
           <div>
             <CardTitle className="text-lg">Health Assistant</CardTitle>
@@ -213,7 +213,7 @@ export function HealthChatbot({ className, userId }: HealthChatbotProps) {
             >
               {message.type === 'bot' && (
                 <Avatar className="h-8 w-8 shrink-0">
-                  <AvatarFallback className="bg-[#D3D3FF]/30 text-[#8A8AFF]">
+                  <AvatarFallback className="bg-[#e5deff]/30 text-[#5f559a]">
                     <Leaf className="h-4 w-4" />
                   </AvatarFallback>
                 </Avatar>
@@ -223,7 +223,7 @@ export function HealthChatbot({ className, userId }: HealthChatbotProps) {
                 className={cn(
                   'max-w-[80%] rounded-lg p-3',
                   message.type === 'user'
-                    ? 'bg-[#D3D3FF] text-white'
+                    ? 'bg-[#e5deff] text-white'
                     : 'bg-slate-100 text-slate-800'
                 )}
               >
@@ -241,7 +241,7 @@ export function HealthChatbot({ className, userId }: HealthChatbotProps) {
                       <Badge
                         key={index}
                         variant="outline"
-                        className="cursor-pointer hover:bg-[#D3D3FF]/10 hover:border-[#D3D3FF] text-xs"
+                        className="cursor-pointer hover:bg-[#e5deff]/10 hover:border-[#e5deff] text-xs"
                         onClick={() => handleSuggestionClick(suggestion)}
                       >
                         {suggestion}
@@ -269,7 +269,7 @@ export function HealthChatbot({ className, userId }: HealthChatbotProps) {
           {isTyping && (
             <div className="flex gap-3 justify-start">
               <Avatar className="h-8 w-8">
-                <AvatarFallback className="bg-[#D3D3FF]/30 text-[#8A8AFF]">
+                <AvatarFallback className="bg-[#e5deff]/30 text-[#5f559a]">
                   <Leaf className="h-4 w-4" />
                 </AvatarFallback>
               </Avatar>
@@ -304,7 +304,7 @@ export function HealthChatbot({ className, userId }: HealthChatbotProps) {
             <Button
               onClick={handleSendMessage}
               disabled={!input.trim() || isTyping || !currentUserId}
-              className="bg-[#D3D3FF] hover:bg-[#BDBDFE]"
+              className="bg-[#e5deff] hover:bg-[#bdb2ff]"
             >
               <Send className="h-4 w-4" />
             </Button>
@@ -313,7 +313,7 @@ export function HealthChatbot({ className, userId }: HealthChatbotProps) {
               size="icon"
               onClick={handleSendEmailReport}
               disabled={isTyping || !currentUserId}
-              className="border-[#D3D3FF]/50 text-[#8A8AFF] hover:bg-[#D3D3FF]/10"
+              className="border-[#e5deff]/50 text-[#5f559a] hover:bg-[#e5deff]/10"
               title="Send Wellness Email"
             >
               <Mail className="h-4 w-4" />

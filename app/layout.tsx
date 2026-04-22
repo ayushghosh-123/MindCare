@@ -1,6 +1,6 @@
 import './globals.css';
 import type { Metadata } from 'next';
-import { Inter, Bricolage_Grotesque } from 'next/font/google';
+import { Inter, Bricolage_Grotesque, Plus_Jakarta_Sans } from 'next/font/google';
 import { ClerkProvider } from '@clerk/nextjs';
 import { Toaster } from '@/components/ui/sonner';
 import { GlobalInitialization } from '@/components/webcom/GlobalInitialization';
@@ -8,6 +8,7 @@ import { MainNavbar } from '@/components/webcom/main-navbar';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const bricolage = Bricolage_Grotesque({ subsets: ['latin'], variable: '--font-bricolage' });
+const plusJakarta = Plus_Jakarta_Sans({ subsets: ['latin'], variable: '--font-plus-jakarta' });
 
 export const metadata: Metadata = {
   title: 'MindCare | AI Mental Wellness',
@@ -22,7 +23,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className={`${inter.variable} ${bricolage.variable} font-sans`} suppressHydrationWarning>
+        <body className={`${inter.variable} ${bricolage.variable} ${plusJakarta.variable} font-sans`} suppressHydrationWarning>
           <GlobalInitialization />
           <MainNavbar />
           {children}

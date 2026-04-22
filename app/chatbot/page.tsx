@@ -46,8 +46,8 @@ export default function ChatbotPage() {
 
   if (!isLoaded) {
     return (
-      <div className="min-h-screen bg-[#F0F0FF] flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-600" />
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
       </div>
     );
   }
@@ -55,7 +55,7 @@ export default function ChatbotPage() {
   if (!user) { router.push('/sign-in'); return null; }
 
   return (
-    <div className="flex flex-col h-[100dvh] overflow-hidden bg-[#F8F8FF]">
+    <div className="flex flex-col h-[100dvh] overflow-hidden bg-background">
       
       <div className="flex flex-1 overflow-hidden relative">
         {/* Mobile Sidebar Overlay */}
@@ -68,7 +68,7 @@ export default function ChatbotPage() {
 
       {/* Sidebar (Left Pane) */}
       <div className={cn(
-        "fixed inset-y-0 left-0 z-50 w-72 md:w-[260px] lg:w-72 transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0 border-r border-gray-200",
+        "fixed inset-y-0 left-0 z-50 w-72 md:w-[280px] lg:w-80 transform transition-transform duration-500 ease-in-out md:relative md:translate-x-0 bg-[#f3f3f3] shadow-2xl md:shadow-none",
         sidebarOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         <ChatSidebar
@@ -89,17 +89,17 @@ export default function ChatbotPage() {
         <div className="flex-1 flex flex-col h-full overflow-hidden relative">
           
           {/* Mobile menu toggle for sidebar (only shows on mobile) */}
-          <div className="md:hidden flex items-center justify-between px-4 py-2 border-b border-gray-100 bg-[#F8F8FF] shadow-sm z-10 sticky top-0">
+          <div className="md:hidden flex items-center justify-between px-6 py-4 bg-white/80 backdrop-blur-3xl shadow-sm z-30 sticky top-0">
             <button 
-              className="p-2 text-gray-600 hover:bg-gray-100 rounded-md transition-colors"
+              className="p-3 text-[#5f559a] bg-[#f3f3f3] hover:bg-[#bdb2ff]/20 rounded-2xl transition-all"
               onClick={() => setSidebarOpen(true)}
             >
-              <Menu className="w-5 h-5" />
+              <Menu className="w-6 h-6" />
             </button>
-            <div className="text-sm font-semibold text-gray-800">
-               {activeSession?.name || "New Chat"}
+            <div className="text-lg font-black text-[#1b0c53] font-['Plus_Jakarta_Sans'] tracking-tight">
+               {activeSession?.name || "Sanctuary Agent"}
             </div>
-            <div className="w-9"></div> {/* Spacer to center title */}
+            <div className="w-12"></div> {/* Spacer to center title */}
           </div>
 
           {/* Chat Window Component */}

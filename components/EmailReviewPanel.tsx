@@ -83,136 +83,152 @@ export function EmailReviewPanel({
   // ── Error State UI ────────────────────────────────────────────────────────
   if (error) {
     return (
-      <Card className="w-full max-w-2xl mx-auto shadow-2xl border-t-8 border-amber-500 bg-[#F8F8FF]/90 backdrop-blur-sm">
-        <CardHeader>
-          <CardTitle className="text-2xl font-bold flex items-center gap-2 text-amber-600">
-            <AlertCircle className="h-6 w-6" />
+      <div className="w-full max-w-2xl mx-auto bg-white rounded-[2.5rem] shadow-2xl shadow-amber-500/10 overflow-hidden animate-in fade-in zoom-in duration-700">
+        <div className="p-10 bg-amber-50/50">
+          <h2 className="text-3xl font-black text-amber-900 tracking-tighter flex items-center gap-4 mb-4">
+            <AlertCircle className="h-8 w-8 stroke-[3]" />
             Configuration Required
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="bg-amber-50 border border-amber-100 p-4 rounded-xl text-amber-900">
-             <p className="font-semibold text-lg mb-2">Wait, there&s a small issue!</p>
-             <p className="text-sm opacity-90 leading-relaxed">
+          </h2>
+          <div className="bg-white rounded-3xl p-6 shadow-sm mb-6">
+             <p className="text-lg font-bold text-amber-900 mb-3">Wait, there&s a small issue!</p>
+             <p className="text-sm text-amber-700/80 leading-relaxed font-medium">
                {error}
              </p>
           </div>
-          <div className="p-4 bg-[#F0F0FF] rounded-xl space-y-3">
-             <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">How to fix this:</p>
-             <ul className="text-sm text-slate-600 space-y-2 list-disc list-inside px-1">
-                <li>Go to your <strong>Profile</strong> tab</li>
-                <li>Ensure your <strong>Email Address</strong> is saved</li>
-                <li>Wait 30 seconds for the cloud to sync</li>
+          <div className="p-8 bg-amber-100/30 rounded-3xl space-y-4">
+             <p className="text-[10px] font-black text-amber-900/40 uppercase tracking-[0.2em]">Sanctum Sync Protocol:</p>
+             <ul className="text-sm text-amber-900/70 space-y-3 font-medium">
+                <li className="flex items-center gap-3">
+                  <div className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                  Navigate to your Sanctuary Profile
+                </li>
+                <li className="flex items-center gap-3">
+                  <div className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                  Ensure your transmission address is verified
+                </li>
+                <li className="flex items-center gap-3">
+                  <div className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                  Allow a moment for celestial synchronization
+                </li>
              </ul>
           </div>
-        </CardContent>
-        <CardFooter>
-          <Button 
-            variant="outline" 
-            className="w-full h-12 text-slate-600 border-slate-300 hover:bg-[#F0F0FF] rounded-xl"
-            onClick={() => handleAction('reject')}
-            disabled={loading}
-          >
-            {loading ? <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-slate-600"></div> : "Dismiss and Refresh"}
-          </Button>
-        </CardFooter>
-      </Card>
+          <div className="mt-10">
+            <Button 
+              variant="ghost" 
+              className="w-full h-16 text-amber-900 bg-amber-100 hover:bg-amber-200 rounded-3xl font-black text-sm uppercase tracking-widest active:scale-95 transition-all"
+              onClick={() => handleAction('reject')}
+              disabled={loading}
+            >
+              {loading ? <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-amber-900"></div> : "Dismiss Protocol"}
+            </Button>
+          </div>
+        </div>
+      </div>
     );
   }
 
   return (
-    <Card className="w-full max-w-2xl mx-auto shadow-2xl border-t-8 border-[#D3D3FF] bg-[#F8F8FF]/80 backdrop-blur-sm">
-      <CardHeader className="border-b pb-4 mb-4">
-        <div className="flex justify-between items-start">
-          <div className="space-y-1">
-            <CardTitle className="text-2xl font-bold flex items-center gap-2 text-[#8A8AFF]">
-              <Send className="h-6 w-6" />
-              Review Your Wellness Update
-            </CardTitle>
-            <p className="text-sm font-semibold text-slate-500 uppercase tracking-wider">
-              Subject: {initialSubject}
-            </p>
-          </div>
-          <Badge variant={evaluation?.status === "approved" ? "outline" : "destructive"} 
-                 className={evaluation?.status === "approved" ? "bg-green-50 text-green-700 border-green-200" : ""}>
-            {evaluation?.status === "approved" ? "AI REVIEWED" : "NEEDS QUALITY CHECK"}
-          </Badge>
-        </div>
-      </CardHeader>
-
-      <CardContent className="space-y-6">
-        {evaluation && evaluation.issues.length > 0 && (
-          <div className="bg-amber-50 border border-amber-200 p-4 rounded-md space-y-2">
-            <div className="flex items-center gap-2 text-amber-700 font-bold">
-              <AlertCircle className="h-4 w-4" />
-              AI Quality Suggestions:
+    <div className="w-full max-w-2xl mx-auto bg-white rounded-[2.5rem] shadow-2xl shadow-[#2C2A4A]/10 overflow-hidden animate-in fade-in slide-in-from-top-6 duration-1000">
+      <div className="p-10 bg-[#f3f3f3]">
+        <div className="flex justify-between items-start gap-6">
+          <div className="space-y-4">
+            <h2 className="text-3xl font-black text-[#1b0c53] tracking-tighter leading-tight flex items-center gap-4">
+              <Send className="h-8 w-8 text-[#5f559a] stroke-[3]" />
+              Transmission Review
+            </h2>
+            <div className="space-y-1">
+              <p className="text-[10px] font-black text-[#5f559a]/40 uppercase tracking-[0.2em]">Celestial Objective:</p>
+              <p className="text-lg font-bold text-[#1b0c53] capitalize">
+                {initialSubject}
+              </p>
             </div>
-            <ul className="list-disc list-inside text-sm text-amber-600 pl-2">
+          </div>
+          <div className={cn(
+            "px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-sm transition-all duration-700",
+            evaluation?.status === "approved" ? "bg-[#bdb2ff] text-[#1b0c53]" : "bg-white text-[#5f559a]/40"
+          )}>
+            {evaluation?.status === "approved" ? "Sanctum Verified" : "Review Required"}
+          </div>
+        </div>
+      </div>
+
+      <div className="p-10 space-y-10">
+        {evaluation && evaluation.issues.length > 0 && (
+          <div className="bg-[#fcfced] p-8 rounded-3xl space-y-4 shadow-sm">
+            <div className="flex items-center gap-3 text-amber-700 font-black text-xs uppercase tracking-widest">
+              <AlertCircle className="h-5 w-5 stroke-[3]" />
+              Adjustment Tokens:
+            </div>
+            <ul className="space-y-3">
               {evaluation.issues.map((issue, idx) => (
-                <li key={idx}>{issue}</li>
+                <li key={idx} className="text-sm text-amber-900/70 font-medium flex items-start gap-3">
+                  <div className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-1.5 shrink-0" />
+                  {issue}
+                </li>
               ))}
             </ul>
           </div>
         )}
 
-        <div className="space-y-2">
-          <label className="text-sm font-bold text-slate-700 uppercase tracking-widest pl-1">Draft Body</label>
+        <div className="space-y-4">
+          <p className="text-[10px] font-black text-[#5f559a]/40 uppercase tracking-[0.2em] pl-4">Draft Projection</p>
           {isEditing ? (
-            <Textarea 
+            <textarea 
               value={currentBody} 
               onChange={(e) => setCurrentBody(e.target.value)} 
               rows={12}
-              className="text-slate-800 leading-relaxed font-monofont p-4 border-2 border-[#D3D3FF]/50 focus:border-[#8A8AFF] rounded-xl"
+              className="w-full text-lg font-medium text-[#1b0c53] bg-[#f3f3f3] border-none rounded-3xl p-8 focus:ring-4 focus:ring-[#bdb2ff]/20 leading-relaxed resize-none shadow-inner transition-all"
+              placeholder="Deepen your narrative..."
             />
           ) : (
-            <div className="bg-[#F0F0FF] p-6 rounded-xl text-slate-700 whitespace-pre-wrap leading-relaxed border-2 border-dashed border-slate-200 italic shadow-inner">
+            <div className="bg-[#f3f3f3] p-10 rounded-3xl text-[#1b0c53] whitespace-pre-wrap text-xl font-medium leading-[1.6] shadow-inner italic">
               {currentBody}
             </div>
           )}
         </div>
-      </CardContent>
 
-      <CardFooter className="flex flex-col sm:flex-row gap-4 pt-6 border-t">
-        <div className="flex gap-4 w-full">
+        <div className="flex flex-col sm:flex-row gap-4 pt-6">
            <Button 
-             variant="outline" 
-             className="flex-1 text-slate-600 border-slate-300 hover:bg-slate-100" 
+             variant="ghost" 
+             className="flex-1 h-16 text-[#5f559a]/40 hover:text-red-500 hover:bg-red-50 rounded-3xl font-black text-xs uppercase tracking-widest active:scale-95 transition-all" 
              onClick={() => handleAction('reject')} 
              disabled={loading}
            >
-             <X className="h-4 w-4 mr-2" />
-             Discard
+             <X className="h-5 w-5 mr-3 stroke-[3]" />
+             Discard Stream
            </Button>
            <Button 
-             variant="secondary" 
-             className="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold" 
+             variant="ghost" 
+             className="flex-1 h-16 bg-[#f3f3f3] hover:bg-white text-[#1b0c53] rounded-3xl font-black text-xs uppercase tracking-widest shadow-sm active:scale-95 transition-all" 
              onClick={() => isEditing ? setIsEditing(false) : setIsEditing(true)} 
              disabled={loading}
            >
              {isEditing ? (
-               <><CheckCircle2 className="h-4 w-4 mr-2" /> Preview</>
+               <><CheckCircle2 className="h-5 w-5 mr-3 stroke-[3]" /> Finalize Ajust</>
              ) : (
-               <><Edit className="h-4 w-4 mr-2" /> Edit Draft</>
+               <><Edit className="h-5 w-5 mr-3 stroke-[3]" /> Refine Projection</>
+             )}
+           </Button>
+           <Button 
+             className="flex-1 h-16 bg-[#1b0c53] hover:bg-black text-white rounded-3xl font-black text-xs uppercase tracking-widest shadow-2xl shadow-[#1b0c53]/20 active:scale-95 transition-all min-w-[220px]" 
+             onClick={() => handleAction('approved')} 
+             disabled={loading}
+           >
+             {loading ? (
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+             ) : (
+               <><Send className="h-5 w-5 mr-3 stroke-[3]" /> Align & Transmit</>
              )}
            </Button>
         </div>
-        <Button 
-          className="w-full sm:w-auto min-w-[200px] bg-[#D3D3FF] hover:bg-[#BDBDFE] text-white font-black text-lg py-6 shadow-lg transform active:scale-95 transition-all" 
-          onClick={() => handleAction('approved')} 
-          disabled={loading}
-        >
-          {loading ? (
-             <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-          ) : (
-            <><Send className="h-5 w-5 mr-3" /> APPROVE & SEND</>
-          )}
-        </Button>
-      </CardFooter>
+      </div>
       
-      <p className="text-center text-[10px] text-slate-400 py-4 italic uppercase tracking-tighter flex items-center justify-center gap-1">
-        <Info className="h-3 w-3" />
-        This email will be delivered to the recipient addresses stored in your Supabase user profile.
-      </p>
-    </Card>
+      <div className="p-10 bg-[#f3f3f3] text-center">
+        <p className="text-[10px] text-[#5f559a]/30 font-black uppercase tracking-[0.2em] flex items-center justify-center gap-3">
+          <Info className="h-4 w-4" />
+          Transmission targets are defined within your Sanctuary Archetype profile.
+        </p>
+      </div>
+    </div>
   );
 }

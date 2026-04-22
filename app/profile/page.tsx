@@ -99,16 +99,17 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 pt-24 sm:pt-32">
       
       {/* Header */}
-      <div className="bg-[#F8F8FF] border-b border-slate-200 sticky top-0 z-10">
-        <div className="container mx-auto px-4 sm:px-6 py-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
+      <div className="bg-transparent mb-12">
+        <div className="container mx-auto px-6 py-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+            <div className="flex items-center gap-4 sm:gap-6">
+               <div className="w-1.5 h-12 sm:h-16 bg-[#bdb2ff] rounded-full hidden sm:block" />
               <div>
-                <h1 className="text-2xl sm:text-3xl font-bold text-slate-800">My Profile</h1>
-                <p className="text-sm sm:text-base text-slate-600">Manage your personal health information</p>
+                <h1 className="text-3xl sm:text-5xl md:text-6xl font-black text-[#1b0c53] tracking-tighter font-['Plus_Jakarta_Sans'] leading-none">Archetype Profile</h1>
+                <p className="text-base sm:text-xl text-[#5f559a]/60 font-medium mt-2 sm:mt-3 italic">Calibrating your essence within the sanctuary.</p>
               </div>
             </div>
           </div>

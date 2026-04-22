@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&amp;family=Inter:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-error-container": "#93000a",
+                    "inverse-on-surface": "#f0f1f1",
+                    "on-primary-fixed": "#1b0c53",
+                    "on-background": "#1a1c1c",
+                    "surface-variant": "#e2e2e2",
+                    "inverse-surface": "#2f3131",
+                    "surface-tint": "#5f559a",
+                    "on-tertiary-fixed": "#1a1837",
+                    "on-tertiary-fixed-variant": "#454365",
+                    "outline-variant": "#c9c4d1",
+                    "background": "#f9f9f9",
+                    "primary-fixed": "#e5deff",
+                    "tertiary-container": "#bbb7df",
+                    "tertiary-fixed": "#e3dfff",
+                    "outline": "#797581",
+                    "primary-fixed-dim": "#c8bfff",
+                    "on-secondary-fixed-variant": "#47435f",
+                    "surface-container-high": "#e8e8e8",
+                    "tertiary-fixed-dim": "#c6c2eb",
+                    "secondary-container": "#e2dbfe",
+                    "surface": "#f9f9f9",
+                    "surface-dim": "#dadada",
+                    "surface-container-low": "#f3f3f3",
+                    "primary-container": "#bdb2ff",
+                    "on-primary-container": "#4b4185",
+                    "secondary-fixed-dim": "#c9c2e4",
+                    "surface-container-lowest": "#ffffff",
+                    "secondary": "#5f5b78",
+                    "on-tertiary-container": "#494769",
+                    "on-secondary-container": "#645f7c",
+                    "on-surface": "#1a1c1c",
+                    "on-surface-variant": "#484550",
+                    "on-primary": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "secondary-fixed": "#e5deff",
+                    "inverse-primary": "#c8bfff",
+                    "primary": "#5f559a",
+                    "on-secondary-fixed": "#1c1832",
+                    "tertiary": "#5d5b7e",
+                    "error-container": "#ffdad6",
+                    "on-primary-fixed-variant": "#473d81",
+                    "surface-container": "#eeeeee",
+                    "surface-bright": "#f9f9f9",
+                    "surface-container-highest": "#e2e2e2",
+                    "error": "#ba1a1a",
+                    "on-error": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Plus Jakarta Sans"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface antialiased">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-40 flex justify-between items-center px-6 py-4 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl shadow-[0px_20px_40px_rgba(44,42,74,0.06)]">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-bold font-['Outfit'] text-[#5f559a] dark:text-[#bdb2ff] tracking-tighter">MindCare</span>
+<div class="hidden md:flex gap-6 items-center">
+<nav class="flex gap-4">
+<a class="text-slate-500 hover:bg-white/50 transition-colors duration-300 px-3 py-1 rounded-full font-medium" href="#">Sanctuary</a>
+<a class="text-[#5f559a] font-bold px-3 py-1 rounded-full" href="#">Analytics</a>
+<a class="text-slate-500 hover:bg-white/50 transition-colors duration-300 px-3 py-1 rounded-full font-medium" href="#">Journal</a>
+</nav>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center bg-surface-container-high rounded-full px-4 py-2 gap-2">
+<span class="material-symbols-outlined text-outline">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-48" placeholder="Search insights..." type="text"/>
+</div>
+<button class="p-2 text-slate-500 hover:bg-white/50 rounded-full transition-colors"><span class="material-symbols-outlined">dark_mode</span></button>
+<button class="p-2 text-slate-500 hover:bg-white/50 rounded-full transition-colors"><span class="material-symbols-outlined">notifications</span></button>
+<div class="w-10 h-10 rounded-full bg-primary-container overflow-hidden border-2 border-white shadow-sm">
+<img alt="User profile photo" data-alt="professional headshot of a smiling woman with warm lighting and soft blurred outdoor background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjAE3jVxl91uOUCmbp57c24LFKAHyw125x7d2ZczfoSs6UqUgH7S1R-vL3Ym4cOuldjD-Dt_uVXWIsfNt1brXElZFx-H4A2TQ6yTTPo8Hx8AX9yH8-0g_WbOa1frZ8gj1YQi463_vOtY-CxKIPpAFDMZHBlSLYCwKP9z8fVxL4fK1kF0z6C887HtN5-5DkRVy3yiFfw5UhJw_h6jAZjlS_QMyzH9lI69D85w1tjqkDTlJLnt0otcqL1Qw0Df-kfRFc3F-0_OEMWKM"/>
+</div>
+</div>
+</header>
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full flex flex-col p-6 z-50 bg-white/70 dark:bg-[#2c2a4a]/70 backdrop-blur-2xl w-72 rounded-r-[2rem] border-r border-white/10 shadow-[20px_0px_40px_rgba(44,42,74,0.04)] hidden md:flex">
+<div class="mb-12 pt-4">
+<span class="font-['Outfit'] text-xl font-black text-[#5f559a] dark:text-[#bdb2ff]">MindCare</span>
+</div>
+<div class="flex items-center gap-4 mb-10 px-4">
+<div class="w-12 h-12 rounded-2xl bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container">spa</span>
+</div>
+<div>
+<h3 class="text-sm font-bold text-on-surface">Welcome back</h3>
+<p class="text-xs text-slate-500">Find your peace</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2 flex-grow">
+<a class="flex items-center gap-3 text-slate-600 px-4 py-3 hover:bg-[#bdb2ff]/10 rounded-full transition-all duration-300" href="#">
+<span class="material-symbols-outlined">spa</span> Sanctuary
+            </a>
+<a class="flex items-center gap-3 text-slate-600 px-4 py-3 hover:bg-[#bdb2ff]/10 rounded-full transition-all duration-300" href="#">
+<span class="material-symbols-outlined">edit_note</span> Journal
+            </a>
+<a class="flex items-center gap-3 bg-[#bdb2ff]/20 text-[#4b4185] rounded-full px-4 py-3 font-semibold" href="#">
+<span class="material-symbols-outlined">insights</span> Analytics
+            </a>
+<a class="flex items-center gap-3 text-slate-600 px-4 py-3 hover:bg-[#bdb2ff]/10 rounded-full transition-all duration-300" href="#">
+<span class="material-symbols-outlined">air</span> Breathing
+            </a>
+<a class="flex items-center gap-3 text-slate-600 px-4 py-3 hover:bg-[#bdb2ff]/10 rounded-full transition-all duration-300" href="#">
+<span class="material-symbols-outlined">settings</span> Settings
+            </a>
+</nav>
+<button class="mt-auto bg-primary text-on-primary rounded-full py-4 px-6 font-bold shadow-lg shadow-primary/20 flex items-center justify-center gap-2 active:scale-95 transition-transform duration-300">
+<span class="material-symbols-outlined">play_circle</span>
+            Start Session
+        </button>
+</aside>
+<!-- Main Content -->
+<main class="md:ml-72 pt-28 px-8 pb-12 min-h-screen">
+<header class="mb-10 max-w-4xl">
+<h1 class="text-5xl font-extrabold font-headline text-on-surface tracking-tight mb-4">Emotional <span class="text-primary italic">Landscape</span></h1>
+<p class="text-lg text-on-surface-variant max-w-2xl leading-relaxed">Your journey toward mindfulness, visualized. Explore the patterns of your well-being through curated data perspectives.</p>
+</header>
+<!-- Bento Grid Analytics -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+<!-- Hero Insight Chart: Mood Over Time -->
+<div class="md:col-span-8 glass-card rounded-2xl p-8 shadow-[0px_20px_40px_rgba(44,42,74,0.06)] relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-8">
+<div class="flex gap-2">
+<span class="px-3 py-1 rounded-full bg-primary-container/30 text-on-primary-container text-xs font-semibold">Weekly</span>
+<span class="px-3 py-1 rounded-full bg-surface-container text-outline text-xs font-semibold">Monthly</span>
+</div>
+</div>
+<h2 class="text-2xl font-bold font-headline mb-8 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">auto_graph</span> Mood Progression
+                </h2>
+<div class="h-64 flex items-end justify-between gap-2 px-2">
+<!-- Fake Line Chart visualization -->
+<div class="flex-1 flex flex-col items-center group/bar">
+<div class="w-full bg-primary-fixed-dim/40 rounded-t-xl h-24 group-hover/bar:bg-primary transition-all duration-500 relative">
+<div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-on-surface text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover/bar:opacity-100 transition-opacity">Stable</div>
+</div>
+<span class="text-[10px] mt-4 font-bold text-outline uppercase tracking-wider">Mon</span>
+</div>
+<div class="flex-1 flex flex-col items-center group/bar">
+<div class="w-full bg-primary-fixed-dim/40 rounded-t-xl h-40 group-hover/bar:bg-primary transition-all duration-500 relative">
+<div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-on-surface text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover/bar:opacity-100 transition-opacity">Calm</div>
+</div>
+<span class="text-[10px] mt-4 font-bold text-outline uppercase tracking-wider">Tue</span>
+</div>
+<div class="flex-1 flex flex-col items-center group/bar">
+<div class="w-full bg-primary-fixed-dim/40 rounded-t-xl h-56 group-hover/bar:bg-primary transition-all duration-500 relative">
+<div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-on-surface text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover/bar:opacity-100 transition-opacity">Joyful</div>
+</div>
+<span class="text-[10px] mt-4 font-bold text-outline uppercase tracking-wider">Wed</span>
+</div>
+<div class="flex-1 flex flex-col items-center group/bar">
+<div class="w-full bg-primary-fixed-dim/40 rounded-t-xl h-32 group-hover/bar:bg-primary transition-all duration-500 relative">
+<div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-on-surface text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover/bar:opacity-100 transition-opacity">Tired</div>
+</div>
+<span class="text-[10px] mt-4 font-bold text-outline uppercase tracking-wider">Thu</span>
+</div>
+<div class="flex-1 flex flex-col items-center group/bar">
+<div class="w-full bg-primary-fixed-dim/40 rounded-t-xl h-48 group-hover/bar:bg-primary transition-all duration-500 relative">
+<div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-on-surface text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover/bar:opacity-100 transition-opacity">Focused</div>
+</div>
+<span class="text-[10px] mt-4 font-bold text-outline uppercase tracking-wider">Fri</span>
+</div>
+<div class="flex-1 flex flex-col items-center group/bar">
+<div class="w-full bg-primary-fixed-dim/40 rounded-t-xl h-64 group-hover/bar:bg-primary transition-all duration-500 relative">
+<div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-on-surface text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover/bar:opacity-100 transition-opacity">Zen</div>
+</div>
+<span class="text-[10px] mt-4 font-bold text-outline uppercase tracking-wider">Sat</span>
+</div>
+<div class="flex-1 flex flex-col items-center group/bar">
+<div class="w-full bg-primary-fixed-dim/40 rounded-t-xl h-44 group-hover/bar:bg-primary transition-all duration-500 relative">
+<div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-on-surface text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover/bar:opacity-100 transition-opacity">Reflective</div>
+</div>
+<span class="text-[10px] mt-4 font-bold text-outline uppercase tracking-wider">Sun</span>
+</div>
+</div>
+</div>
+<!-- Habit Mastery Card -->
+<div class="md:col-span-4 bg-primary-container rounded-2xl p-8 flex flex-col justify-between text-on-primary-container relative overflow-hidden">
+<div class="absolute -bottom-10 -right-10 w-40 h-40 bg-white/20 rounded-full blur-3xl"></div>
+<div>
+<span class="material-symbols-outlined text-4xl mb-4" style="font-variation-settings: 'FILL' 1;">stars</span>
+<h2 class="text-3xl font-black font-headline tracking-tighter leading-tight mb-2">Habit Mastery</h2>
+<p class="text-sm opacity-80 mb-6 font-medium">You've maintained your meditation streak for 12 days. Deeply impressive.</p>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between items-end">
+<span class="text-xs font-bold uppercase tracking-widest">Meditation</span>
+<span class="text-2xl font-bold">88%</span>
+</div>
+<div class="w-full bg-on-primary-container/10 h-3 rounded-full overflow-hidden">
+<div class="bg-on-primary-container h-full w-[88%] rounded-full"></div>
+</div>
+</div>
+</div>
+<!-- Sleep Patterns (Glassmorphic Bar) -->
+<div class="md:col-span-4 glass-card rounded-2xl p-8 flex flex-col">
+<h3 class="font-headline font-bold text-xl mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">bedtime</span> Sleep Hygiene
+                </h3>
+<div class="flex-grow flex items-center justify-center py-4">
+<div class="relative w-40 h-40">
+<svg class="w-full h-full" viewbox="0 0 36 36">
+<path class="text-surface-container" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="100, 100" stroke-width="3"></path>
+<path class="text-primary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="75, 100" stroke-linecap="round" stroke-width="3"></path>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-3xl font-black">7.2</span>
+<span class="text-[10px] font-bold text-outline uppercase">Avg Hours</span>
+</div>
+</div>
+</div>
+<div class="mt-4 p-4 bg-surface-container-low rounded-xl">
+<p class="text-xs font-medium text-on-surface-variant italic">"Your REM sleep is up by 12% compared to last week. Keep the bedtime routine."</p>
+</div>
+</div>
+<!-- Mindfulness Activities (Bento Item) -->
+<div class="md:col-span-4 glass-card rounded-2xl p-8">
+<h3 class="font-headline font-bold text-xl mb-6">Activity Mix</h3>
+<div class="space-y-6">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed flex items-center justify-center"><span class="material-symbols-outlined text-on-secondary-fixed text-sm">air</span></div>
+<div class="flex-1">
+<div class="flex justify-between text-xs font-bold mb-1"><span>Breathing</span><span>45%</span></div>
+<div class="w-full bg-surface-container h-1.5 rounded-full"><div class="bg-secondary h-full w-[45%] rounded-full"></div></div>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-tertiary-fixed flex items-center justify-center"><span class="material-symbols-outlined text-on-tertiary-fixed text-sm">self_improvement</span></div>
+<div class="flex-1">
+<div class="flex justify-between text-xs font-bold mb-1"><span>Meditation</span><span>30%</span></div>
+<div class="w-full bg-surface-container h-1.5 rounded-full"><div class="bg-tertiary h-full w-[30%] rounded-full"></div></div>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center"><span class="material-symbols-outlined text-on-primary-fixed text-sm">edit_note</span></div>
+<div class="flex-1">
+<div class="flex justify-between text-xs font-bold mb-1"><span>Journaling</span><span>25%</span></div>
+<div class="w-full bg-surface-container h-1.5 rounded-full"><div class="bg-primary h-full w-[25%] rounded-full"></div></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Focus vs. Stress (Asymmetric Chart) -->
+<div class="md:col-span-4 glass-card rounded-2xl p-8 relative overflow-hidden">
+<div class="absolute -top-10 -left-10 w-32 h-32 bg-primary/5 rounded-full"></div>
+<h3 class="font-headline font-bold text-xl mb-2">Cognitive Load</h3>
+<p class="text-xs text-outline mb-6">Efficiency of focus vs stress triggers</p>
+<div class="flex flex-col gap-8">
+<div class="flex items-center justify-center">
+<div class="grid grid-cols-2 gap-4 w-full">
+<div class="bg-white rounded-2xl p-4 shadow-sm text-center border border-primary/5">
+<span class="text-primary text-3xl font-black">low</span>
+<p class="text-[10px] font-bold text-outline uppercase tracking-tighter">Stress Level</p>
+</div>
+<div class="bg-white rounded-2xl p-4 shadow-sm text-center border border-primary/5">
+<span class="text-on-tertiary-container text-3xl font-black">High</span>
+<p class="text-[10px] font-bold text-outline uppercase tracking-tighter">Focus Rating</p>
+</div>
+</div>
+</div>
+<div class="p-4 bg-tertiary-container/20 rounded-2xl border border-tertiary-container/30">
+<div class="flex gap-3">
+<span class="material-symbols-outlined text-on-tertiary-container">lightbulb</span>
+<p class="text-xs text-on-tertiary-container font-medium leading-relaxed">Your focus peaks around 10:00 AM after your morning breathing session.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Quote / Action -->
+<div class="md:col-span-12 mt-4">
+<div class="bg-surface-container-low rounded-xl p-6 flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full overflow-hidden">
+<img alt="Guide Photo" data-alt="close-up portrait of a serene woman with natural lighting and soft, comforting expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB8nKMVFVWaPqqwBf3ONbWj3nlTPdwsgIR77q3Dqs-PLX_z97sFVzdP3wNS0cp8WdVzGeSVMn-YY-SeubCGVF17BhKH3vzW4S0YhL48AV7f3vVU37fsQexAUawLPXraAQ7dKNj73DowDTKThWdsV7-XKyg9q5OInjKjx_Z-N0z3NrPzFLiQv0aCfy2sjw52S0LfB19cTAt_anORnpWWSjQgvBeajxVcbzgrclUCoVjAU4ea24zrHmc2jU-RAKYAa2SAV-R78vatu8U"/>
+</div>
+<div>
+<p class="text-sm font-semibold italic text-on-surface">"Every piece of data is a breath toward understanding yourself better."</p>
+<p class="text-[10px] font-bold text-outline uppercase tracking-widest mt-1">— Your Mindfulness Guide</p>
+</div>
+</div>
+<button class="bg-surface-container-lowest text-primary border border-primary/10 px-6 py-3 rounded-full text-sm font-bold shadow-sm hover:bg-white transition-all active:scale-95">Download PDF Insight</button>
+</div>
+</div>
+</div>
+</main>
+<!-- FAB for quick sessions (Contextual) -->
+<div class="fixed bottom-8 right-8 z-50">
+<button class="bg-primary text-on-primary w-16 h-16 rounded-full flex items-center justify-center shadow-2xl hover:scale-105 active:scale-95 transition-all duration-300">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+</div>
+</body></html>

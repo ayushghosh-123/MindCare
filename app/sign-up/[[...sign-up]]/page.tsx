@@ -17,8 +17,8 @@ export default function SignUpPage() {
   // Show loading state while checking authentication
   if (!isLoaded) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#D3D3FF]"></div>
+      <div className="flex items-center justify-center min-h-screen bg-[#f9f9f9] relative">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#5f559a] z-10" />
       </div>
     );
   }
@@ -29,18 +29,33 @@ export default function SignUpPage() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-4 sm:p-8">
-      <div className="w-full max-w-md">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-[#f9f9f9] p-4 sm:p-8 relative selection:bg-[#bdb2ff] selection:text-[#4b4185]">
+      {/* Subtle background for Serene Sanctuary effect */}
+      <div 
+        className="absolute inset-0 z-[1] opacity-30 pointer-events-none mix-blend-multiply"
+        style={{
+          background: 'radial-gradient(ellipse at top right, rgba(189, 178, 255, 0.4), transparent 60%), radial-gradient(ellipse at bottom left, rgba(229, 222, 255, 0.5), transparent 60%)'
+        }}
+      />
+      <div className="w-full max-w-md relative z-10">
         <div className="text-center mb-6 sm:mb-8 mt-8 sm:mt-0">
-          <h1 className="text-2xl sm:text-3xl font-bold text-slate-800 mb-2">Health Diary</h1>
-          <p className="text-sm sm:text-base text-slate-600">Create an account to start tracking</p>
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-[#5f559a] mb-2 font-['Plus_Jakarta_Sans']">MindCare</h1>
+          <p className="text-sm sm:text-base text-[#484550] font-medium tracking-wide">Create your private sanctuary</p>
         </div>
-        <div className="flex justify-center w-full">
+        <div className="flex justify-center w-full shadow-2xl shadow-[#5f559a]/10 rounded-2xl overflow-hidden">
           <SignUp
             routing="path"
             path="/sign-up"
             signInUrl="/sign-in"
             afterSignUpUrl="/"
+            appearance={{
+              elements: {
+                card: "shadow-none border-none",
+                headerTitle: "hidden",
+                headerSubtitle: "hidden",
+                primaryButton: "bg-[#5f559a] hover:bg-[#4b4185]"
+              }
+            }}
           />
         </div>
       </div>

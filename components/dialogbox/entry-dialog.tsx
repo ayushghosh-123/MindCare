@@ -213,7 +213,7 @@ export function EntryDialog({ open, onOpenChange, entry, onSave }: EntryDialogPr
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button type="submit" className="bg-[#D3D3FF]/100 hover:bg-[#D3D3FF]">
+            <Button type="submit" className="bg-[#e5deff]/100 hover:bg-[#e5deff]">
               {entry ? 'Update' : 'Save'} Entry
             </Button>
           </div>

@@ -253,34 +253,35 @@ export function UserProfile({ entries, userProfile: dbUserProfile, onProfileUpda
   return (
     <div className="space-y-6">
       {/* Profile Header */}
-      <Card>
-        <CardHeader>
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <Avatar className="h-16 w-16">
+      <div className="bg-white/80 backdrop-blur-2xl rounded-[1.5rem] sm:rounded-[2rem] p-6 sm:p-8 shadow-xl shadow-[#5f559a]/10 border border-white/60 relative overflow-hidden group">
+        <div className="absolute -right-20 -top-20 w-64 h-64 bg-[#e5deff]/40 blur-3xl rounded-full pointer-events-none group-hover:scale-110 transition-transform duration-1000"></div>
+        <div className="mb-4 relative z-10">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+            <div className="flex flex-col sm:flex-row items-center sm:items-center text-center sm:text-left gap-4 sm:gap-6">
+              <Avatar className="h-20 w-20 sm:h-24 sm:w-24 ring-4 ring-white shadow-lg">
                 <AvatarImage src={user?.imageUrl} />
-                <AvatarFallback className="bg-[#D3D3FF]/30 text-[#8A8AFF] text-xl">
-                  <User className="h-8 w-8" />
+                <AvatarFallback className="bg-[#e5deff]/30 text-[#5f559a] text-xl font-['Plus_Jakarta_Sans']">
+                  <User className="h-10 w-10 sm:h-12 sm:w-12" />
                 </AvatarFallback>
               </Avatar>
               <div>
-                <CardTitle className="text-2xl">{profile.name}</CardTitle>
-                <div className="flex flex-col gap-1">
-                  <p className="text-slate-600 font-medium">{profile.email || "No email provided"}</p>
+                <h2 className="font-['Plus_Jakarta_Sans'] text-2xl sm:text-3xl font-extrabold text-[#1a1c1c] tracking-tight">{profile.name}</h2>
+                <div className="flex flex-col gap-1 mt-1">
+                  <p className="text-slate-600 font-medium text-sm sm:text-base">{profile.email || "No email provided"}</p>
                   {!profile.email && (
-                    <Badge variant="destructive" className="w-fit text-[10px] py-0 px-2 animate-pulse">
+                    <Badge variant="destructive" className="mx-auto sm:mx-0 w-fit text-[10px] py-0 px-2 animate-pulse">
                       <AlertCircle className="h-3 w-3 mr-1" />
                       Email Missing - AI Agent Disabled
                     </Badge>
                   )}
                 </div>
                 {healthMetrics && (
-                  <div className="flex items-center gap-4 mt-2">
-                    <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                  <div className="flex items-center justify-center sm:justify-start gap-2 sm:gap-4 mt-3">
+                    <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 text-[10px] sm:text-xs">
                       <Calendar className="h-3 w-3 mr-1" />
                       {healthMetrics.streak} day streak
                     </Badge>
-                    <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                    <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 text-[10px] sm:text-xs">
                       <Activity className="h-3 w-3 mr-1" />
                       {healthMetrics.totalEntries} entries
                     </Badge>
@@ -292,63 +293,66 @@ export function UserProfile({ entries, userProfile: dbUserProfile, onProfileUpda
               variant={isEditing ? "default" : "outline"}
               onClick={() => isEditing ? handleSave() : setIsEditing(true)}
               disabled={saving}
-              className="w-full sm:w-auto"
+              className={`w-full sm:w-auto rounded-full px-6 shadow-md font-['Plus_Jakarta_Sans'] font-bold ${isEditing ? 'bg-[#5f559a] hover:bg-[#4b4185] text-white' : 'text-[#5f559a] bg-white border-[#e5deff] hover:bg-[#e5deff]/50'}`}
             >
               {isEditing ? (
                 <>
                   <Save className="h-4 w-4 mr-2" />
-                  {saving ? 'Saving...' : 'Save'}
+                  {saving ? 'Saving...' : 'Save Context'}
                 </>
               ) : (
                 <>
                   <Edit className="h-4 w-4 mr-2" />
-                  Edit Profile
+                  Edit Sanctuary
                 </>
               )}
             </Button>
           </div>
-        </CardHeader>
-      </Card>
+        </div>
+      </div>
       {/* Personal Information */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <User className="h-5 w-5 text-[#8A8AFF]" />
-            Personal Information
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
+      <div className="bg-white/80 backdrop-blur-2xl rounded-[1.5rem] sm:rounded-[2rem] p-6 sm:p-8 shadow-xl shadow-[#5f559a]/5 border border-white/60 relative overflow-hidden">
+        <div className="mb-6">
+          <h3 className="flex items-center gap-3 font-['Plus_Jakarta_Sans'] text-xl sm:text-2xl font-bold text-[#1a1c1c]">
+            <div className="p-2 rounded-full bg-[#bdb2ff]/20 text-[#5f559a]"><User className="h-5 w-5" /></div>
+            Physical Context
+          </h3>
+        </div>
+        <div>
           {isEditing ? (
-            <div className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <Label htmlFor="age">Age</Label>
+            <div className="space-y-8">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="space-y-4">
+                  <Label htmlFor="age" className="text-[10px] font-black uppercase tracking-[0.2em] text-[#5f559a]/50 ml-4">Temporal Age</Label>
                   <Input
                     id="age"
                     type="number"
                     value={profile.age || ''}
                     onChange={(e) => setProfile(prev => ({ ...prev, age: parseInt(e.target.value) || undefined }))}
                     placeholder="25"
+                    className="h-16 px-6 bg-[#f3f3f3] border-none rounded-3xl text-lg font-bold text-[#1b0c53] focus:ring-4 focus:ring-[#bdb2ff]/20 transition-all"
                   />
                 </div>
-                <div>
-                  <Label htmlFor="height">Height (cm)</Label>
+                <div className="space-y-4">
+                  <Label htmlFor="height" className="text-[10px] font-black uppercase tracking-[0.2em] text-[#5f559a]/50 ml-4">Stature (cm)</Label>
                   <Input
                     id="height"
                     type="number"
                     value={profile.height || ''}
                     onChange={(e) => setProfile(prev => ({ ...prev, height: parseInt(e.target.value) || undefined }))}
                     placeholder="170"
+                    className="h-16 px-6 bg-[#f3f3f3] border-none rounded-3xl text-lg font-bold text-[#1b0c53] focus:ring-4 focus:ring-[#bdb2ff]/20 transition-all"
                   />
                 </div>
-                <div>
-                  <Label htmlFor="weight">Weight (kg)</Label>
+                <div className="space-y-4">
+                  <Label htmlFor="weight" className="text-[10px] font-black uppercase tracking-[0.2em] text-[#5f559a]/50 ml-4">Mass (kg)</Label>
                   <Input
                     id="weight"
                     type="number"
                     value={profile.weight || ''}
                     onChange={(e) => setProfile(prev => ({ ...prev, weight: parseInt(e.target.value) || undefined }))}
                     placeholder="70"
+                    className="h-16 px-6 bg-[#f3f3f3] border-none rounded-3xl text-lg font-bold text-[#1b0c53] focus:ring-4 focus:ring-[#bdb2ff]/20 transition-all"
                   />
                 </div>
               </div>
@@ -369,40 +373,40 @@ export function UserProfile({ entries, userProfile: dbUserProfile, onProfileUpda
               </div>
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Health Goals */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Target className="h-5 w-5 text-[#8A8AFF]" />
-            Health Goals
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
+      <div className="bg-white/80 backdrop-blur-2xl rounded-[1.5rem] sm:rounded-[2rem] p-6 sm:p-8 shadow-xl shadow-[#5f559a]/5 border border-white/60 relative overflow-hidden">
+        <div className="mb-6">
+          <h3 className="flex items-center gap-3 font-['Plus_Jakarta_Sans'] text-xl sm:text-2xl font-bold text-[#1a1c1c]">
+            <div className="p-2 rounded-full bg-[#bdb2ff]/20 text-[#5f559a]"><Target className="h-5 w-5" /></div>
+            Wellness Objectives
+          </h3>
+        </div>
+        <div>
           {isEditing ? (
-            <div className="space-y-3">
-              <div className="flex gap-2">
+            <div className="space-y-6">
+              <div className="flex flex-col sm:flex-row gap-4">
                 <Input
                   value={newGoal}
                   onChange={(e) => setNewGoal(e.target.value)}
-                  placeholder="Add a health goal..."
+                  placeholder="Define a new objective..."
                   onKeyPress={(e) => e.key === 'Enter' && addGoal()}
+                  className="h-14 sm:h-16 px-6 bg-[#f3f3f3] border-none rounded-2xl sm:rounded-3xl text-base sm:text-lg font-bold text-[#1b0c53] focus:ring-4 focus:ring-[#bdb2ff]/20 transition-all"
                 />
-                <Button onClick={addGoal} size="sm">Add</Button>
+                <Button onClick={addGoal} className="h-14 sm:h-16 px-10 bg-[#1b0c53] text-white rounded-2xl sm:rounded-3xl font-black uppercase tracking-widest hover:bg-black transition-all">Add</Button>
               </div>
-              <div className="space-y-2">
+              <div className="flex flex-wrap gap-2 sm:gap-3">
                 {profile.healthGoals.map((goal, index) => (
-                  <div key={index} className="flex items-center justify-between p-2 bg-[#F0F0FF] rounded">
-                    <span>{goal}</span>
-                    <Button
-                      variant="ghost"
-                      size="sm"
+                  <div key={index} className="flex items-center gap-3 sm:gap-4 pl-4 sm:pl-6 pr-1 sm:pr-2 py-1 sm:py-2 bg-[#f3f3f3] rounded-full group">
+                    <span className="text-xs sm:text-sm font-bold text-[#1b0c53]">{goal}</span>
+                    <button
                       onClick={() => removeGoal(index)}
+                      className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-[#5f559a] hover:bg-red-50 hover:text-red-500 transition-all"
                     >
-                      <X className="h-4 w-4" />
-                    </Button>
+                      <X className="h-4 w-4 stroke-[3]" />
+                    </button>
                   </div>
                 ))}
               </div>
@@ -420,16 +424,16 @@ export function UserProfile({ entries, userProfile: dbUserProfile, onProfileUpda
               )}
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Medical Information */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Medical Conditions</CardTitle>
-          </CardHeader>
-          <CardContent>
+        <div className="bg-white/80 backdrop-blur-2xl rounded-[2rem] p-8 shadow-xl shadow-[#5f559a]/5 border border-white/60 relative overflow-hidden">
+          <div className="mb-6">
+            <h3 className="font-['Plus_Jakarta_Sans'] text-xl font-bold text-[#1a1c1c]">Medical History</h3>
+          </div>
+          <div>
             {isEditing ? (
               <div className="space-y-3">
                 <div className="flex gap-2">
@@ -469,14 +473,14 @@ export function UserProfile({ entries, userProfile: dbUserProfile, onProfileUpda
                 )}
               </div>
             )}
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Medications</CardTitle>
-          </CardHeader>
-          <CardContent>
+        <div className="bg-white/80 backdrop-blur-2xl rounded-[2rem] p-8 shadow-xl shadow-[#5f559a]/5 border border-white/60 relative overflow-hidden">
+          <div className="mb-6">
+            <h3 className="font-['Plus_Jakarta_Sans'] text-xl font-bold text-[#1a1c1c]">Medications</h3>
+          </div>
+          <div>
             {isEditing ? (
               <div className="space-y-3">
                 <div className="flex gap-2">
@@ -516,47 +520,50 @@ export function UserProfile({ entries, userProfile: dbUserProfile, onProfileUpda
                 )}
               </div>
             )}
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
 
       {/* Emergency Information */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Heart className="h-5 w-5 text-[#8A8AFF]" />
-            Emergency & Medical Contacts
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
+      <div className="bg-white/80 backdrop-blur-2xl rounded-[1.5rem] sm:rounded-[2rem] p-6 sm:p-8 shadow-xl shadow-[#5f559a]/5 border border-white/60 relative overflow-hidden">
+        <div className="mb-6">
+          <h3 className="flex items-center gap-3 font-['Plus_Jakarta_Sans'] text-xl sm:text-2xl font-bold text-[#1a1c1c]">
+            <div className="p-2 rounded-full bg-[#bdb2ff]/20 text-[#5f559a]"><Heart className="h-5 w-5" /></div>
+            Emergency Protocol
+          </h3>
+        </div>
+        <div>
           {isEditing ? (
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="emergencyContact">Emergency Contact</Label>
+            <div className="space-y-8">
+              <div className="space-y-4">
+                <Label htmlFor="emergencyContact" className="text-[10px] font-black uppercase tracking-[0.2em] text-[#5f559a]/50 ml-4">Primary Kin Transmission</Label>
                 <Input
                   id="emergencyContact"
                   value={profile.emergencyContact}
                   onChange={(e) => setProfile(prev => ({ ...prev, emergencyContact: e.target.value }))}
-                  placeholder="Name and phone number"
+                  placeholder="Name and celestial address"
+                  className="h-16 px-6 bg-[#f3f3f3] border-none rounded-3xl text-lg font-bold text-[#1b0c53] focus:ring-4 focus:ring-[#bdb2ff]/20 transition-all"
                 />
               </div>
-              <div>
-                <Label htmlFor="doctorInfo">Doctor Information</Label>
+              <div className="space-y-4">
+                <Label htmlFor="doctorInfo" className="text-[10px] font-black uppercase tracking-[0.2em] text-[#5f559a]/50 ml-4">Healer Reference</Label>
                 <Input
                   id="doctorInfo"
                   value={profile.doctorInfo}
                   onChange={(e) => setProfile(prev => ({ ...prev, doctorInfo: e.target.value }))}
-                  placeholder="Doctor name and contact"
+                  placeholder="Physician or guide contact"
+                  className="h-16 px-6 bg-[#f3f3f3] border-none rounded-3xl text-lg font-bold text-[#1b0c53] focus:ring-4 focus:ring-[#bdb2ff]/20 transition-all"
                 />
               </div>
-              <div>
-                <Label htmlFor="notes">Additional Notes</Label>
+              <div className="space-y-4">
+                <Label htmlFor="notes" className="text-[10px] font-black uppercase tracking-[0.2em] text-[#5f559a]/50 ml-4">Subliminal Context</Label>
                 <Textarea
                   id="notes"
                   value={profile.notes}
                   onChange={(e) => setProfile(prev => ({ ...prev, notes: e.target.value }))}
-                  placeholder="Any additional health information..."
-                  rows={3}
+                  placeholder="Additional observations for the sanctuary..."
+                  rows={4}
+                  className="px-6 py-6 bg-[#f3f3f3] border-none rounded-[2.5rem] text-lg font-bold text-[#1b0c53] focus:ring-4 focus:ring-[#bdb2ff]/20 transition-all resize-none"
                 />
               </div>
             </div>
@@ -578,24 +585,25 @@ export function UserProfile({ entries, userProfile: dbUserProfile, onProfileUpda
               )}
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {isEditing && (
-        <div className="flex gap-3 justify-end">
+        <div className="flex gap-3 justify-end items-center sticky bottom-6 bg-white/70 backdrop-blur-md p-4 rounded-full border border-white shadow-xl z-10 w-max ml-auto">
           <Button
-            variant="outline"
+            variant="ghost"
             onClick={() => setIsEditing(false)}
             disabled={saving}
+            className="rounded-full px-6 font-semibold"
           >
-            Cancel
+            Discard
           </Button>
           <Button
             onClick={handleSave}
-            className="bg-[#D3D3FF] hover:bg-[#BDBDFE]"
+            className="bg-[#5f559a] text-white hover:bg-[#4b4185] rounded-full px-8 shadow-lg font-bold"
             disabled={saving}
           >
-            {saving ? 'Saving...' : 'Save Changes'}
+            {saving ? 'Synchronizing...' : 'Save Sanctuary'}
           </Button>
         </div>
       )}

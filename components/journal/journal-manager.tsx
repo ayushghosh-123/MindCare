@@ -188,7 +188,7 @@ export function JournalManager({
       <Card className={className}>
         <CardContent className="flex items-center justify-center py-12">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#D3D3FF] mx-auto mb-4"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#e5deff] mx-auto mb-4"></div>
             <p className="text-slate-600">Loading journals...</p>
           </div>
         </CardContent>
@@ -199,19 +199,18 @@ export function JournalManager({
   return (
     <div className={cn("space-y-6", className)}>
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-slate-800">My Journals</h2>
-          <p className="text-slate-600">Organize your thoughts and experiences</p>
+          <h2 className="text-xl sm:text-2xl font-bold text-slate-800">My Journals</h2>
+          <p className="text-sm sm:text-base text-slate-600">Organize your thoughts and experiences</p>
         </div>
         <Button 
           onClick={() => setShowCreateJournal(true)}
-          className="bg-[#4338CA] hover:bg-[#5558E3] shadow-lg hover:shadow-[0_0_20px_rgba(67,56,202,0.6)] transition-all duration-300"
+          className="w-full sm:w-auto bg-[#4338CA] hover:bg-[#5558E3] shadow-lg hover:shadow-[0_0_20px_rgba(67,56,202,0.6)] transition-all duration-300"
         >
           <Plus className="h-4 w-4 mr-2" />
           New Journal
         </Button>
-        
       </div>
 
       {/* Create Journal Modal */}
@@ -269,42 +268,42 @@ export function JournalManager({
       )}
 
       {/* Journals List */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {journals.map((journal) => (
           <Card 
             key={journal.id} 
-            className="cursor-pointer hover:shadow-md transition-shadow"
+            className="cursor-pointer hover:shadow-md transition-shadow active:scale-[0.98] sm:active:scale-100"
             onClick={() => {
               setSelectedJournal(journal);
               onSelectJournal(journal);
             }}
           >
-            <CardHeader className="pb-3">
+            <CardHeader className="pb-3 px-4 sm:px-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div 
-                    className="w-4 h-4 rounded-full"
+                    className="w-3 h-3 sm:w-4 sm:h-4 rounded-full"
                     style={{ backgroundColor: journal.color }}
                   />
-                  <CardTitle className="text-lg">{journal.title}</CardTitle>
+                  <CardTitle className="text-base sm:text-lg">{journal.title}</CardTitle>
                 </div>
                 <div className="flex items-center gap-1">
                   {journal.is_public ? (
-                    <Globe className="h-4 w-4 text-green-600" />
+                    <Globe className="h-3 w-3 sm:h-4 sm:w-4 text-green-600" />
                   ) : (
-                    <Lock className="h-4 w-4 text-slate-400" />
+                    <Lock className="h-3 w-3 sm:h-4 sm:w-4 text-slate-400" />
                   )}
                 </div>
               </div>
               {journal.description && (
-                <p className="text-sm text-slate-600">{journal.description}</p>
+                <p className="text-xs sm:text-sm text-slate-600 line-clamp-2">{journal.description}</p>
               )}
             </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between text-sm text-slate-500">
+            <CardContent className="px-4 sm:px-6">
+              <div className="flex items-center justify-between text-[10px] sm:text-sm text-slate-500">
                 <span>Created {format(new Date(journal.created_at), 'MMM d, yyyy')}</span>
                 <div className="flex items-center gap-1">
-                  <FileText className="h-4 w-4" />
+                  <FileText className="h-3 w-3 sm:h-4 sm:w-4" />
                   <span>0 entries</span>
                 </div>
               </div>
@@ -316,21 +315,21 @@ export function JournalManager({
       {/* Selected Journal Entries */}
       {selectedJournal && (
         <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
+          <CardHeader className="px-4 sm:px-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex items-center gap-3">
                 <div 
                   className="w-4 h-4 rounded-full"
                   style={{ backgroundColor: selectedJournal.color }}
                 />
                 <div>
-                  <CardTitle>{selectedJournal.title}</CardTitle>
-                  <p className="text-sm text-slate-600">{selectedJournal.description}</p>
+                  <CardTitle className="text-lg sm:text-xl">{selectedJournal.title}</CardTitle>
+                  <p className="text-xs sm:text-sm text-slate-600">{selectedJournal.description}</p>
                 </div>
               </div>
               <Button 
                 onClick={() => setShowCreateEntry(true)}
-                className="bg-[#1e0ce6] hover:bg-[#5558E3] text-white shadow-lg hover:shadow-[0_0_20px_rgba(67,56,202,0.6)] transition-all duration-300"
+                className="w-full sm:w-auto bg-[#1e0ce6] hover:bg-[#5558E3] text-white shadow-lg hover:shadow-[0_0_20px_rgba(67,56,202,0.6)] transition-all duration-300"
               >
                 <Plus className="h-4 w-4 mr-2" />
                 New Entry
@@ -349,45 +348,45 @@ export function JournalManager({
                 {entries.map((entry) => (
                   <Card 
                     key={entry.id}
-                    className="cursor-pointer hover:shadow-md transition-shadow"
+                    className="cursor-pointer hover:shadow-md transition-shadow px-2 sm:px-0 active:scale-[0.98] sm:active:scale-100"
                     onClick={() => onSelectEntry(entry)}
                   >
-                    <CardHeader className="pb-3">
-                      <div className="flex items-center justify-between">
+                    <CardHeader className="pb-3 px-4 sm:px-6">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                         <div className="flex items-center gap-3">
-                          <CardTitle className="text-lg">
+                          <CardTitle className="text-base sm:text-lg">
                             {entry.title || 'Untitled Entry'}
                           </CardTitle>
                           {entry.mood && (
-                            <Badge variant="outline" className={getMoodColor(entry.mood)}>
+                            <Badge variant="outline" className={cn("text-[8px] sm:text-[10px] px-2 py-0.5", getMoodColor(entry.mood))}>
                               {entry.mood}
                             </Badge>
                           )}
                         </div>
-                        <div className="flex items-center gap-2 text-sm text-slate-500">
-                          <Calendar className="h-4 w-4" />
+                        <div className="flex items-center gap-2 text-[10px] sm:text-sm text-slate-500">
+                          <Calendar className="h-3 w-3 sm:h-4 sm:w-4" />
                           {format(new Date(entry.created_at), 'MMM d, yyyy')}
                         </div>
                       </div>
                     </CardHeader>
-                    <CardContent>
-                      <p className="text-slate-700 line-clamp-3 mb-3">
+                    <CardContent className="px-4 sm:px-6">
+                      <p className="text-sm sm:text-base text-slate-700 line-clamp-3 mb-3">
                         {entry.content}
                       </p>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4 text-sm text-slate-500">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0">
+                        <div className="flex items-center gap-3 sm:gap-4 text-[10px] sm:text-sm text-slate-500">
                           <span>{entry.word_count} words</span>
                           <span>{entry.reading_time} min read</span>
                         </div>
                         {entry.tags && entry.tags.length > 0 && (
-                          <div className="flex gap-1">
+                          <div className="flex flex-wrap gap-1">
                             {entry.tags.slice(0, 3).map((tag, index) => (
-                              <Badge key={index} variant="secondary" className="text-xs">
+                              <Badge key={index} variant="secondary" className="text-[8px] sm:text-xs">
                                 {tag}
                               </Badge>
                             ))}
                             {entry.tags.length > 3 && (
-                              <Badge variant="secondary" className="text-xs">
+                              <Badge variant="secondary" className="text-[8px] sm:text-xs">
                                 +{entry.tags.length - 3}
                               </Badge>
                             )}

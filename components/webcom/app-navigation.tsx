@@ -92,8 +92,8 @@ export function AppNavigation({
       )}>
         <div className="p-6">
           <div className="flex items-center gap-3 mb-8">
-            <div className="p-2 bg-[#D3D3FF]/30 rounded-lg">
-              <Heart className="h-6 w-6 text-[#8A8AFF]" />
+            <div className="p-2 bg-[#e5deff]/30 rounded-lg">
+              <Heart className="h-6 w-6 text-[#5f559a]" />
             </div>
             <div>
               <h2 className="text-xl font-bold text-slate-800">Reflect & Connect</h2>
@@ -113,7 +113,7 @@ export function AppNavigation({
                   className={cn(
                     "flex items-center gap-3 w-full p-4 rounded-lg transition-colors",
                     isActive 
-                      ? "bg-[#D3D3FF] text-white" 
+                      ? "bg-[#e5deff] text-white" 
                       : "text-slate-700 hover:bg-slate-100"
                   )}
                   onClick={() => {
@@ -126,7 +126,7 @@ export function AppNavigation({
                     <div className="font-medium">{item.label}</div>
                     <div className={cn(
                       "text-xs",
-                      isActive ? "text-[#D3D3FF]" : "text-slate-500"
+                      isActive ? "text-[#e5deff]" : "text-slate-500"
                     )}>
                       {item.description}
                     </div>
@@ -145,7 +145,7 @@ export function AppNavigation({
           <div className="mt-8">
             <Link
               href="/diary"
-              className="flex items-center justify-center w-full p-3 bg-[#D3D3FF] hover:bg-[#BDBDFE] text-white rounded-lg transition-colors"
+              className="flex items-center justify-center w-full p-3 bg-[#e5deff] hover:bg-[#bdb2ff] text-white rounded-lg transition-colors"
               onClick={() => {
                 onViewChange('diary');
                 setIsMobileMenuOpen(false);

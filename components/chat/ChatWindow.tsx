@@ -135,20 +135,29 @@ export function ChatWindow({
   const isFallbackMode = voiceMode === "fallback";
 
   return (
-    <div className="flex flex-col h-full bg-[#F8F8FF] relative">
+    <div className="flex flex-col h-full bg-[#f9f9f9] relative">
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto px-4 pb-32 pt-4">
         <div className="max-w-3xl mx-auto space-y-6">
           {isLoading ? (
-            <div className="flex items-center justify-center h-[50vh]">
+            <div className="flex items-center justify-center h-[40vh] sm:h-[50vh]">
               <p className="text-sm text-gray-400 animate-pulse">Loading conversation…</p>
             </div>
           ) : messages.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-[50vh] gap-3 text-center">
-              <p className="text-lg text-gray-700 font-medium">
-                How can I help you today{user?.firstName ? `, ${user.firstName}` : ""}?
-              </p>
+            <div className="flex flex-col items-center justify-center h-[40dvh] sm:h-[50dvh] gap-4 sm:gap-6 text-center animate-in fade-in zoom-in duration-1000">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 bg-white rounded-full shadow-2xl flex items-center justify-center relative">
+                <span className="text-3xl sm:text-4xl">🕊️</span>
+                <div className="absolute inset-0 bg-[#bdb2ff] rounded-full animate-ping opacity-10"></div>
+              </div>
+              <div className="px-4">
+                <h3 className="text-2xl sm:text-4xl font-black text-[#1b0c53] tracking-tighter font-['Plus_Jakarta_Sans'] leading-tight mb-2 sm:mb-4">
+                  Welcome to MindCare.
+                </h3>
+                <p className="text-base sm:text-xl text-[#5f559a]/60 font-medium italic">
+                  I am here to hold space for your thoughts{user?.firstName ? `, ${user.firstName}` : ""}.
+                </p>
+              </div>
             </div>
           ) : (
             messages.map((msg) => <MessageBubble key={msg.id} message={msg} />)
@@ -170,23 +179,23 @@ export function ChatWindow({
 
           {/* Typing indicator */}
           {isSending && (
-             <div className="flex justify-start mb-6 w-full animate-in fade-in slide-in-from-bottom-2 duration-300">
-               <div className="w-8 h-8 rounded-full border border-gray-200 bg-[#F8F8FF] flex items-center justify-center text-sm mr-4 shrink-0 shadow-sm">
-                 🤖
+             <div className="flex justify-start mb-10 w-full animate-in fade-in slide-in-from-bottom-2 duration-500 pl-2 sm:pl-4">
+               <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-white flex items-center justify-center text-base sm:text-lg mr-3 sm:mr-6 shrink-0 shadow-xl shadow-[#2C2A4A]/5">
+                 ✨
                </div>
-               <div className="bg-[#F8F8FF] border text-gray-800 rounded-2xl px-5 py-4 shadow-sm flex flex-col gap-2">
+               <div className="bg-[#f3f3f3] rounded-[1.5rem] sm:rounded-[2rem] px-5 sm:px-8 py-3 sm:py-5 shadow-inner flex flex-col gap-2 sm:gap-3 max-w-[85%] sm:max-w-[80%]">
                  <div className="flex items-center gap-2">
                    {[0, 150, 300].map((delay) => (
                      <span
                        key={delay}
-                       className="w-1.5 h-1.5 bg-violet-400 rounded-full animate-bounce"
+                       className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-[#bdb2ff] rounded-full animate-bounce"
                        style={{ animationDelay: `${delay}ms` }}
                      />
                    ))}
                  </div>
                  {/* Progress Stage Message */}
-                 <p className="text-xs font-medium text-slate-500 animate-in fade-in slide-in-from-left-2 duration-300">
-                    {currentStage || (isSending ? "AI is thinking..." : "")}
+                 <p className="text-[8px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-[#5f559a]/40 animate-pulse">
+                    {currentStage || "Active Reasoning..."}
                  </p>
                </div>
              </div>
@@ -211,7 +220,7 @@ export function ChatWindow({
       </div>
 
       {/* Floating Input Area */}
-      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#F8F8FF] via-white to-transparent pt-6 pb-[5.5rem] md:pb-6 px-4 pointer-events-none">
+      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#f9f9f9] via-white to-transparent pt-6 pb-[5.5rem] md:pb-6 px-4 pointer-events-none">
         <div className="max-w-3xl mx-auto relative pointer-events-auto">
           {/* Voice Mode Info - Show when in fallback */}
           {isFallbackMode && isVoiceSupported && (
@@ -242,13 +251,13 @@ export function ChatWindow({
                   <p className="font-medium mb-1">Voice Recognition Issue</p>
                   <p className="text-xs mb-3">{voiceError}</p>
                   {networkStatus === "offline" && (
-                    <div className="text-xs mb-2 p-2 bg-[#F8F8FF] rounded border border-red-100">
+                    <div className="text-xs mb-2 p-2 bg-[#f9f9f9] rounded border border-red-100">
                       <p className="font-medium text-red-700">📡 No Internet Connection</p>
                       <p className="mt-1">Check your network and try again.</p>
                     </div>
                   )}
                   {isRetrying && retryCount > 0 && (
-                    <div className="text-xs mb-2 p-2 bg-[#F8F8FF] rounded border border-orange-100">
+                    <div className="text-xs mb-2 p-2 bg-[#f9f9f9] rounded border border-orange-100">
                       <p className="font-medium text-orange-700">🔄 Auto-retrying ({retryCount}/3)…</p>
                     </div>
                   )}
@@ -265,7 +274,8 @@ export function ChatWindow({
             </div>
           )}
 
-          <div className="relative flex items-end shadow-lg border border-gray-200 bg-[#F8F8FF] rounded-2xl overflow-hidden focus-within:ring-2 focus-within:ring-violet-200 focus-within:border-violet-400 transition-all">
+          {/* Chat input box wrapper */}
+          <div className="relative flex items-end shadow-2xl shadow-[#2C2A4A]/10 bg-white/90 backdrop-blur-3xl rounded-[1.5rem] sm:rounded-[2.5rem] p-1.5 sm:p-2 border border-[#5f559a]/10 focus-within:border-[#5f559a]/30 focus-within:shadow-[#5f559a]/15 transition-all duration-500 group">
             <textarea
               rows={1}
               value={input}
@@ -281,19 +291,19 @@ export function ChatWindow({
                   e.currentTarget.style.height = 'auto';
                 }
               }}
-              placeholder="Message Mindcare..."
-              className="flex-1 max-h-50 text-base bg-transparent px-4 py-3.5 resize-none focus:outline-none placeholder:text-gray-400"
+              placeholder="Speak with MindCare..."
+              className="flex-1 max-h-30 text-base sm:text-lg font-medium bg-transparent px-5 sm:px-7 py-4 sm:py-5 resize-none focus:outline-none placeholder:text-[#5f559a]/30 text-[#1a1c1c]"
             />
-            <div className="p-2 flex items-center gap-2">
+            <div className="p-1 sm:p-2 flex items-center gap-1 sm:gap-2">
               <button
                 type="button"
                 onClick={toggleListening}
                 disabled={!isVoiceSupported || isSending}
-                className={`p-2 rounded-xl border transition-colors ${
+                className={`p-2.5 sm:p-3 rounded-full border transition-all duration-300 ${
                   isListening
-                    ? "bg-[#D3D3FF]/10 text-[#8A8AFF] border-[#D3D3FF]/50"
-                    : "bg-[#F8F8FF] text-gray-600 border-gray-200 hover:bg-gray-50"
-                } disabled:bg-gray-100 disabled:text-gray-300 disabled:border-gray-100`}
+                    ? "bg-[#bdb2ff]/20 text-[#5f559a] border-[#5f559a]/30 shadow-inner"
+                    : "bg-transparent text-slate-500 border-transparent hover:bg-[#f9f9f9] hover:text-[#5f559a]"
+                } disabled:opacity-50 disabled:cursor-not-allowed`}
                 title={
                   isVoiceSupported
                     ? isListening
@@ -303,21 +313,21 @@ export function ChatWindow({
                 }
                 aria-label={isListening ? "Stop voice input" : "Start voice input"}
               >
-                {isListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+                {isListening ? <MicOff className="w-4 h-4 sm:w-5 sm:h-5" /> : <Mic className="w-4 h-4 sm:w-5 sm:h-5" />}
               </button>
 
               <button
                 type="button"
                 onClick={toggleAutoSpeak}
-                className={`p-2 rounded-xl border transition-colors ${
+                className={`p-2.5 sm:p-3 rounded-full border transition-all duration-300 ${
                   autoSpeak
-                    ? "bg-violet-50 text-violet-600 border-violet-200"
-                    : "bg-[#F8F8FF] text-gray-500 border-gray-200 hover:bg-gray-50"
+                    ? "bg-[#bdb2ff]/20 text-[#5f559a] border-[#5f559a]/30"
+                    : "bg-transparent text-slate-400 border-transparent hover:bg-[#f9f9f9] hover:text-slate-600"
                 }`}
                 title={autoSpeak ? "Mute spoken replies" : "Enable spoken replies"}
                 aria-label={autoSpeak ? "Mute spoken replies" : "Enable spoken replies"}
               >
-                {autoSpeak ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
+                {autoSpeak ? <Volume2 className="w-4 h-4 sm:w-5 sm:h-5" /> : <VolumeX className="w-4 h-4 sm:w-5 sm:h-5" />}
               </button>
 
               {/* Playback Controls (only visible when audio is playing or paused) */}
@@ -328,15 +338,15 @@ export function ChatWindow({
                    if (isPlaying) pauseSpeaking();
                    else if (lastSpokenResponseRef.current) resumeSpeaking();
                  }}
-                 className="p-2 rounded-xl border bg-emerald-50 text-emerald-600 border-emerald-200 hover:bg-emerald-100 transition-colors"
+                 className="p-1.5 sm:p-2 rounded-lg sm:rounded-xl border bg-emerald-50 text-emerald-600 border-emerald-200 hover:bg-emerald-100 transition-colors"
                  title={isPlaying ? "Pause playback" : "Resume playback"}
                >
                  {isPlaying ? (
-                   <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                   <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                      <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
                    </svg>
                  ) : (
-                   <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                   <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                      <path d="M8 5v14l11-7z" />
                    </svg>
                  )}
@@ -352,18 +362,18 @@ export function ChatWindow({
                   if (ta) ta.style.height = "auto";
                 }}
                 disabled={isSending || !input.trim()}
-                className="bg-black hover:bg-gray-800 disabled:bg-gray-200 disabled:text-gray-400 text-white p-2 rounded-xl transition-colors flex items-center justify-center"
+                className="bg-[#5f559a] hover:bg-[#1b0c53] hover:scale-110 active:scale-95 text-white p-3.5 sm:p-4 rounded-full shadow-2xl shadow-[#5f559a]/30 disabled:scale-100 disabled:bg-[#f3f3f3] disabled:text-[#5f559a]/20 transition-all duration-500 flex items-center justify-center ml-1 sm:ml-2"
                 title="Send message"
               >
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5">
-                  <path d="M12 4L12 20M12 4L5.5 10.5M12 4L18.5 10.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 sm:w-6 sm:h-6">
+                  <path d="M12 4L12 20M12 4L5.5 10.5M12 4L18.5 10.5" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </button>
             </div>
           </div>
           <p className="text-[11px] text-gray-400 mt-2 text-center">{voiceHintText}</p>
           {voiceError && (
-            <p className="text-[11px] text-[#8A8AFF] mt-1 text-center">{voiceError}</p>
+            <p className="text-[11px] text-[#5f559a] mt-1 text-center">{voiceError}</p>
           )}
         </div>
       </div>

@@ -12,29 +12,28 @@ export function MessageBubble({ message }: { message: Chat }) {
   });
 
   return (
-    <div className={`flex w-full mb-6 relative animate-in fade-in slide-in-from-bottom-2 duration-300 ${isUser ? "justify-end" : "justify-start"}`}>
+    <div className={`flex w-full mb-4 sm:mb-8 relative animate-in fade-in slide-in-from-bottom-2 duration-500 ${isUser ? "justify-end pl-6 sm:pl-12" : "justify-start pr-6 sm:pr-12"}`}>
       
       {!isUser && (
-        <div className="w-8 h-8 rounded-full border border-gray-200 bg-gradient-to-br from-[#F8F8FF] to-gray-50 flex items-center justify-center text-sm mr-4 shrink-0 mt-0.5 shadow-sm">
-          🤖
+        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-white shadow-xl shadow-[#2C2A4A]/5 flex items-center justify-center text-base sm:text-lg mr-3 sm:mr-6 shrink-0 mt-1 animate-in zoom-in duration-700">
+          ✨
         </div>
       )}
 
-      <div className={`flex flex-col gap-1 max-w-[85%] md:max-w-[75%] ${isUser ? "items-end" : "items-start"}`}>
+      <div className={`flex flex-col gap-2 max-w-[95%] sm:max-w-[80%] ${isUser ? "items-end" : "items-start"}`}>
         <div
-          className={`px-5 py-3.5 text-[15px] leading-relaxed whitespace-pre-line shadow-sm border ${
+          className={`px-5 sm:px-8 py-3 sm:py-5 text-base sm:text-lg font-medium leading-[1.6] whitespace-pre-line shadow-2xl shadow-[#2C2A4A]/5 relative transition-all ${
             isUser
-              ? "bg-gradient-to-br from-violet-600 to-indigo-600 text-white rounded-2xl rounded-tr-sm border-transparent"
-              : "bg-[#F8F8FF] border-gray-100 text-gray-800 rounded-2xl rounded-tl-sm"
+              ? "bg-[#5f559a] text-white rounded-[1.5rem] sm:rounded-[2rem] rounded-tr-lg sm:rounded-tr-lg"
+              : "bg-white/90 backdrop-blur-3xl text-[#1b0c53] rounded-[1.5rem] sm:rounded-[2rem] rounded-tl-lg sm:rounded-tl-lg"
           }`}
         >
           {message.message}
         </div>
-        <span className="text-[11px] text-gray-400 px-1 mt-0.5 font-medium tracking-wide">
+        <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-[#5f559a]/30 px-4">
           {time}
         </span>
       </div>
-
     </div>
   );
 }

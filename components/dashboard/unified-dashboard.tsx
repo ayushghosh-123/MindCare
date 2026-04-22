@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Calendar } from 'lucide-react';
+import { Calendar, Leaf, Sparkles, Activity as ActivityIcon, Droplets, Moon, Zap, MessageSquare } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { dbHelpers, type HealthEntry } from '@/lib/supabase';
 import { useToast } from '@/components/hooks/use-toast';
@@ -249,43 +250,11 @@ export function UnifiedDashboardToday({ userId, className }: UnifiedDashboardTod
   // Loading skeleton layout that closely matches the actual UI to prevent CLS
   if (loading) {
     return (
-      <div className={cn('space-y-6 animate-pulse', className)}>
-        <Card>
-          <CardContent className="p-6 flex items-center justify-between">
-            <div>
-              <div className="h-6 w-40 bg-slate-200 rounded mb-2" />
-              <div className="h-4 w-60 bg-slate-200 rounded" />
-            </div>
-            <div className="h-16 w-16 bg-slate-200 rounded-full" />
-          </CardContent>
-        </Card>
-        
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2">
-            <Card>
-              <CardHeader>
-                 <div className="h-6 w-32 bg-slate-200 rounded" />
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
-                  <div className="h-14 bg-slate-200 rounded" />
-                  <div className="h-14 bg-slate-200 rounded" />
-                  <div className="h-14 bg-slate-200 rounded" />
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
-                   <div className="h-14 bg-slate-200 rounded" />
-                   <div className="h-14 bg-slate-200 rounded" />
-                   <div className="h-14 bg-slate-200 rounded" />
-                </div>
-                <div className="h-14 bg-slate-200 rounded mb-3" />
-                <div className="h-24 bg-slate-200 rounded mb-3" />
-                <div className="flex gap-3 mt-6">
-                   <div className="h-10 w-28 bg-slate-200 rounded" />
-                   <div className="h-10 w-24 bg-slate-200 rounded" />
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+      <div className={cn('space-y-6 sm:space-y-10 animate-pulse', className)}>
+        <div className="h-24 sm:h-32 bg-[#f3f3f3] rounded-[1.5rem] sm:rounded-[2.5rem]" />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-10">
+          <div className="lg:col-span-2 h-[400px] sm:h-[600px] bg-[#f3f3f3] rounded-[1.5rem] sm:rounded-[2.5rem]" />
+          <div className="h-[300px] sm:h-[400px] bg-[#f3f3f3] rounded-[1.5rem] sm:rounded-[2.5rem]" />
         </div>
       </div>
     );
@@ -321,54 +290,73 @@ export function UnifiedDashboardToday({ userId, className }: UnifiedDashboardTod
   }) : 0;
 
   return (
-    <div className={cn('space-y-6', className)}>
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8 }}
+      className={cn('space-y-10', className)}
+    >
 
       {/* 🚀 CONSOLIDATED HEADER */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card className="md:col-span-3 border-none bg-gradient-to-r from-[#D3D3FF] to-[#E6E6FF] shadow-lg">
-          <CardContent className="p-6 flex items-center justify-between text-slate-800">
-            <div>
-              <h2 className="text-2xl font-bold tracking-tight">Today's Overview</h2>
-              <p className="text-slate-600 flex items-center gap-1 mt-1">
-                <Calendar className="h-4 w-4" /> {todayIsoDate} — Welcome back!
-              </p>
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.2 }}
+        className="bg-white rounded-[2.5rem] shadow-2xl shadow-[#2C2A4A]/5 overflow-hidden"
+      >
+        <div className="flex flex-col md:flex-row items-stretch">
+          <div className="flex-1 p-6 sm:p-12 bg-[#f3f3f3] flex flex-col justify-center relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 sm:w-64 h-32 sm:h-64 bg-[#bdb2ff]/10 blur-[40px] sm:blur-[80px] rounded-full translate-x-1/2 -translate-y-1/2" />
+            <h2 className="font-['Outfit'] text-4xl sm:text-5xl md:text-7xl font-black text-[#1b0c53] tracking-tighter leading-none mb-4 sm:mb-6 relative z-10">
+              Daily Calibration
+            </h2>
+            <div className="flex items-center gap-3 sm:gap-4 text-base sm:text-xl text-[#5f559a]/60 font-medium italic relative z-10">
+              <Calendar className="h-5 w-5 sm:h-6 sm:w-6 text-[#bdb2ff]" />
+              <span className="truncate">{todayIsoDate} — The sanctuary awaits.</span>
             </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-[#D3D3FF] border-2 shadow-sm">
-          <CardContent className="p-4 flex flex-col items-center justify-center h-full">
-            <div className="text-center">
-              <div className="text-3xl font-black text-[#8A8AFF]">{currentScore}</div>
-              <div className="text-[10px] uppercase font-bold text-slate-500 tracking-tighter">Health Score</div>
-            </div>
-            {storedScore !== undefined && storedScore !== currentScore && (
-              <div className="text-xs text-slate-500 text-center mt-1">
-                Saved: {storedScore}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
+          </div>
+          <div className="w-full md:w-96 p-8 sm:p-12 flex flex-col items-center justify-center bg-white border-l border-[#f3f3f3]">
+             <div className="relative group">
+                <div className="absolute inset-0 bg-[#bdb2ff]/20 blur-2xl rounded-full scale-150 group-hover:scale-175 transition-transform duration-1000" />
+                <div className="relative w-32 h-32 sm:w-40 sm:h-40 rounded-full bg-[#f3f3f3] flex flex-col items-center justify-center shadow-inner border border-white">
+                   <div className="text-4xl sm:text-6xl font-black text-[#1b0c53] tracking-tighter font-['Outfit']">{currentScore}</div>
+                   <div className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-[#5f559a]/40 mt-1">Vitality Score</div>
+                </div>
+             </div>
+             {storedScore !== undefined && storedScore !== currentScore && (
+               <p className="text-[10px] font-black text-amber-500 uppercase tracking-widest mt-6 sm:mt-8 animate-pulse flex items-center gap-2">
+                 <Sparkles className="h-3 w-3" />
+                 Unsaved Manifestation
+               </p>
+             )}
+          </div>
+        </div>
+      </motion.div>
 
       {/* Two-column layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
 
         {/* Left: Entry Form */}
-        <div className="lg:col-span-2">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Calendar className="h-5 w-5 text-slate-600" />
-                Today ({todayIsoDate})
-              </CardTitle>
-            </CardHeader>
-
-            <CardContent>
-              {/* Sleep, Exercise, Water */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
-                <div>
-                  <label className="text-xs text-slate-600">Sleep (hours)</label>
+        <div className="lg:col-span-2 space-y-10">
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.4 }}
+            className="bg-white rounded-[2rem] sm:rounded-[3rem] shadow-2xl shadow-[#2C2A4A]/5 p-6 sm:p-12 space-y-10 sm:space-y-16 border border-white/40"
+          >
+            
+            {/* Core Metrics */}
+            <div className="space-y-10">
+              <h3 className="font-['Outfit'] text-xs font-black uppercase tracking-[0.3em] text-[#5f559a]/40 flex items-center gap-4">
+                Metabolic Pulse
+                <div className="flex-1 h-px bg-[#f3f3f3]" />
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <div className="space-y-3 sm:space-y-4">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Moon className="h-4 w-4 text-[#bdb2ff]" />
+                    <label className="text-[10px] font-black text-[#1b0c53] uppercase tracking-widest">Sleep (Hours)</label>
+                  </div>
                   <input
                     type="number"
                     step="0.1"
@@ -376,47 +364,62 @@ export function UnifiedDashboardToday({ userId, className }: UnifiedDashboardTod
                     max="24"
                     value={form.sleep_hours}
                     onChange={onChange('sleep_hours')}
-                    className="w-full p-2 border rounded mt-1"
-                    placeholder="e.g. 7.5"
+                    className="w-full h-16 sm:h-20 px-6 sm:px-8 bg-[#f3f3f3] border-2 border-transparent rounded-[1.5rem] sm:rounded-[2rem] text-xl sm:text-2xl font-black text-[#1b0c53] focus:ring-4 focus:ring-[#bdb2ff]/20 focus:border-[#bdb2ff]/40 transition-all shadow-inner font-['Outfit']"
+                    placeholder="7.5"
                   />
                 </div>
 
-                <div>
-                  <label className="text-xs text-slate-600">Exercise (minutes)</label>
+                <div className="space-y-3 sm:space-y-4">
+                  <div className="flex items-center gap-2 mb-1">
+                    <ActivityIcon className="h-4 w-4 text-[#bdb2ff]" />
+                    <label className="text-[10px] font-black text-[#1b0c53] uppercase tracking-widest">Vigor (Minutes)</label>
+                  </div>
                   <input
                     type="number"
                     min="0"
                     value={form.exercise_minutes}
                     onChange={onChange('exercise_minutes')}
-                    className="w-full p-2 border rounded mt-1"
-                    placeholder="e.g. 30"
+                    className="w-full h-16 sm:h-20 px-6 sm:px-8 bg-[#f3f3f3] border-2 border-transparent rounded-[1.5rem] sm:rounded-[2rem] text-xl sm:text-2xl font-black text-[#1b0c53] focus:ring-4 focus:ring-[#bdb2ff]/20 focus:border-[#bdb2ff]/40 transition-all shadow-inner font-['Outfit']"
+                    placeholder="30"
                   />
                 </div>
 
-                <div>
-                  <label className="text-xs text-slate-600">Water (litres)</label>
+                <div className="space-y-3 sm:space-y-4">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Droplets className="h-4 w-4 text-[#bdb2ff]" />
+                    <label className="text-[10px] font-black text-[#1b0c53] uppercase tracking-widest">Osmosis (Litres)</label>
+                  </div>
                   <input
                     type="number"
                     step="0.1"
                     min="0"
                     value={form.water_intake}
                     onChange={onChange('water_intake')}
-                    className="w-full p-2 border rounded mt-1"
-                    placeholder="e.g. 3.0"
+                    className="w-full h-16 sm:h-20 px-6 sm:px-8 bg-[#f3f3f3] border-2 border-transparent rounded-[1.5rem] sm:rounded-[2rem] text-xl sm:text-2xl font-black text-[#1b0c53] focus:ring-4 focus:ring-[#bdb2ff]/20 focus:border-[#bdb2ff]/40 transition-all shadow-inner font-['Outfit']"
+                    placeholder="3.0"
                   />
                 </div>
               </div>
+            </div>
 
-              {/* Mood, Energy, Stress */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
-                <div>
-                  <label className="text-xs text-slate-600">Mood</label>
+            {/* Emotional Alignment */}
+            <div className="space-y-10">
+              <h3 className="font-['Outfit'] text-xs font-black uppercase tracking-[0.3em] text-[#5f559a]/40 flex items-center gap-4">
+                Emotional Alignment
+                <div className="flex-1 h-px bg-[#f3f3f3]" />
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Sparkles className="h-4 w-4 text-[#bdb2ff]" />
+                    <label className="text-[10px] font-black text-[#1b0c53] uppercase tracking-widest">Mood State</label>
+                  </div>
                   <select
                     value={form.mood}
                     onChange={onChange('mood')}
-                    className="w-full p-2 border rounded mt-1"
+                    className="w-full h-16 sm:h-20 px-6 sm:px-8 bg-[#f3f3f3] border-2 border-transparent rounded-[1.5rem] sm:rounded-[2rem] text-base sm:text-lg font-black text-[#1b0c53] focus:ring-4 focus:ring-[#bdb2ff]/20 focus:border-[#bdb2ff]/40 transition-all shadow-inner appearance-none font-['Outfit']"
                   >
-                    <option value="">Select</option>
+                    <option value="">Choose State</option>
                     <option value="excellent">Excellent</option>
                     <option value="good">Good</option>
                     <option value="neutral">Neutral</option>
@@ -425,133 +428,127 @@ export function UnifiedDashboardToday({ userId, className }: UnifiedDashboardTod
                   </select>
                 </div>
 
-                <div>
-                  <label className="text-xs text-slate-600">Energy (1-10)</label>
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Zap className="h-4 w-4 text-[#bdb2ff]" />
+                    <label className="text-[10px] font-black text-[#1b0c53] uppercase tracking-widest">Energy (1-10)</label>
+                  </div>
                   <input
                     type="number"
                     min="1"
                     max="10"
                     value={form.energy_level}
                     onChange={onChange('energy_level')}
-                    className="w-full p-2 border rounded mt-1"
+                    className="w-full h-16 sm:h-20 px-6 sm:px-8 bg-[#f3f3f3] border-2 border-transparent rounded-[1.5rem] sm:rounded-[2rem] text-xl sm:text-2xl font-black text-[#1b0c53] focus:ring-4 focus:ring-[#bdb2ff]/20 focus:border-[#bdb2ff]/40 transition-all shadow-inner font-['Outfit']"
                     placeholder="7"
                   />
                 </div>
 
-                <div>
-                  <label className="text-xs text-slate-600">Stress (1-10)</label>
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2 mb-1">
+                    <ActivityIcon className="h-4 w-4 text-[#bdb2ff]" />
+                    <label className="text-[10px] font-black text-[#1b0c53] uppercase tracking-widest">Stress (1-10)</label>
+                  </div>
                   <input
                     type="number"
                     min="1"
                     max="10"
                     value={form.stress_level}
                     onChange={onChange('stress_level')}
-                    className="w-full p-2 border rounded mt-1"
+                    className="w-full h-16 sm:h-20 px-6 sm:px-8 bg-[#f3f3f3] border-2 border-transparent rounded-[1.5rem] sm:rounded-[2rem] text-xl sm:text-2xl font-black text-[#1b0c53] focus:ring-4 focus:ring-[#bdb2ff]/20 focus:border-[#bdb2ff]/40 transition-all shadow-inner font-['Outfit']"
                     placeholder="4"
                   />
                 </div>
               </div>
+            </div>
 
-              {/* Daily Meals */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
-                <div>
-                  <label className="text-xs text-slate-600">Breakfast (optional)</label>
-                  <input
-                    type="text"
-                    value={form.breakfast}
-                    onChange={onChange('breakfast')}
-                    className="w-full p-2 border rounded mt-1"
-                    placeholder="e.g. Oatmeal w/ Berries"
-                  />
-                </div>
-                <div>
-                  <label className="text-xs text-slate-600">Lunch (optional)</label>
-                  <input
-                    type="text"
-                    value={form.lunch}
-                    onChange={onChange('lunch')}
-                    className="w-full p-2 border rounded mt-1"
-                    placeholder="e.g. Chicken Caesar Salad"
-                  />
-                </div>
-                <div>
-                  <label className="text-xs text-slate-600">Dinner (optional)</label>
-                  <input
-                    type="text"
-                    value={form.dinner}
-                    onChange={onChange('dinner')}
-                    className="w-full p-2 border rounded mt-1"
-                    placeholder="e.g. Salmon & Rice"
+            {/* Narratives */}
+            <div className="space-y-10">
+              <h3 className="font-['Outfit'] text-xs font-black uppercase tracking-[0.3em] text-[#5f559a]/40 flex items-center gap-4">
+                Daily Narratives
+                <div className="flex-1 h-px bg-[#f3f3f3]" />
+              </h3>
+              <div className="space-y-10">
+                <div className="space-y-3 sm:space-y-4">
+                  <div className="flex items-center gap-2 mb-1">
+                    <MessageSquare className="h-4 w-4 text-[#bdb2ff]" />
+                    <label className="text-[10px] font-black text-[#1b0c53] uppercase tracking-widest">Deep Observations</label>
+                  </div>
+                  <textarea
+                    value={form.notes}
+                    onChange={onChange('notes')}
+                    className="w-full p-6 sm:p-10 bg-[#f3f3f3] border-2 border-transparent rounded-[2rem] sm:rounded-[3rem] text-lg sm:text-xl font-bold text-[#1b0c53] focus:ring-4 focus:ring-[#bdb2ff]/20 focus:border-[#bdb2ff]/40 transition-all shadow-inner min-h-[200px] sm:min-h-[250px] resize-none leading-relaxed"
+                    placeholder="How was your day? Anything to record in the sanctuary?"
                   />
                 </div>
               </div>
+            </div>
 
-              {/* Symptoms & Notes */}
-              <div className="mb-3">
-                <label className="text-xs text-slate-600">Symptoms (optional)</label>
-                <input
-                  type="text"
-                  value={form.symptoms}
-                  onChange={onChange('symptoms')}
-                  className="w-full p-2 border rounded mt-1"
-                  placeholder="e.g. headache, sore throat"
-                />
-              </div>
+            {/* Save Button */}
+            <div className="flex flex-col sm:flex-row items-center gap-8 pt-6">
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={handleSave}
+                disabled={saving}
+                className="w-full sm:w-auto h-24 px-16 bg-[#1b0c53] hover:bg-black text-white rounded-[2rem] transition-all disabled:opacity-50 font-black text-xs uppercase tracking-[0.3em] shadow-3xl shadow-[#1b0c53]/40 active:scale-95"
+              >
+                {todayEntry ? (saving ? 'Synchronizing...' : 'Update Reflection') : (saving ? 'Synchronizing...' : 'Log Reflection')}
+              </motion.button>
 
-              <div className="mb-3">
-                <label className="text-xs text-slate-600">Notes (optional)</label>
-                <textarea
-                  value={form.notes}
-                  onChange={onChange('notes')}
-                  className="w-full p-2 border rounded mt-1 min-h-[80px]"
-                  placeholder="How was your day? Anything to record?"
-                />
-              </div>
-
-              {/* Save Button */}
-              <div className="flex flex-col sm:flex-row items-center sm:justify-start gap-3 mt-6">
-                <button
-                  onClick={handleSave}
-                  disabled={saving}
-                  className="w-full sm:w-auto px-6 py-2.5 bg-gradient-to-r from-[#8A8AFF] to-[#6B6BCC] hover:opacity-90 text-white rounded-lg transition disabled:opacity-50 font-bold shadow-md shadow-[#8A8AFF]/30 border-0"
-                >
-                  {todayEntry ? (saving ? 'Updating...' : 'Update Today') : (saving ? 'Saving...' : 'Save Today')}
-                </button>
-
-                <button
-                  onClick={() => {
-                    setForm({
-                      sleep_hours: '',
-                      exercise_minutes: '',
-                      water_intake: '',
-                      mood: '',
-                      symptoms: '',
-                      notes: '',
-                      energy_level: '',
-                      stress_level: '',
-                      breakfast: '',
-                      lunch: '',
-                      dinner: ''
-                    });
-                  }}
-                  className="w-full sm:w-auto px-6 py-2.5 border border-slate-200 rounded-lg text-slate-700 hover:bg-[#F0F0FF] font-medium"
-                >
-                  Clear
-                </button>
-
-                <div className="sm:ml-auto w-full sm:w-auto text-center sm:text-right text-xs text-slate-500 mt-2 sm:mt-0">
-                  {todayEntry ? 'Entry exists for today' : 'No entry yet'}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+              <button
+                onClick={() => {
+                  setForm({
+                    sleep_hours: '',
+                    exercise_minutes: '',
+                    water_intake: '',
+                    mood: '',
+                    symptoms: '',
+                    notes: '',
+                    energy_level: '',
+                    stress_level: '',
+                    breakfast: '',
+                    lunch: '',
+                    dinner: ''
+                  });
+                }}
+                className="w-full sm:w-auto px-12 h-24 text-[#5f559a] hover:bg-[#f3f3f3] rounded-[2rem] font-black text-xs uppercase tracking-widest transition-all"
+              >
+                Clear Stream
+              </button>
+            </div>
+          </motion.div>
         </div>
 
         {/* Right Column: Community & Feed */}
-        <div className="space-y-6">
-          {/* <CommunityWall /> */}
+        <div className="space-y-10">
+          <motion.div 
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.6 }}
+            className="bg-[#1b0c53] rounded-[3rem] p-12 flex flex-col items-center justify-center text-center space-y-10 shadow-2xl relative overflow-hidden group"
+          >
+             <div className="absolute top-0 right-0 w-32 h-32 bg-[#bdb2ff]/10 blur-[40px] rounded-full translate-x-1/2 -translate-y-1/2" />
+             <div className="w-24 h-24 bg-white/10 rounded-[2rem] flex items-center justify-center shadow-sm relative z-10 group-hover:rotate-6 transition-transform">
+                <Leaf className="h-12 w-12 text-[#bdb2ff]" />
+             </div>
+             <div className="space-y-4 relative z-10">
+                <h4 className="font-['Outfit'] text-2xl font-black text-white tracking-tighter">Sanctuary Insights</h4>
+                <p className="text-base text-white/60 font-medium leading-relaxed italic">
+                  Complete your daily calibration to unlock personalized wellness projections and behavior patterns.
+                </p>
+             </div>
+             <div className="w-full h-px bg-white/10" />
+             <div className="w-full flex justify-between items-center px-4 relative z-10">
+                <div className="text-[10px] font-black uppercase tracking-widest text-white/40">Status</div>
+                <div className="flex items-center gap-2">
+                   <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+                   <span className="text-[10px] font-black uppercase tracking-widest text-white/80">Active</span>
+                </div>
+             </div>
+          </motion.div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

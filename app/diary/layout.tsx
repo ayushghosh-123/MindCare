@@ -23,7 +23,7 @@ function DiarySidebar() {
         user_id: user.id,
         title: 'New Journal',
         description: 'A place for my thoughts',
-        color: '#8A8AFF',
+        color: '#e5deff',
         is_public: false,
       });
       if (error) throw error;
@@ -36,29 +36,29 @@ function DiarySidebar() {
   };
 
   return (
-    <div className="w-[300px] h-screen bg-white border-r border-slate-200 flex flex-col p-6 sticky top-0 overflow-y-auto hidden lg:flex shrink-0">
-      <div className="flex items-center justify-between mb-8">
-        <h2 className="text-xl font-bold text-slate-800">My Journals</h2>
+    <div className="w-[300px] h-[calc(100vh-6rem)] bg-white/40 backdrop-blur-md border-r border-[#c9c4d1]/30 flex flex-col p-8 sticky top-24 overflow-y-auto hidden lg:flex shrink-0 z-30 m-4 rounded-[2rem] shadow-sm">
+      <div className="flex items-center justify-between mb-10">
+        <h2 className="text-3xl font-black text-[#1b0c53] tracking-tighter font-['Outfit']">Journals</h2>
         <button 
           onClick={createJournal}
-          className="p-2 rounded-full hover:bg-slate-100 text-[#8A8AFF] transition-colors"
+          className="p-2 rounded-xl bg-white border border-[#c9c4d1]/30 shadow-sm hover:scale-105 transition-all text-[#5f559a]"
           title="New Journal"
         >
-          <Plus size={20} />
+          <Plus size={20} strokeWidth={2.5} />
         </button>
       </div>
 
-      <div className="flex flex-col gap-[15px] group/journals pb-10">
+      <div className="flex flex-col gap-4 group/journals pb-10">
         {loading && journals.length === 0 ? (
           <div className="flex flex-col gap-4">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-[100px] w-full rounded-[10px] bg-slate-100 animate-pulse" />
+              <div key={i} className="h-[90px] w-full rounded-2xl bg-[#5f559a]/5 border border-[#5f559a]/10 animate-pulse" />
             ))}
           </div>
         ) : journals.length === 0 ? (
-          <div className="text-center py-8 px-4 border-2 border-dashed border-slate-200 rounded-xl">
-             <BookOpen className="mx-auto text-slate-300 mb-2" size={32} />
-             <p className="text-sm text-slate-500 text-center">No journals yet.</p>
+          <div className="text-center py-10 px-4 border-2 border-dashed border-[#c9c4d1] bg-white/50 rounded-2xl">
+             <BookOpen className="mx-auto text-[#5f559a] mb-3 opacity-50" size={32} strokeWidth={1.5} />
+             <p className="text-sm font-semibold text-[#484550]">No journals yet.</p>
           </div>
         ) : (
           journals.map((journal) => (
@@ -66,14 +66,14 @@ function DiarySidebar() {
               key={journal.id}
               onClick={() => setSelectedJournal(journal)}
               className={cn(
-                "flex flex-col items-center justify-center text-center h-[100px] bg-indigo-500 w-full rounded-[10px] text-white cursor-pointer transition-all duration-[400ms] mx-auto group/journal relative overflow-hidden",
-                "group-hover/journals:blur-[10px] group-hover/journals:scale-[0.9] hover:!blur-none hover:!scale-[1.1] shadow-md",
-                selectedJournal?.id === journal.id ? "ring-4 ring-offset-2 ring-slate-200 !blur-none !scale-[1.05]" : ""
+                "flex flex-col items-center justify-center text-center p-6 min-h-[100px] w-full rounded-3xl cursor-pointer transition-all duration-500 mx-auto group/journal relative border border-transparent shadow-sm mb-2",
+                "hover:scale-[1.03] hover:shadow-xl hover:shadow-[#2C2A4A]/5",
+                selectedJournal?.id === journal.id ? "bg-white ring-2 ring-[#5f559a]/20 scale-[1.03] shadow-xl shadow-[#2C2A4A]/5" : "opacity-90"
               )}
-              style={{ backgroundColor: journal.color || '#6366F1' }}
+              style={{ backgroundColor: selectedJournal?.id === journal.id ? undefined : (journal.color || '#e5deff') }}
             >
-              <p className="text-base font-bold px-4 truncate w-full">{journal.title}</p>
-              <p className="text-[0.7em] opacity-90 px-4 truncate w-full">{journal.description || 'Lorem Ipsum'}</p>
+              <p className="text-base font-bold px-4 truncate w-full text-slate-800">{journal.title}</p>
+              <p className="text-xs font-semibold opacity-70 px-4 truncate w-full text-slate-800">{journal.description || 'A quiet place.'}</p>
               
               {/* Delete Button */}
               <button
@@ -81,10 +81,10 @@ function DiarySidebar() {
                   e.stopPropagation();
                   deleteJournal(journal.id);
                 }}
-                className="absolute top-2 right-2 p-1.5 rounded-full bg-black/10 hover:bg-red-500/80 text-white opacity-0 group-hover/journal:opacity-100 transition-all duration-200"
+                className="absolute -top-2 -right-2 p-1.5 rounded-full border border-red-200 bg-white hover:bg-red-500 hover:text-white text-red-500 opacity-0 group-hover/journal:opacity-100 transition-all duration-200 shadow-sm"
                 title="Delete Journal"
               >
-                <Trash2 size={14} />
+                <Trash2 size={14} strokeWidth={2} />
               </button>
             </div>
           ))
@@ -94,8 +94,7 @@ function DiarySidebar() {
   );
 }
 
-// Mobile journal picker that appears below the main navbar on smaller screens. It allows users to quickly switch between journals without needing to open the sidebar. It uses a horizontal scroll layout and highlights the selected journal.
-
+// Mobile journal picker that appears below the main navbar on smaller screens
 function MobileJournalPicker() {
   const { journals, selectedJournal, setSelectedJournal, loading } = useDiary();
 
@@ -103,20 +102,20 @@ function MobileJournalPicker() {
   if (journals.length === 0) return null;
 
   return (
-    <div className="lg:hidden w-full bg-white border-b border-slate-100 overflow-visible">
-      <div className="flex gap-4 p-4 overflow-x-auto no-scrollbar scroll-smooth">
+    <div className="lg:hidden w-full bg-[#f9f9f9] border-b border-[#c9c4d1]/30 overflow-visible relative z-20">
+      <div className="flex gap-4 p-4 overflow-x-auto no-scrollbar scroll-smooth items-center">
         {journals.map((journal) => (
           <div
             key={journal.id}
             onClick={() => setSelectedJournal(journal)}
             className={cn(
-              "flex-shrink-0 flex flex-col items-center justify-center text-center h-[70px] w-[140px] rounded-xl text-white cursor-pointer transition-all duration-300 shadow-sm relative overflow-hidden",
-              selectedJournal?.id === journal.id ? "ring-2 ring-offset-2 ring-slate-200 scale-[1.05]" : "opacity-70 scale-95"
+              "flex-shrink-0 flex flex-col items-center justify-center text-center h-[64px] w-[130px] rounded-2xl cursor-pointer transition-all duration-300 relative border shadow-sm",
+              selectedJournal?.id === journal.id ? "ring-2 ring-offset-2 ring-[#5f559a] scale-[1.02] border-white/50" : "opacity-80 scale-95 border-transparent hover:scale-100 hover:opacity-100"
             )}
-            style={{ backgroundColor: journal.color || '#6366F1' }}
+            style={{ backgroundColor: journal.color || '#e5deff' }}
           >
-            <p className="text-sm font-bold px-2 truncate w-full">{journal.title}</p>
-            <p className="text-[0.6em] opacity-80 px-2 truncate w-full">{journal.description || 'Lorem Ipsum'}</p>
+            <p className="text-sm font-bold text-slate-800 px-2 truncate w-full">{journal.title}</p>
+            <p className="text-[10px] font-semibold text-slate-600 px-2 truncate w-full">{journal.description || 'A quiet place.'}</p>
           </div>
         ))}
       </div>
@@ -124,32 +123,38 @@ function MobileJournalPicker() {
   );
 }
 
-// This component wraps the main layout of the diary section, including the sidebar and main navbar. It also includes a persistent header that contains the page title and a "New Entry" button that is always visible when not in writing mode. The header has a backdrop blur effect to create a sense of depth and separation from the content below. The MobileJournalPicker is included within the header to ensure it remains accessible on smaller screens without taking up additional vertical space.
 function DiaryLayoutContent({ children }: { children: React.ReactNode }) {
   const { isWriting, setIsWriting } = useDiary();
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
+    <div className="flex min-h-screen bg-[#f9f9f9] relative font-sans text-slate-800 pt-24">
+      {/* Subtle background for Serene Sanctuary effect */}
+      <div 
+        className="absolute inset-0 z-[1] opacity-30 pointer-events-none mix-blend-multiply"
+        style={{
+          background: 'radial-gradient(ellipse at top right, rgba(189, 178, 255, 0.2), transparent 50%), radial-gradient(ellipse at bottom left, rgba(229, 222, 255, 0.3), transparent 50%)'
+        }}
+      />
       <DiarySidebar />
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 relative z-10">
           
         {/* Persistent Layout Header */}
-        <div className="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-20 shadow-sm">
-          <div className="container mx-auto px-4 sm:px-6 py-4 max-w-5xl">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="bg-white/70 backdrop-blur-xl border-b border-[#c9c4d1]/30 sticky top-24 z-20 shadow-sm">
+          <div className="container mx-auto px-4 sm:px-6 py-8 max-w-5xl">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
               <div className="flex items-center gap-4">
                 <div>
-                  <h1 className="text-2xl sm:text-3xl font-bold text-slate-800 tracking-tight">My Diary</h1>
-                  <p className="text-sm sm:text-base text-slate-600 font-medium">Write and organize your thoughts</p>
+                  <h1 className="text-3xl sm:text-4xl font-bold text-[#5f559a] tracking-tight" style={{ fontFamily: 'var(--font-heading)' }}>My Diary</h1>
+                  <p className="text-sm sm:text-base text-[#484550] font-medium mt-1">A private space for your thoughts</p>
                 </div>
               </div>
               {!isWriting && (
-                <Button 
+                <button 
                   onClick={() => setIsWriting(true)} 
-                  className="bg-[#6366F1] hover:bg-[#4F46E5] text-white shadow-lg hover:shadow-[0_0_20px_rgba(99,102,241,0.6)] transition-all duration-300 font-bold"
+                  className="bg-[#5f559a] text-white px-6 py-2.5 rounded-full font-semibold flex items-center shadow-lg shadow-[#5f559a]/20 hover:scale-105 hover:bg-[#4b4185] transition-all"
                 >
-                  <Plus className="h-5 w-5 mr-2" /> New Entry
-                </Button>
+                  <Plus className="h-5 w-5 mr-2 stroke-[2.5]" /> New Entry
+                </button>
               )}
             </div>
           </div>
@@ -158,7 +163,7 @@ function DiaryLayoutContent({ children }: { children: React.ReactNode }) {
           <MobileJournalPicker />
         </div>
 
-        <main className="flex-1 min-w-0 overflow-y-auto">
+        <main className="flex-1 min-w-0 overflow-y-auto pt-4">
           {children}
         </main>
       </div>

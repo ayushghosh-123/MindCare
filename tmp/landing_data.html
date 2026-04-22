@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MindCare Sanctuary | Data-Driven Serenity</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;family=Outfit:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-low": "#f3f3f3",
+                    "inverse-surface": "#2f3131",
+                    "surface-container-high": "#e8e8e8",
+                    "on-tertiary-fixed": "#1a1837",
+                    "secondary-container": "#e2dbfe",
+                    "surface-container-highest": "#e2e2e2",
+                    "surface-bright": "#f9f9f9",
+                    "outline-variant": "#c9c4d1",
+                    "inverse-primary": "#c8bfff",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-fixed-variant": "#454365",
+                    "on-primary": "#ffffff",
+                    "on-secondary-fixed": "#1c1832",
+                    "on-background": "#1a1c1c",
+                    "surface-variant": "#e2e2e2",
+                    "error-container": "#ffdad6",
+                    "error": "#ba1a1a",
+                    "tertiary": "#5d5b7e",
+                    "on-secondary": "#ffffff",
+                    "tertiary-fixed": "#e3dfff",
+                    "on-surface-variant": "#484550",
+                    "on-secondary-fixed-variant": "#47435f",
+                    "tertiary-fixed-dim": "#c6c2eb",
+                    "secondary-fixed": "#e5deff",
+                    "primary-fixed-dim": "#c8bfff",
+                    "outline": "#797581",
+                    "secondary": "#5f5b78",
+                    "background": "#f9f9f9",
+                    "on-tertiary": "#ffffff",
+                    "on-primary-fixed": "#1b0c53",
+                    "on-error-container": "#93000a",
+                    "surface-tint": "#5f559a",
+                    "surface-dim": "#dadada",
+                    "on-primary-fixed-variant": "#473d81",
+                    "on-surface": "#1a1c1c",
+                    "inverse-on-surface": "#f0f1f1",
+                    "surface-container": "#eeeeee",
+                    "surface": "#f9f9f9",
+                    "on-tertiary-container": "#494769",
+                    "on-primary-container": "#4b4185",
+                    "on-error": "#ffffff",
+                    "tertiary-container": "#bbb7df",
+                    "primary-container": "#bdb2ff",
+                    "on-secondary-container": "#645f7c",
+                    "primary-fixed": "#e5deff",
+                    "secondary-fixed-dim": "#c9c2e4",
+                    "primary": "#5f559a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "spacing": {},
+            "fontFamily": {
+                    "headline": ["Plus Jakarta Sans"],
+                    "body": ["Inter"],
+                    "label": ["Inter"],
+                    "outfit": ["Outfit"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #f9f9f9; color: #1a1c1c; }
+        .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-outfit { font-family: 'Outfit', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
+        .glass-card { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(201, 196, 209, 0.15); }
+        .ambient-shadow { shadow: 0px 20px 40px rgba(44, 42, 74, 0.06); }
+        .laptop-frame {
+            position: relative;
+            background: #1a1a1a;
+            border-radius: 1.5rem;
+            padding: 0.75rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        .laptop-screen {
+            background: white;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            aspect-ratio: 16 / 10;
+        }
+        .doodle-accent { position: relative; }
+        .doodle-accent::after {
+            content: ""; position: absolute; bottom: -4px; left: 0; width: 100%; height: 8px;
+            background: url("data:image/svg+xml,%3Csvg width='100' height='10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 5 Q 25 0, 50 5 T 100 5' stroke='%23bdb2ff' stroke-width='2' fill='none'/%3E%3C/svg%3E") repeat-x;
+            opacity: 0.6; z-index: -1;
+        }
+    </style>
+</head>
+<body class="bg-surface selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-white/70 backdrop-blur-xl shadow-[0px_20px_40px_rgba(44,42,74,0.06)]">
+<nav class="flex justify-between items-center px-8 py-4 max-w-7xl mx-auto">
+<div class="text-2xl font-bold tracking-tighter text-[#5f559a]">MindCare</div>
+<div class="hidden md:flex items-center gap-10">
+<a class="font-headline text-sm tracking-tight text-[#5f559a] font-semibold border-b-2 border-[#5f559a] pb-1" href="#">Features</a>
+<a class="font-headline text-sm tracking-tight text-slate-600 hover:text-[#5f559a] transition-all duration-300" href="#">How it Works</a>
+<a class="font-headline text-sm tracking-tight text-slate-600 hover:text-[#5f559a] transition-all duration-300" href="#">Benefits</a>
+<a class="font-headline text-sm tracking-tight text-slate-600 hover:text-[#5f559a] transition-all duration-300" href="#">Science</a>
+</div>
+<button class="bg-primary text-on-primary px-6 py-2.5 rounded-full font-headline font-semibold text-sm scale-95 duration-200 ease-in-out hover:scale-100 shadow-md">
+            Get Started
+        </button>
+</nav>
+</header>
+<main>
+<!-- Hero Section -->
+<section class="relative pt-40 pb-24 px-8 overflow-hidden bg-gradient-to-b from-white to-surface">
+<div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16 relative z-10">
+<div class="lg:w-1/2 text-left">
+<span class="text-primary font-headline font-semibold tracking-widest uppercase text-xs mb-4 block">Advanced Mental Wellness</span>
+<h1 class="font-headline text-6xl md:text-7xl font-extrabold tracking-tighter text-on-surface leading-[1.1] mb-6">
+                    Data-Driven <br/><span class="doodle-accent text-primary">Serenity.</span>
+</h1>
+<p class="text-on-surface-variant text-xl font-light leading-relaxed mb-10 max-w-xl">
+                    Experience a mental health sanctuary that understands you over time. Context-aware AI insights meet evidence-based clinical techniques for profound self-understanding.
+                </p>
+<div class="flex flex-wrap gap-4">
+<button class="bg-primary text-on-primary px-8 py-4 rounded-full font-headline font-bold text-lg hover:opacity-90 transition-all shadow-xl">
+                        Explore Insights
+                    </button>
+<button class="flex items-center gap-3 px-8 py-4 rounded-full font-headline font-bold text-lg text-primary hover:bg-primary-fixed-dim/20 transition-all">
+<span class="material-symbols-outlined">analytics</span>
+                        See the science
+                    </button>
+</div>
+<!-- Snapshot of Insights integrated here as suggested -->
+<div class="mt-12 flex items-center gap-10 py-6 border-t border-outline-variant/30">
+<div>
+<span class="block text-3xl font-black font-outfit text-primary">82%</span>
+<span class="text-[10px] font-bold text-outline uppercase tracking-widest">Accuracy Rating</span>
+</div>
+<div class="w-px h-10 bg-outline-variant/30"></div>
+<div>
+<span class="block text-3xl font-black font-outfit text-on-surface">14</span>
+<span class="text-[10px] font-bold text-outline uppercase tracking-widest">Insights Reviewed</span>
+</div>
+</div>
+</div>
+<!-- Laptop Mockup Section -->
+<div class="lg:w-1/2 w-full">
+<div class="laptop-frame">
+<div class="laptop-screen">
+<img alt="MindCare Analytics Dashboard Mockup" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCcDTQkUWRQt79tOprE4Mda5bZeMBITLLUrgQKebo5ilWeOqrtjeYOizDpLFqZLkemR1l0f1orX9ZVBQofXlEU-5SXSVdQNP3NbD-PPGRWB0OW1ZNsi5XP5X3oxpv1_74WRw7J1FOKMl9WVBfugqL7tNplcNV3KHO5zSHonX8ddCXQ3ni0xPfs9zUHyrd_pyvb0Zn506jPZ9m_uEy2XAjZ_9z-g2o3qgHAGqQoPWIHNUDno8yET3sFwCm837XygMJHgnZLNGE0RlHk"/>
+</div>
+</div>
+<!-- Floating Decorative Elements -->
+<div class="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-primary/5 blur-[120px] rounded-full"></div>
+</div>
+</div>
+</section>
+<!-- Features Section Restyled per PRD/Docs -->
+<section class="py-24 px-8 bg-surface-container-low">
+<div class="max-w-7xl mx-auto">
+<div class="mb-16">
+<h2 class="font-headline text-4xl font-bold tracking-tight text-on-surface mb-4">The Context Gap, Solved.</h2>
+<p class="text-on-surface-variant text-lg">Beyond simple logging. Active intelligence for your emotional landscape.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+<!-- LangGraph Memory Feature -->
+<div class="md:col-span-7 glass-card rounded-2xl p-10 flex flex-col justify-between shadow-sm group">
+<div>
+<div class="w-14 h-14 bg-primary-container rounded-full flex items-center justify-center text-primary mb-8 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl">psychology_alt</span>
+</div>
+<h3 class="font-headline text-3xl font-bold mb-4 text-on-surface">LangGraph-Powered Memory</h3>
+<p class="text-on-surface-variant text-lg leading-relaxed max-w-md">Our AI assistant retains memory across sessions, asking deep, personalized follow-up questions that recognize your behavioral patterns over weeks and months.</p>
+</div>
+<div class="mt-12 p-6 rounded-xl bg-surface-container-high/50 border border-white">
+<div class="flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-primary text-sm">auto_awesome</span>
+<span class="text-xs font-bold text-primary uppercase tracking-widest">Active Pattern Found</span>
+</div>
+<p class="text-sm italic text-on-surface-variant">"You often seek solitude to recalibrate your creative energy after social transitions..."</p>
+</div>
+</div>
+<!-- Human-in-the-loop Feature -->
+<div class="md:col-span-5 bg-[#5f559a] text-on-primary rounded-2xl p-10 flex flex-col shadow-xl">
+<div class="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center text-white mb-8">
+<span class="material-symbols-outlined text-3xl">fact_check</span>
+</div>
+<h3 class="font-headline text-3xl font-bold mb-4">Human-in-the-Loop Validation</h3>
+<p class="opacity-80 text-lg leading-relaxed mb-8">You are always in control. Review, edit, or reject AI-generated insights to ensure they resonate with your lived experience.</p>
+<div class="mt-auto">
+<div class="flex gap-2">
+<div class="px-4 py-2 bg-white/10 rounded-full text-xs font-bold border border-white/20">82% Accuracy</div>
+<div class="px-4 py-2 bg-white/10 rounded-full text-xs font-bold border border-white/20">HIPAA Compliant</div>
+</div>
+</div>
+</div>
+<!-- Smart Journaling Bento Item -->
+<div class="md:col-span-12 glass-card rounded-2xl p-10 flex flex-col md:flex-row items-center gap-12">
+<div class="md:w-1/2">
+<div class="w-14 h-14 bg-secondary-container rounded-full flex items-center justify-center text-secondary mb-8">
+<span class="material-symbols-outlined text-3xl">edit_square</span>
+</div>
+<h3 class="font-headline text-3xl font-bold mb-4 text-on-surface">Rich Smart Journaling</h3>
+<p class="text-on-surface-variant text-lg leading-relaxed">A distraction-free writing environment that automatically tracks mood tags, word count, and metadata while you reflect on your day.</p>
+</div>
+<div class="md:w-1/2 w-full grid grid-cols-2 gap-4">
+<div class="h-32 bg-primary-container/20 rounded-xl flex flex-col items-center justify-center border border-primary/10">
+<span class="text-primary font-headline font-bold text-2xl">Daily</span>
+<span class="text-primary/60 text-[10px] uppercase font-bold tracking-widest mt-1">Reflections</span>
+</div>
+<div class="h-32 bg-secondary-container/20 rounded-xl flex flex-col items-center justify-center border border-secondary/10">
+<span class="text-secondary font-headline font-bold text-2xl">Mood</span>
+<span class="text-secondary/60 text-[10px] uppercase font-bold tracking-widest mt-1">Metadata Tracking</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Updated Process Section -->
+<section class="py-24 px-8 overflow-hidden">
+<div class="max-w-7xl mx-auto">
+<div class="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
+<div class="max-w-xl">
+<h2 class="font-headline text-5xl font-bold tracking-tight text-on-surface mb-6">The Path to <br/>Self-Understanding.</h2>
+<p class="text-on-surface-variant text-xl font-light">From data-logging to active discovery in four simple stages.</p>
+</div>
+<div class="text-primary text-9xl font-headline font-black opacity-5 select-none leading-none">RITUAL</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-12 relative">
+<!-- Step 1 -->
+<div class="relative group">
+<div class="text-primary-container font-headline font-bold text-7xl absolute -top-10 -left-6 opacity-40 group-hover:opacity-100 transition-opacity">01</div>
+<div class="relative pt-12">
+<h4 class="font-headline text-xl font-bold mb-4 text-on-surface uppercase tracking-tight">Smart Entry</h4>
+<p class="text-on-surface-variant text-sm leading-relaxed">Input your thoughts. Our rich-text journal captures the nuance of your day automatically.</p>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="relative group">
+<div class="text-primary-container font-headline font-bold text-7xl absolute -top-10 -left-6 opacity-40 group-hover:opacity-100 transition-opacity">02</div>
+<div class="relative pt-12">
+<h4 class="font-headline text-xl font-bold mb-4 text-on-surface uppercase tracking-tight">AI Engagement</h4>
+<p class="text-on-surface-variant text-sm leading-relaxed">Chat with LangGraph memory-enabled assistant for deep, context-aware follow-up prompts.</p>
+</div>
+</div>
+<!-- Step 3 -->
+<div class="relative group">
+<div class="text-primary-container font-headline font-bold text-7xl absolute -top-10 -left-6 opacity-40 group-hover:opacity-100 transition-opacity">03</div>
+<div class="relative pt-12">
+<h4 class="font-headline text-xl font-bold mb-4 text-on-surface uppercase tracking-tight">Review Analytics</h4>
+<p class="text-on-surface-variant text-sm leading-relaxed">Visualize long-term mood trends and behavioral insights via your personal dashboard.</p>
+</div>
+</div>
+<!-- Step 4 -->
+<div class="relative group">
+<div class="text-primary-container font-headline font-bold text-7xl absolute -top-10 -left-6 opacity-40 group-hover:opacity-100 transition-opacity">04</div>
+<div class="relative pt-12">
+<h4 class="font-headline text-xl font-bold mb-4 text-on-surface uppercase tracking-tight">Human Validation</h4>
+<p class="text-on-surface-variant text-sm leading-relaxed">Approve or edit AI insights to lock in patterns that genuinely help you grow.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Science & Security (Preserved Style) -->
+<section class="py-24 px-8 bg-surface-container-high/30">
+<div class="max-w-5xl mx-auto glass-card rounded-3xl p-12 md:p-20 text-center shadow-lg border border-white/40">
+<div class="flex justify-center gap-4 mb-8">
+<div class="bg-primary-fixed-dim/30 px-4 py-1 rounded-full text-primary font-headline text-xs font-bold uppercase tracking-widest">AI Methodology</div>
+<div class="bg-primary-fixed-dim/30 px-4 py-1 rounded-full text-primary font-headline text-xs font-bold uppercase tracking-widest">HIPAA Compliant</div>
+</div>
+<h2 class="font-headline text-4xl font-bold mb-8 text-on-surface">Evidence-Based, <br/>Encryption-Locked.</h2>
+<p class="text-on-surface-variant text-lg leading-relaxed max-w-2xl mx-auto mb-12">
+                MindCare combines state-of-the-art LLMs fine-tuned for empathy with robust end-to-end encryption. Your sanctuary is secure, private, and solely yours.
+            </p>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-8 grayscale opacity-50">
+<div class="flex items-center justify-center font-headline font-bold text-xl">SECURE</div>
+<div class="flex items-center justify-center font-headline font-bold text-xl">PRIVATE</div>
+<div class="flex items-center justify-center font-headline font-bold text-xl">ANONYMOUS</div>
+<div class="flex items-center justify-center font-headline font-bold text-xl">CLINICAL</div>
+</div>
+</div>
+</section>
+<!-- Testimonials (Preserved Content) -->
+<section class="py-24 px-8">
+<div class="max-w-7xl mx-auto">
+<div class="text-center mb-16">
+<h2 class="font-headline text-4xl font-bold text-on-surface mb-4">Voices of Peace</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Testimonial 1 -->
+<div class="bg-white p-8 rounded-2xl shadow-[0px_20px_40px_rgba(44,42,74,0.06)] border border-surface-container">
+<p class="text-on-surface-variant italic mb-8">"It doesn't feel like an app. It feels like a space where I'm finally understood without judgment."</p>
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-slate-200 overflow-hidden">
+<img data-alt="User avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCoIdyj8M4VSfUzsAcQTr-t8ry1AsMRSzqGbczyDverbc5OTQxpv9bQ5b3XvmTrdnwBSzD_Qj-WfuoKFtfOPfSOFpq4oSEThyJLq1wtd9sFgl3gVs77M3wo26iWOefQByO2gM5ng3wopegW8iBsePApwX7B1BGj7dLBpSK8K-iKvnrGMa705R7xorlf_rQB5WOCPNIetfB2jv3D1NAqyTEOIS-7PBEKU5ljD1pVFnjWF4YsCbzIRGmR-rbt6xm6WGtEmdq24RhxT8"/>
+</div>
+<div>
+<h5 class="font-bold text-on-surface text-sm">Elena R.</h5>
+<p class="text-xs text-on-surface-variant">Daily user for 6 months</p>
+</div>
+</div>
+</div>
+<!-- Testimonial 2 -->
+<div class="bg-white p-8 rounded-2xl shadow-[0px_20px_40px_rgba(44,42,74,0.06)] border border-surface-container transform md:-translate-y-4">
+<p class="text-on-surface-variant italic mb-8">"The journaling prompts are spooky-accurate. It helped me realize patterns I've had for years."</p>
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-slate-200 overflow-hidden">
+<img data-alt="User avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtA0mM_4vgyq2MjwJ-FVVEBDFilF6QGiII-5p4ExV-OUgqWSouKcbXVDs_oF2qdFmYfIH2YiQtHzN05y3oFioAOftHl9seCVH0QvWRykWrfz5ERAFAif1bdr8oJbpZSX_Tdpra7IUsVKq1d_i9DCAQST2z7IJzWMZ5hNiaVuST_eLJoV0CcbEig4l0U8FNGx96lY8CkeKwwPtGmxwrYp8IWcPEQoUqMtnJJdK8RQ7O75oDPIODmQVQYrNZHga1hIDOj63b_mJSkIs"/>
+</div>
+<div>
+<h5 class="font-bold text-on-surface text-sm">Marcus T.</h5>
+<p class="text-xs text-on-surface-variant">Creative Director</p>
+</div>
+</div>
+</div>
+<!-- Testimonial 3 -->
+<div class="bg-white p-8 rounded-2xl shadow-[0px_20px_40px_rgba(44,42,74,0.06)] border border-surface-container">
+<p class="text-on-surface-variant italic mb-8">"Finally, a mental health tool that doesn't look like a hospital. It's beautiful and therapeutic."</p>
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-slate-200 overflow-hidden">
+<img data-alt="User avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfUvduS7MANaG4-szC1t30EIvREPQ15D3xQyo_K_B2wLIaaUy5J5OBpqd2V6FwEr4rlrGdBnArC43dZHPT8FszAc97yDZuS5DsVIUMmtyLOc9aUOmorKbeojmgJ4ZFGeaH_6bLiFjjhUVds7Kby_srKTL6hYulSuauxGr8VyJLZeFiUSPajiBLAugRhmd8iEW2JR8N3cG1eErTp5akjIt3EGo-hbCvpVu3qmwAIbhr0X9KZipEOOO1DQqekM3IOPC5J7hmY-hUpv4"/>
+</div>
+<div>
+<h5 class="font-bold text-on-surface text-sm">Sarah W.</h5>
+<p class="text-xs text-on-surface-variant">Wellness Coach</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Final CTA -->
+<section class="py-24 px-8 mb-20">
+<div class="max-w-7xl mx-auto bg-[#bdb2ff]/20 rounded-[3rem] p-16 md:p-32 text-center relative overflow-hidden">
+<div class="relative z-10">
+<h2 class="font-headline text-5xl md:text-7xl font-bold text-primary mb-8 leading-tight">Begin your <br/>insight ritual.</h2>
+<p class="text-on-primary-container text-xl md:text-2xl font-light mb-12 max-w-xl mx-auto">Discover the hidden patterns of your emotional landscape today.</p>
+<button class="bg-primary text-on-primary px-12 py-5 rounded-full font-headline font-bold text-xl shadow-2xl hover:scale-105 transition-transform">
+                    Start Free Trial
+                </button>
+</div>
+<div class="absolute -top-20 -right-20 w-80 h-80 bg-primary/10 rounded-full blur-3xl"></div>
+<div class="absolute -bottom-20 -left-20 w-80 h-80 bg-secondary/10 rounded-full blur-3xl"></div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-12 bg-[#f3f3f3] mt-20 tonal-shift-bg">
+<div class="flex flex-col md:flex-row justify-between items-center px-12 max-w-7xl mx-auto gap-8">
+<div class="text-lg font-bold text-[#5f559a]">MindCare</div>
+<div class="flex flex-wrap justify-center gap-8">
+<a class="font-headline text-xs uppercase tracking-widest text-slate-500 hover:text-[#5f559a] transition-colors opacity-80 hover:opacity-100" href="#">Privacy Policy</a>
+<a class="font-headline text-xs uppercase tracking-widest text-slate-500 hover:text-[#5f559a] transition-colors opacity-80 hover:opacity-100" href="#">Terms of Service</a>
+<a class="font-headline text-xs uppercase tracking-widest text-slate-500 hover:text-[#5f559a] transition-colors opacity-80 hover:opacity-100" href="#">Contact Us</a>
+<a class="font-headline text-xs uppercase tracking-widest text-slate-500 hover:text-[#5f559a] transition-colors opacity-80 hover:opacity-100" href="#">Press Kit</a>
+</div>
+<div class="font-headline text-xs uppercase tracking-widest text-slate-500">© 2024 MindCare Sanctuary. Crafted for serenity.</div>
+</div>
+</footer>
+</body></html>

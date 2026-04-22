@@ -13,7 +13,7 @@ export function LoadingSkeleton() {
         <div className="dot-spinner__dot" />
         <div className="dot-spinner__dot" />
       </div>
-      <p className="text-[#8A8AFF] font-semibold tracking-wide animate-pulse">Loading MindCare...</p>
+      <p className="text-[#5f559a] font-semibold tracking-wide animate-pulse">Loading MindCare...</p>
     </div>
   );
 }

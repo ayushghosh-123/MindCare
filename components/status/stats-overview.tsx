@@ -3,6 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Moon, Droplets, Activity, TrendingUp } from 'lucide-react';
 import type { HealthEntry } from '@/lib/supabase';
+import { cn } from '@/lib/utils';
 
 interface StatsOverviewProps {
   entries: HealthEntry[];
@@ -53,30 +54,42 @@ export function StatsOverview({ entries }: StatsOverviewProps) {
       title: 'Total Entries',
       value: totalEntries,
       icon: TrendingUp,
-      color: 'text-[#8A8AFF]',
-      bgColor: 'bg-[#D3D3FF]/10',
+      color: 'text-[#5f559a]',
+      bgColor: 'bg-[#e5deff]/10',
     },
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-      {stats.map((stat) => {
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+      {stats.map((stat, idx) => {
         const Icon = stat.icon;
+        const isPrimary = stat.title === 'Total Entries';
+
         return (
-          <Card key={stat.title} className="hover:shadow-md transition-shadow">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-slate-600">
+          <div key={stat.title} className="relative p-10 bg-white rounded-[2rem] shadow-xl shadow-[#2C2A4A]/5 hover:shadow-2xl transition-all duration-700 transform hover:-translate-y-2 overflow-hidden group">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-[#f3f3f3] rounded-bl-[4rem] -mr-8 -mt-8 transition-all group-hover:scale-110" />
+            
+            <div className="flex items-center justify-between mb-8 relative z-10">
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#5f559a]/40">
                 {stat.title}
-              </CardTitle>
-              <div className={`${stat.bgColor} p-2 rounded-lg`}>
-                <Icon className={`h-4 w-4 ${stat.color}`} />
+              </span>
+              <div className={cn(
+                "p-4 rounded-2xl shadow-sm transition-all group-hover:rotate-12",
+                isPrimary ? "bg-[#1b0c53] text-white" : "bg-[#f3f3f3] text-[#5f559a]"
+              )}>
+                <Icon className="w-6 h-6 stroke-[2.5]" />
               </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-xl sm:text-2xl font-bold text-slate-800">{stat.value}</div>
-              <p className="text-xs text-slate-500 mt-1">Last 7 days average</p>
-            </CardContent>
-          </Card>
+            </div>
+            
+            <div className="relative z-10">
+              <div className="text-4xl font-black text-[#1b0c53] tracking-tighter">
+                {stat.value}
+              </div>
+              <p className="text-[10px] font-black text-[#5f559a]/30 mt-4 uppercase tracking-widest italic">
+                {isPrimary ? 'Celestial Record' : 'Recent Cycle'}
+              </p>
+            </div>
+          </div>
         );
       })}
     </div>
