@@ -58,7 +58,7 @@ export function MainNavbar() {
           {/* User / Mobile Menu */}
           <div className="flex items-center gap-3 sm:gap-6 pl-3 sm:pl-6 border-l border-[#f3f3f3]">
             <div className="scale-100 sm:scale-110">
-              <UserButton afterSignOutUrl="/" />
+              <UserButton />
             </div>
             <button 
               className="md:hidden p-2 text-[#5f559a] hover:bg-[#f3f3f3] rounded-xl transition-colors"

@@ -21,11 +21,11 @@ export function LandingNavbar() {
         <div className="flex items-center justify-between px-6 sm:px-10 py-3 sm:py-4 bg-white/95 backdrop-blur-3xl shadow-[0px_25px_60px_-15px_rgba(44,42,74,0.12)] rounded-[1.5rem] sm:rounded-full border border-white/60">
           
           {/* Logo / Brand */}
-          <Link href="/" className="group flex items-center gap-2 sm:gap-3">
+          <Link href="/" className="group flex items-center gap-2 sm:gap-3 shrink-0">
             <div className="w-8 h-8 sm:w-10 sm:h-10 bg-[#bdb2ff] rounded-xl flex items-center justify-center text-white shadow-xl shadow-[#bdb2ff]/30 group-hover:rotate-6 transition-transform">
               <span className="font-['Outfit'] font-black text-lg sm:text-2xl">M</span>
             </div>
-            <span className="font-['Outfit'] font-black text-lg sm:text-2xl text-[#1b0c53] tracking-tighter">mindcare</span>
+            <span className="font-['Outfit'] font-black text-base sm:text-2xl text-[#1b0c53] tracking-tighter">mindcare</span>
           </Link>
 
           {/* Desktop Nav Items */}
@@ -42,23 +42,23 @@ export function LandingNavbar() {
           </div>
 
           {/* User / Action Buttons */}
-          <div className="flex items-center gap-3 sm:gap-6 pl-3 sm:pl-6 border-l border-[#f3f3f3]">
+          <div className="flex items-center gap-2 sm:gap-6 sm:pl-6 sm:border-l border-[#f3f3f3]">
             {user ? (
               <div className="flex items-center gap-3 sm:gap-6">
                 <Link href="/diary" className="hidden sm:block">
                   <Button className="rounded-2xl px-6 bg-[#5f559a] text-white font-bold hover:bg-[#1b0c53] transition-all shadow-lg shadow-[#5f559a]/20">Enter Sanctuary</Button>
                 </Link>
-                <div className="scale-100 sm:scale-110">
-                  <UserButton afterSignOutUrl="/" />
+                <div className="scale-90 sm:scale-110">
+                  <UserButton />
                 </div>
               </div>
             ) : (
-              <div className="flex items-center gap-2 sm:gap-4">
-                <Link href="/sign-in">
+              <div className="flex items-center gap-1 sm:gap-4">
+                <Link href="/sign-in" className="hidden md:block">
                   <Button variant="ghost" className="rounded-full font-black text-[10px] sm:text-xs uppercase tracking-widest text-[#5f559a] hover:bg-[#bdb2ff]/10 px-4">Sign In</Button>
                 </Link>
                 <Link href="/sign-up">
-                  <Button className="rounded-full px-5 sm:px-8 h-10 sm:h-12 bg-[#1b0c53] hover:bg-black text-white font-black text-[10px] sm:text-xs uppercase tracking-widest shadow-xl shadow-[#1b0c53]/20 hover:scale-105 active:scale-95 transition-all">Get Started</Button>
+                  <Button className="rounded-full px-4 sm:px-8 h-9 sm:h-12 bg-[#1b0c53] hover:bg-black text-white font-black text-[9px] sm:text-xs uppercase tracking-widest shadow-xl shadow-[#1b0c53]/20 hover:scale-105 active:scale-95 transition-all">Get Started</Button>
                 </Link>
               </div>
             )}
@@ -86,6 +86,11 @@ export function LandingNavbar() {
                 {item.name}
               </a>
             ))}
+            {!user && (
+              <Link href="/sign-in" onClick={() => setIsMenuOpen(false)}>
+                <Button variant="ghost" className="w-full rounded-xl font-bold text-[#5f559a] h-12">Sign In</Button>
+              </Link>
+            )}
             {user && (
               <Link href="/diary" onClick={() => setIsMenuOpen(false)}>
                 <Button className="w-full rounded-xl bg-[#5f559a] text-white font-bold h-12">Enter Sanctuary</Button>
