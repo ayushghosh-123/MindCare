@@ -303,7 +303,7 @@ export function UserProfile({ entries, userProfile: dbUserProfile, onProfileUpda
               ) : (
                 <>
                   <Edit className="h-4 w-4 mr-2" />
-                  Edit Sanctuary
+                  Edit Yourself
                 </>
               )}
             </Button>

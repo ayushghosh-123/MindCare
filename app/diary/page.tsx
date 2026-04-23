@@ -370,7 +370,6 @@ export default function DiaryPage() {
                 {sortedDates.map((date, i) => (
                   <div key={date} className="space-y-8">
                     <div className="flex items-center gap-3 sm:gap-5 mb-4 sm:mb-6 pl-2 sm:pl-4">
-                       <span className="hidden sm:block text-xs font-black text-[#5f559a]/40 uppercase tracking-[0.4em] transform -rotate-90 origin-left translate-y-8 select-none">Temporal Marker</span>
                        <h3 className="text-xl sm:text-2xl font-black text-[#1b0c53] tracking-tighter bg-[#bdb2ff]/20 px-6 sm:px-8 py-2 sm:py-3 rounded-full shadow-sm">{format(new Date(date), 'MMMM d, yyyy')}</h3>
                     </div>
                     <div className="grid grid-cols-1 gap-8">

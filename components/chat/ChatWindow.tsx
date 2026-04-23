@@ -145,16 +145,18 @@ export function ChatWindow({
               <p className="text-sm text-gray-400 animate-pulse">Loading conversation…</p>
             </div>
           ) : messages.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-[40dvh] sm:h-[50dvh] gap-4 sm:gap-6 text-center animate-in fade-in zoom-in duration-1000">
-              <div className="w-20 h-20 sm:w-24 sm:h-24 bg-white rounded-full shadow-2xl flex items-center justify-center relative">
-                <span className="text-3xl sm:text-4xl">🕊️</span>
-                <div className="absolute inset-0 bg-[#bdb2ff] rounded-full animate-ping opacity-10"></div>
+            <div className="flex flex-col items-center justify-center h-[50dvh] gap-8 text-center animate-in fade-in zoom-in duration-1000">
+              <div className="relative group">
+                <div className="absolute inset-0 bg-gradient-to-tr from-[#bdb2ff]/40 to-[#d0ccff]/40 blur-3xl rounded-full group-hover:scale-150 transition-transform duration-1000" />
+                <div className="relative w-28 h-28 sm:w-36 sm:h-36 bg-white rounded-full shadow-2xl flex items-center justify-center border border-white">
+                  <span className="text-4xl sm:text-6xl animate-bounce duration-[3000ms]">🕊️</span>
+                </div>
               </div>
-              <div className="px-4">
-                <h3 className="text-2xl sm:text-4xl font-black text-[#1b0c53] tracking-tighter font-['Plus_Jakarta_Sans'] leading-tight mb-2 sm:mb-4">
-                  Welcome to MindCare.
+              <div className="px-4 space-y-4">
+                <h3 className="text-4xl sm:text-6xl font-black text-[#1b0c53] tracking-tighter font-['Outfit'] leading-none">
+                  MindCare <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#1b0c53] to-[#5f559a]/60">Sanctuary</span>
                 </h3>
-                <p className="text-base sm:text-xl text-[#5f559a]/60 font-medium italic">
+                <p className="text-lg sm:text-2xl text-[#5f559a]/40 font-medium italic max-w-lg mx-auto leading-relaxed">
                   I am here to hold space for your thoughts{user?.firstName ? `, ${user.firstName}` : ""}.
                 </p>
               </div>
@@ -220,7 +222,7 @@ export function ChatWindow({
       </div>
 
       {/* Floating Input Area */}
-      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#f9f9f9] via-white to-transparent pt-6 pb-[5.5rem] md:pb-6 px-4 pointer-events-none">
+      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#f9f9f9] via-[#f9f9f9]/80 to-transparent pt-12 pb-4 sm:pb-6 px-6 pointer-events-none">
         <div className="max-w-3xl mx-auto relative pointer-events-auto">
           {/* Voice Mode Info - Show when in fallback */}
           {isFallbackMode && isVoiceSupported && (
@@ -275,7 +277,7 @@ export function ChatWindow({
           )}
 
           {/* Chat input box wrapper */}
-          <div className="relative flex items-end shadow-2xl shadow-[#2C2A4A]/10 bg-white/90 backdrop-blur-3xl rounded-[1.5rem] sm:rounded-[2.5rem] p-1.5 sm:p-2 border border-[#5f559a]/10 focus-within:border-[#5f559a]/30 focus-within:shadow-[#5f559a]/15 transition-all duration-500 group">
+          <div className="relative flex items-end shadow-[0_20px_60px_-15px_rgba(44,42,74,0.15)] bg-white/95 backdrop-blur-3xl rounded-[1.5rem] sm:rounded-[2rem] p-1.5 sm:p-2 border border-white focus-within:ring-2 focus-within:ring-[#bdb2ff]/20 transition-all duration-500 group">
             <textarea
               rows={1}
               value={input}
@@ -292,14 +294,14 @@ export function ChatWindow({
                 }
               }}
               placeholder="Speak with MindCare..."
-              className="flex-1 max-h-30 text-base sm:text-lg font-medium bg-transparent px-5 sm:px-7 py-4 sm:py-5 resize-none focus:outline-none placeholder:text-[#5f559a]/30 text-[#1a1c1c]"
+              className="flex-1 max-h-30 text-sm sm:text-base font-medium bg-transparent px-4 sm:px-6 py-3 sm:py-4 resize-none focus:outline-none placeholder:text-[#5f559a]/30 text-[#1a1c1c]"
             />
             <div className="p-1 sm:p-2 flex items-center gap-1 sm:gap-2">
               <button
                 type="button"
                 onClick={toggleListening}
                 disabled={!isVoiceSupported || isSending}
-                className={`p-2.5 sm:p-3 rounded-full border transition-all duration-300 ${
+                className={`p-2 sm:p-2.5 rounded-full border transition-all duration-300 ${
                   isListening
                     ? "bg-[#bdb2ff]/20 text-[#5f559a] border-[#5f559a]/30 shadow-inner"
                     : "bg-transparent text-slate-500 border-transparent hover:bg-[#f9f9f9] hover:text-[#5f559a]"
@@ -319,7 +321,7 @@ export function ChatWindow({
               <button
                 type="button"
                 onClick={toggleAutoSpeak}
-                className={`p-2.5 sm:p-3 rounded-full border transition-all duration-300 ${
+                className={`p-2 sm:p-2.5 rounded-full border transition-all duration-300 ${
                   autoSpeak
                     ? "bg-[#bdb2ff]/20 text-[#5f559a] border-[#5f559a]/30"
                     : "bg-transparent text-slate-400 border-transparent hover:bg-[#f9f9f9] hover:text-slate-600"
@@ -362,10 +364,10 @@ export function ChatWindow({
                   if (ta) ta.style.height = "auto";
                 }}
                 disabled={isSending || !input.trim()}
-                className="bg-[#5f559a] hover:bg-[#1b0c53] hover:scale-110 active:scale-95 text-white p-3.5 sm:p-4 rounded-full shadow-2xl shadow-[#5f559a]/30 disabled:scale-100 disabled:bg-[#f3f3f3] disabled:text-[#5f559a]/20 transition-all duration-500 flex items-center justify-center ml-1 sm:ml-2"
+                className="bg-[#5f559a] hover:bg-[#1b0c53] hover:scale-110 active:scale-95 text-white p-2.5 sm:p-3 rounded-full shadow-xl shadow-[#5f559a]/20 disabled:scale-100 disabled:bg-[#f3f3f3] disabled:text-[#5f559a]/20 transition-all duration-500 flex items-center justify-center ml-1"
                 title="Send message"
               >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 sm:w-6 sm:h-6">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4.5 h-4.5 sm:w-5 sm:h-5">
                   <path d="M12 4L12 20M12 4L5.5 10.5M12 4L18.5 10.5" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </button>

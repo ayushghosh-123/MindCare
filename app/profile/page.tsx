@@ -108,7 +108,7 @@ export default function ProfilePage() {
             <div className="flex items-center gap-4 sm:gap-6">
                <div className="w-1.5 h-12 sm:h-16 bg-[#bdb2ff] rounded-full hidden sm:block" />
               <div>
-                <h1 className="text-3xl sm:text-5xl md:text-6xl font-black text-[#1b0c53] tracking-tighter font-['Plus_Jakarta_Sans'] leading-none">Archetype Profile</h1>
+                <h1 className="text-3xl sm:text-5xl md:text-6xl font-black text-[#1b0c53] tracking-tighter font-['Plus_Jakarta_Sans'] leading-none">Self Profile</h1>
                 <p className="text-base sm:text-xl text-[#5f559a]/60 font-medium mt-2 sm:mt-3 italic">Calibrating your essence within the sanctuary.</p>
               </div>
             </div>

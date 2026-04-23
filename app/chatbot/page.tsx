@@ -55,20 +55,20 @@ export default function ChatbotPage() {
   if (!user) { router.push('/sign-in'); return null; }
 
   return (
-    <div className="flex flex-col h-[100dvh] overflow-hidden bg-background">
+    <div className="flex flex-col h-screen md:h-[100dvh] overflow-hidden bg-background pt-[88px] md:pt-0">
       
       <div className="flex flex-1 overflow-hidden relative">
         {/* Mobile Sidebar Overlay */}
         {sidebarOpen && (
           <div 
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 md:hidden transition-opacity"
+            className="fixed inset-0 bg-black/60 backdrop-blur-md z-[140] md:hidden transition-opacity"
             onClick={() => setSidebarOpen(false)}
           />
         )}
 
       {/* Sidebar (Left Pane) */}
       <div className={cn(
-        "fixed inset-y-0 left-0 z-50 w-72 md:w-[280px] lg:w-80 transform transition-transform duration-500 ease-in-out md:relative md:translate-x-0 bg-[#f3f3f3] shadow-2xl md:shadow-none",
+        "fixed inset-y-0 left-0 z-[150] w-72 md:w-[280px] lg:w-80 transform transition-transform duration-500 ease-in-out md:relative md:translate-x-0 bg-[#f3f3f3] shadow-2xl md:shadow-none",
         sidebarOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         <ChatSidebar
@@ -88,19 +88,13 @@ export default function ChatbotPage() {
         {/* Main Chat Area (Right Pane) */}
         <div className="flex-1 flex flex-col h-full overflow-hidden relative">
           
-          {/* Mobile menu toggle for sidebar (only shows on mobile) */}
-          <div className="md:hidden flex items-center justify-between px-6 py-4 bg-white/80 backdrop-blur-3xl shadow-sm z-30 sticky top-0">
-            <button 
-              className="p-3 text-[#5f559a] bg-[#f3f3f3] hover:bg-[#bdb2ff]/20 rounded-2xl transition-all"
-              onClick={() => setSidebarOpen(true)}
-            >
-              <Menu className="w-6 h-6" />
-            </button>
-            <div className="text-lg font-black text-[#1b0c53] font-['Plus_Jakarta_Sans'] tracking-tight">
-               {activeSession?.name || "Sanctuary Agent"}
-            </div>
-            <div className="w-12"></div> {/* Spacer to center title */}
-          </div>
+          {/* Floating Mobile menu toggle for sidebar */}
+          <button 
+            className="md:hidden fixed top-[104px] left-6 p-4 text-[#5f559a] bg-white/90 backdrop-blur-3xl shadow-2xl shadow-[#2C2A4A]/10 hover:bg-[#bdb2ff]/20 rounded-2xl transition-all z-40 active:scale-95 border border-white"
+            onClick={() => setSidebarOpen(true)}
+          >
+            <Menu className="w-6 h-6" />
+          </button>
 
           {/* Chat Window Component */}
           <div className="flex-1 overflow-hidden">

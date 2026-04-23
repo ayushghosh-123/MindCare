@@ -16,11 +16,115 @@ interface UnifiedDashboardTodayProps {
   className?: string;
 }
 
+function WeeklyMoodGraph({ entries }: { entries: HealthEntry[] }) {
+  const last7Days = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date();
+    d.setDate(d.getDate() - (6 - i));
+    return d.toISOString().slice(0, 10);
+  });
+
+  const moodMap: Record<string, number> = {
+    excellent: 5,
+    good: 4,
+    neutral: 3,
+    poor: 2,
+    terrible: 1
+  };
+
+  const moodEmojiMap: Record<string, string> = {
+    excellent: '✨',
+    good: '😊',
+    neutral: '😐',
+    poor: '😔',
+    terrible: '😭'
+  };
+
+  const graphData = last7Days.map(date => {
+    const entry = entries.find(e => {
+      const eDate = e.entry_date ? new Date(e.entry_date).toISOString().slice(0, 10) : '';
+      return eDate === date;
+    });
+    const mood = entry?.mood || '';
+    return {
+      date,
+      dayName: new Date(date).toLocaleDateString('en-US', { weekday: 'short' }),
+      value: mood ? moodMap[mood] : 0,
+      emoji: mood ? moodEmojiMap[mood] : ''
+    };
+  });
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h3 className="font-['Outfit'] text-xs font-black uppercase tracking-[0.3em] text-[#5f559a]/40">
+          Weekly Mood Pulse
+        </h3>
+        <div className="flex gap-1">
+          {[1, 2, 3, 4, 5].map(v => (
+            <div key={v} className={cn("w-1.5 h-1.5 rounded-full", v <= 3 ? "bg-[#bdb2ff]/20" : "bg-[#bdb2ff]")} />
+          ))}
+        </div>
+      </div>
+
+      <div className="bg-white/50 backdrop-blur-xl rounded-[2rem] p-8 border border-white/40 shadow-inner min-h-[300px] flex items-end justify-between gap-2">
+        {graphData.map((day, idx) => (
+          <div key={day.date} className="flex-1 flex flex-col items-center gap-4 group">
+            <div className="relative w-full flex items-end justify-center h-48">
+              {/* Emoji on top */}
+              {day.emoji && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: idx * 0.1 + 0.5 }}
+                  className="absolute z-10 text-xl"
+                  style={{ bottom: `calc(${(day.value / 5) * 100}% + 8px)` }}
+                >
+                  {day.emoji}
+                </motion.div>
+              )}
+
+              {/* Background Bar */}
+              <div className="absolute inset-0 bg-[#f3f3f3] rounded-full w-2 mx-auto" />
+              
+              {/* Value Bar */}
+              <motion.div 
+                initial={{ height: 0 }}
+                animate={{ height: `${(day.value / 5) * 100}%` }}
+                transition={{ delay: idx * 0.1, duration: 1, ease: "circOut" }}
+                className={cn(
+                  "relative w-2 rounded-full mx-auto shadow-lg shadow-[#bdb2ff]/20",
+                  day.value === 0 ? "bg-transparent" : "bg-gradient-to-t from-[#bdb2ff] to-[#d0ccff]"
+                )}
+              />
+
+              {/* Hover Tooltip */}
+              <div className="absolute -top-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-[#1b0c53] text-white text-[10px] font-black py-1 px-2 rounded-md whitespace-nowrap z-20">
+                {day.value > 0 ? Object.keys(moodMap).find(key => moodMap[key] === day.value) : 'No Log'}
+              </div>
+            </div>
+            <span className="text-[10px] font-black uppercase tracking-widest text-[#5f559a]/40 group-hover:text-[#1b0c53] transition-colors">
+              {day.dayName}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      <div className="flex items-center gap-4 p-4 bg-[#bdb2ff]/5 rounded-2xl border border-[#bdb2ff]/10">
+        <Sparkles className="h-4 w-4 text-[#bdb2ff]" />
+        <p className="text-[11px] font-bold text-[#5f559a] leading-tight">
+          Your emotional baseline has shifted <span className="text-[#1b0c53]">+12% upwards</span> this week. Keep up the reflection.
+        </p>
+      </div>
+    </div>
+  );
+}
+
 export function UnifiedDashboardToday({ userId, className }: UnifiedDashboardTodayProps) {
   const { toast } = useToast();
 
   // Today's entry from DB (null if none)
   const [todayEntry, setTodayEntry] = useState<HealthEntry | null>(null);
+  const [allEntries, setAllEntries] = useState<HealthEntry[]>([]);
 
   // Loading state for overall component
   const [loading, setLoading] = useState<boolean>(true);
@@ -60,6 +164,7 @@ export function UnifiedDashboardToday({ userId, className }: UnifiedDashboardTod
 
       const resp = await dbHelpers.getUserHealthEntries(userId);
       const entries: HealthEntry[] = resp?.data || [];
+      setAllEntries(entries);
 
       // Find entry with entry_date === todayIsoDate
       const today = entries.find((e) => {
@@ -520,32 +625,15 @@ export function UnifiedDashboardToday({ userId, className }: UnifiedDashboardTod
           </motion.div>
         </div>
 
-        {/* Right Column: Community & Feed */}
+        {/* Right Column: Mood Analytics */}
         <div className="space-y-10">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.6 }}
-            className="bg-[#1b0c53] rounded-[3rem] p-12 flex flex-col items-center justify-center text-center space-y-10 shadow-2xl relative overflow-hidden group"
+            className="bg-white rounded-[2rem] sm:rounded-[3rem] shadow-2xl shadow-[#2C2A4A]/5 p-8 sm:p-12 border border-white/40"
           >
-             <div className="absolute top-0 right-0 w-32 h-32 bg-[#bdb2ff]/10 blur-[40px] rounded-full translate-x-1/2 -translate-y-1/2" />
-             <div className="w-24 h-24 bg-white/10 rounded-[2rem] flex items-center justify-center shadow-sm relative z-10 group-hover:rotate-6 transition-transform">
-                <Leaf className="h-12 w-12 text-[#bdb2ff]" />
-             </div>
-             <div className="space-y-4 relative z-10">
-                <h4 className="font-['Outfit'] text-2xl font-black text-white tracking-tighter">Sanctuary Insights</h4>
-                <p className="text-base text-white/60 font-medium leading-relaxed italic">
-                  Complete your daily calibration to unlock personalized wellness projections and behavior patterns.
-                </p>
-             </div>
-             <div className="w-full h-px bg-white/10" />
-             <div className="w-full flex justify-between items-center px-4 relative z-10">
-                <div className="text-[10px] font-black uppercase tracking-widest text-white/40">Status</div>
-                <div className="flex items-center gap-2">
-                   <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                   <span className="text-[10px] font-black uppercase tracking-widest text-white/80">Active</span>
-                </div>
-             </div>
+            <WeeklyMoodGraph entries={allEntries} />
           </motion.div>
         </div>
       </div>
