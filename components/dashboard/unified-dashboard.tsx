@@ -131,6 +131,9 @@ export function UnifiedDashboardToday({ userId, className }: UnifiedDashboardTod
   // Saving state for form submit
   const [saving, setSaving] = useState<boolean>(false);
 
+  // Toggle for optional sections
+  const [showNutrients, setShowNutrients] = useState<boolean>(false);
+
   // Form state (strings to keep inputs friendly; we'll convert before sending)
   const [form, setForm] = useState({
     sleep_hours: '',
@@ -189,9 +192,10 @@ export function UnifiedDashboardToday({ userId, className }: UnifiedDashboardTod
         }
       }
 
-      // If entry exists, prefill form
-      if (today) {
-        setForm({
+        // If entry exists, prefill form
+        if (today) {
+          if (bfast || lun || din) setShowNutrients(true);
+          setForm({
           sleep_hours: today.sleep_hours != null ? String(today.sleep_hours) : '',
           exercise_minutes: today.exercise_minutes != null ? String(today.exercise_minutes) : '',
           water_intake: today.water_intake != null ? String(today.water_intake) : '',
@@ -244,26 +248,14 @@ export function UnifiedDashboardToday({ userId, className }: UnifiedDashboardTod
     sleep_hours?: string | number;
     exercise_minutes?: string | number;
     water_intake?: string | number;
-    breakfast?: string;
-    lunch?: string;
-    dinner?: string;
   }) => {
     const sourceData = data || form;
     
-    // Default to form data for meals if not explicitly passed
-    const bfast = 'breakfast' in sourceData ? sourceData.breakfast : form.breakfast;
-    const lun = 'lunch' in sourceData ? sourceData.lunch : form.lunch;
-    const din = 'dinner' in sourceData ? sourceData.dinner : form.dinner;
-
-    const mealsLogged = [bfast, lun, din]
-      .filter((m) => typeof m === 'string' && m.trim().length > 0).length;
-
     return calculateHealthScore({
       mood: String(sourceData.mood || ''),
       sleep_hours: parseFloat(String(sourceData.sleep_hours || '0')),
       exercise_minutes: parseFloat(String(sourceData.exercise_minutes || '0')),
       water_intake: parseFloat(String(sourceData.water_intake || '0')),
-      meals_logged: mealsLogged
     });
   };
 
@@ -385,13 +377,10 @@ export function UnifiedDashboardToday({ userId, className }: UnifiedDashboardTod
 
   // Calculate stored score from database entry (health_score is not stored, calculate from saved data)
   const storedScore = todayEntry ? computeHealthScore({
-    mood: todayEntry.mood,
+    mood: todayEntry.mood || undefined,
     sleep_hours: todayEntry.sleep_hours,
     exercise_minutes: todayEntry.exercise_minutes,
     water_intake: todayEntry.water_intake,
-    breakfast: entryBreakfast,
-    lunch: entryLunch,
-    dinner: entryDinner,
   }) : 0;
 
   return (
@@ -447,7 +436,7 @@ export function UnifiedDashboardToday({ userId, className }: UnifiedDashboardTod
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.4 }}
-            className="bg-white rounded-[2rem] sm:rounded-[3rem] shadow-2xl shadow-[#2C2A4A]/5 p-6 sm:p-12 space-y-10 sm:space-y-16 border border-white/40"
+            className="bg-white rounded-[2rem] sm:rounded-[3rem] shadow-2xl shadow-[#2C2A4A] p-6 sm:p-12 space-y-10 sm:space-y-16 border border-white/40"
           >
             
             {/* Core Metrics */}
@@ -477,7 +466,7 @@ export function UnifiedDashboardToday({ userId, className }: UnifiedDashboardTod
                 <div className="space-y-3 sm:space-y-4">
                   <div className="flex items-center gap-2 mb-1">
                     <ActivityIcon className="h-4 w-4 text-[#bdb2ff]" />
-                    <label className="text-[10px] font-black text-[#1b0c53] uppercase tracking-widest">Vigor (Minutes)</label>
+                    <label className="text-[10px] font-black text-[#1b0c53] uppercase tracking-widest">Exercise (Minutes)</label>
                   </div>
                   <input
                     type="number"
@@ -492,7 +481,7 @@ export function UnifiedDashboardToday({ userId, className }: UnifiedDashboardTod
                 <div className="space-y-3 sm:space-y-4">
                   <div className="flex items-center gap-2 mb-1">
                     <Droplets className="h-4 w-4 text-[#bdb2ff]" />
-                    <label className="text-[10px] font-black text-[#1b0c53] uppercase tracking-widest">Osmosis (Litres)</label>
+                    <label className="text-[10px] font-black text-[#1b0c53] uppercase tracking-widest">Hydration (Litres)</label>
                   </div>
                   <input
                     type="number"
@@ -507,9 +496,90 @@ export function UnifiedDashboardToday({ userId, className }: UnifiedDashboardTod
               </div>
             </div>
 
+            {/* Nutritional Sanctuary */}
+            <div className="space-y-10">
+              <div className="flex items-center justify-between gap-4">
+                <h3 className="font-['Outfit'] text-xs font-black uppercase tracking-[0.3em] text-[#5f559a] flex items-center gap-4 flex-1">
+                  Nutritional Sanctuary
+                  <div className="flex-1 h-px bg-[#f3f3f3]" />
+                </h3>
+                <div className="flex items-center gap-3 bg-[#f3f3f3] px-4 py-2 rounded-full cursor-pointer hover:bg-[#e5deff] transition-colors group"
+                     onClick={() => setShowNutrients(!showNutrients)}>
+                  <div className={cn(
+                    "w-8 h-4 rounded-full relative transition-colors duration-300",
+                    showNutrients ? "bg-[#bdb2ff]" : "bg-gray-300"
+                  )}>
+                    <div className={cn(
+                      "absolute top-1 w-2 h-2 bg-white rounded-full transition-all duration-300",
+                      showNutrients ? "left-5" : "left-1"
+                    )} />
+                  </div>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-[#1b0c53]">
+                    {showNutrients ? 'Enabled' : 'Disabled'}
+                  </span>
+                </div>
+              </div>
+
+              <AnimatePresence>
+                {showNutrients && (
+                  <motion.div 
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.5, ease: "circOut" }}
+                    className="overflow-hidden"
+                  >
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-10 pt-4">
+                      <div className="space-y-3 sm:space-y-4">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-lg">🌅</span>
+                          <label className="text-[10px] font-black text-[#1b0c53] uppercase tracking-widest">Morning (Breakfast)</label>
+                        </div>
+                        <input
+                          type="text"
+                          value={form.breakfast}
+                          onChange={onChange('breakfast')}
+                          className="w-full h-16 sm:h-20 px-6 sm:px-8 bg-[#f3f3f3] border-2 border-transparent rounded-[1.5rem] sm:rounded-[2rem] text-base sm:text-lg font-bold text-[#1b0c53] focus:ring-4 focus:ring-[#bdb2ff]/20 focus:border-[#bdb2ff]/40 transition-all shadow-inner font-['Outfit']"
+                          placeholder="Oatmeal, Fruit..."
+                        />
+                      </div>
+
+                      <div className="space-y-3 sm:space-y-4">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-lg">☀️</span>
+                          <label className="text-[10px] font-black text-[#1b0c53] uppercase tracking-widest">Midday (Lunch)</label>
+                        </div>
+                        <input
+                          type="text"
+                          value={form.lunch}
+                          onChange={onChange('lunch')}
+                          className="w-full h-16 sm:h-20 px-6 sm:px-8 bg-[#f3f3f3] border-2 border-transparent rounded-[1.5rem] sm:rounded-[2rem] text-base sm:text-lg font-bold text-[#1b0c53] focus:ring-4 focus:ring-[#bdb2ff]/20 focus:border-[#bdb2ff]/40 transition-all shadow-inner font-['Outfit']"
+                          placeholder="Salad, Quinoa..."
+                        />
+                      </div>
+
+                      <div className="space-y-3 sm:space-y-4">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-lg">🌙</span>
+                          <label className="text-[10px] font-black text-[#1b0c53] uppercase tracking-widest">Evening (Dinner)</label>
+                        </div>
+                        <input
+                          type="text"
+                          value={form.dinner}
+                          onChange={onChange('dinner')}
+                          className="w-full h-16 sm:h-20 px-6 sm:px-8 bg-[#f3f3f3] border-2 border-transparent rounded-[1.5rem] sm:rounded-[2rem] text-base sm:text-lg font-bold text-[#1b0c53] focus:ring-4 focus:ring-[#bdb2ff]/20 focus:border-[#bdb2ff]/40 transition-all shadow-inner font-['Outfit']"
+                          placeholder="Grilled Salmon..."
+                        />
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
             {/* Emotional Alignment */}
             <div className="space-y-10">
-              <h3 className="font-['Outfit'] text-xs font-black uppercase tracking-[0.3em] text-[#5f559a]/40 flex items-center gap-4">
+              <h3 className="font-['Outfit'] text-xs font-black uppercase tracking-[0.3em] text-[#5f559a] flex items-center gap-4">
                 Emotional Alignment
                 <div className="flex-1 h-px bg-[#f3f3f3]" />
               </h3>
@@ -569,7 +639,7 @@ export function UnifiedDashboardToday({ userId, className }: UnifiedDashboardTod
 
             {/* Narratives */}
             <div className="space-y-10">
-              <h3 className="font-['Outfit'] text-xs font-black uppercase tracking-[0.3em] text-[#5f559a]/40 flex items-center gap-4">
+              <h3 className="font-['Outfit'] text-xs font-black uppercase tracking-[0.3em] text-[#5f559a] flex items-center gap-4">
                 Daily Narratives
                 <div className="flex-1 h-px bg-[#f3f3f3]" />
               </h3>

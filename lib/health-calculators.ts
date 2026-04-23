@@ -20,21 +20,20 @@ export function calculateHealthScore(params: {
   sleep_hours?: number;
   exercise_minutes?: number;
   water_intake?: number;
-  meals_logged?: number;
+  meals_logged?: number; // Kept in interface for compatibility but ignored in calculation
 }): number {
   const moodVal = moodToScore(params.mood);
   const sleepVal = params.sleep_hours ?? 0;
   const exerciseVal = params.exercise_minutes ?? 0;
   const waterVal = params.water_intake ?? 0;
-  const mealsVal = params.meals_logged ?? 0;
 
-  const partMood = (moodVal / 5) * 25;
-  const partSleep = Math.min(sleepVal / 8, 1) * 20;
-  const partExercise = Math.min(exerciseVal / 60, 1) * 20;
-  const partWater = Math.min(waterVal / 3, 1) * 20; // Target: 3 Litres
-  const partMeals = Math.min(mealsVal / 3, 1) * 15;
+  // Re-distributed 15% from meals to Mood (+5%) and Exercise (+10%)
+  const partMood = (moodVal / 5) * 30;
+  const partSleep = Math.min(sleepVal / 8, 1) * 25;
+  const partExercise = Math.min(exerciseVal / 60, 1) * 25;
+  const partWater = Math.min(waterVal / 3, 1) * 20;
 
-  return Math.round(partMood + partSleep + partExercise + partWater + partMeals);
+  return Math.round(partMood + partSleep + partExercise + partWater);
 }
 
 /**

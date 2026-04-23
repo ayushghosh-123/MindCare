@@ -32,6 +32,26 @@ export function MindCareLanding() {
     }
   };
 
+  const typewriterContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.05,
+        delayChildren: 0.6,
+      }
+    }
+  };
+
+  const letterVariant = {
+    hidden: { opacity: 0, x: -2 },
+    visible: { 
+      opacity: 1, 
+      x: 0,
+      transition: { duration: 0.1 } 
+    }
+  };
+
   return (
     <div className="bg-[#f9f9f9] selection:bg-[#bdb2ff] selection:text-[#4b4185] min-h-screen font-['Plus_Jakarta_Sans'] overflow-x-hidden">
 
@@ -40,9 +60,20 @@ export function MindCareLanding() {
       <main>
         {/* --- HERO SECTION --- */}
         <section className="relative pt-32 sm:pt-48 pb-16 sm:pb-24 px-4 sm:px-6 overflow-hidden">
+          {/* Hero Background Image with Blur */}
+          <div className="absolute inset-0 z-0">
+            <img 
+              src="/Image/Hero_back_image.jpeg" 
+              alt="Hero Background" 
+              className="w-full h-full object-cover blur-[6px] opacity-25 scale-105"
+            />
+            {/* Soft overlay to ensure readability */}
+            <div className="absolute inset-0 bg-gradient-to-b from-[#f9f9f9]/40 via-transparent to-[#f9f9f9]" />
+          </div>
+
           {/* Animated Background Blobs */}
-          <div className="absolute top-0 right-0 w-[400px] sm:w-[800px] h-[400px] sm:h-[800px] bg-gradient-to-br from-[#bdb2ff]/20 via-[#e5deff]/10 to-transparent blur-[80px] sm:blur-[120px] rounded-full -translate-y-1/2 translate-x-1/4 animate-pulse duration-[10000ms]" />
-          <div className="absolute bottom-0 left-0 w-[300px] sm:w-[600px] h-[300px] sm:h-[600px] bg-gradient-to-tr from-[#5f559a]/10 via-transparent to-transparent blur-[60px] sm:blur-[100px] rounded-full translate-y-1/4 -translate-x-1/4" />
+          <div className="absolute top-0 right-0 w-[400px] sm:w-[800px] h-[400px] sm:h-[800px] bg-gradient-to-br from-[#bdb2ff]/20 via-[#e5deff]/10 to-transparent blur-[80px] sm:blur-[120px] rounded-full -translate-y-1/2 translate-x-1/4 animate-pulse duration-[10000ms] z-0" />
+          <div className="absolute bottom-0 left-0 w-[300px] sm:w-[600px] h-[300px] sm:h-[600px] bg-gradient-to-tr from-[#5f559a]/10 via-transparent to-transparent blur-[60px] sm:blur-[100px] rounded-full translate-y-1/4 -translate-x-1/4 z-0" />
 
           <div className="max-w-7xl mx-auto flex flex-col items-center text-center relative z-10">
             <motion.div
@@ -56,13 +87,25 @@ export function MindCareLanding() {
             </motion.div>
 
             <motion.h1
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.2 }}
+              variants={typewriterContainer}
+              initial="hidden"
+              animate="visible"
               className="font-['Outfit'] text-4xl sm:text-6xl md:text-8xl font-black tracking-tighter text-[#1b0c53] leading-[1.1] sm:leading-[0.95] mb-6 sm:mb-8"
             >
-              A Smart Way to Understand<br className="hidden sm:block" />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#5f559a] via-[#bdb2ff] to-[#5f559a] bg-size-200 animate-gradient">Your Mind.</span>
+              {"A Smart Way to Understand".split("").map((char, index) => (
+                <motion.span key={index} variants={letterVariant}>{char}</motion.span>
+              ))}
+              <br className="hidden sm:block" />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#5f559a] via-[#bdb2ff] to-[#5f559a] bg-size-200 animate-gradient">
+                {"Your Mind.".split("").map((char, index) => (
+                  <motion.span key={index} variants={letterVariant}>{char}</motion.span>
+                ))}
+              </span>
+              <motion.span
+                animate={{ opacity: [1, 0] }}
+                transition={{ repeat: Infinity, duration: 0.8 }}
+                className="inline-block w-[4px] h-[0.8em] bg-[#bdb2ff] ml-2 align-middle"
+              />
             </motion.h1>
 
             <motion.p
@@ -267,24 +310,114 @@ export function MindCareLanding() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
               {[
-                { title: "Smart Journaling", desc: "Rich-text mood tracking, tags, and auto-save reflections.", icon: <BookOpen />, color: "bg-[#e5deff]" },
-                { title: "AI Health Assistant", desc: "Multi-step reasoning engine with contextual memory.", icon: <Brain />, color: "bg-[#bdb2ff]" },
-                { title: "Vital Analytics", desc: "Long-term mood trends and health score intelligence.", icon: <LineChart />, color: "bg-[#f3f3f3]" },
-                { title: "Event-Driven UI", desc: "Real-time sync across your entire sanctuary experience.", icon: <RefreshCw />, color: "bg-[#f9f9f9]" },
-                { title: "Archetype System", desc: "Profile calibration for medical and personal goals.", icon: <User />, color: "bg-[#e5deff]" },
-                { title: "Human Protocol", desc: "You remain in control with human-in-the-loop validation.", icon: <ShieldCheck />, color: "bg-[#bdb2ff]" }
+                { title: "Smart Journaling", desc: "Rich-text mood tracking, tags, and auto-save reflections.", image: "/Image/custom_notes.jpeg" },
+                { title: "Emotional Intelligence", desc: "Deep AI analysis of your emotional patterns and triggers.", image: "/Image/mood.jpeg" },
+                { title: "Vitality Tracking", desc: "Monitor your energy levels and find your optimal performance.", image: "/Image/energy.jpeg" },
+                { title: "Physical Sanctuary", desc: "Sync your physical movement with your mental clarity.", image: "/Image/physical_activity.jpeg" },
+                { title: "Restorative Sleep", desc: "Understand your rest patterns and improve recovery.", image: "/Image/sleep.jpeg" },
+                { title: "Nutritional Wisdom", desc: "See how your diet directly impacts your daily mood.", image: "/Image/nutrition.jpeg" }
               ].map((feature, i) => (
                 <motion.div
                   key={i}
                   whileHover={{ y: -10 }}
-                  className="p-8 sm:p-10 rounded-[2rem] sm:rounded-[2.5rem] bg-white border border-[#f3f3f3] shadow-lg shadow-[#2C2A4A]/5 flex flex-col items-start gap-6 sm:gap-8 group"
+                  className="group relative flex flex-col p-2 rounded-[2.5rem] bg-white border border-[#f3f3f3] shadow-lg shadow-[#2C2A4A]/5 overflow-hidden transition-all duration-500"
                 >
-                  <div className={`w-14 h-14 sm:w-16 sm:h-16 ${feature.color} rounded-2xl flex items-center justify-center text-[#1b0c53] group-hover:scale-110 transition-transform duration-500`}>
-                    {React.cloneElement(feature.icon as React.ReactElement<any>, { size: 24 })}
+                  {/* Image Header */}
+                  <div className="relative h-64 w-full rounded-[2rem] overflow-hidden mb-6">
+                    <img 
+                      src={feature.image} 
+                      alt={feature.title}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+                    {/* Minimal overlay for better contrast if needed, or remove completely */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   </div>
-                  <div>
-                    <h4 className="text-xl sm:text-2xl font-black text-[#1b0c53] mb-3 sm:mb-4 tracking-tight">{feature.title}</h4>
+
+                  {/* Content */}
+                  <div className="px-6 pb-8">
+                    <h4 className="text-2xl font-black text-[#1b0c53] mb-3 tracking-tight group-hover:text-[#5f559a] transition-colors">{feature.title}</h4>
                     <p className="text-sm sm:text-base text-[#5f559a] font-medium leading-relaxed">{feature.desc}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* --- THE PATH TO CLARITY (PROCESS) --- */}
+        <section id="process" className="py-24 sm:py-40 px-4 sm:px-6 bg-[#f9f9f9] relative overflow-hidden">
+          {/* Decorative Elements */}
+          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#bdb2ff]/5 blur-[120px] rounded-full translate-x-1/3 -translate-y-1/3" />
+          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#5f559a]/5 blur-[100px] rounded-full -translate-x-1/3 translate-y-1/3" />
+          
+          <div className="max-w-7xl mx-auto relative z-10">
+            <div className="text-center mb-16 sm:mb-24">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-[#bdb2ff]/20 text-[#5f559a] font-bold text-xs uppercase tracking-widest mb-6"
+              >
+                <RefreshCw className="w-3.5 h-3.5 animate-spin-slow" />
+                Workflow Lifecycle
+              </motion.div>
+              <h2 className="font-['Outfit'] text-4xl sm:text-6xl md:text-7xl font-black tracking-tighter text-[#1b0c53] leading-tight mb-6">
+                Your Path to <span className="text-[#5f559a]">Clarity.</span>
+              </h2>
+              <p className="text-lg sm:text-xl text-[#5f559a] font-medium max-w-2xl mx-auto">
+                A seamless loop of reflection and intelligence designed to help you master your inner world.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative">
+              {/* Connection Line (Desktop) */}
+              <div className="hidden md:block absolute top-24 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#bdb2ff]/40 to-transparent z-0" />
+
+              {[
+                { 
+                  step: "01", 
+                  title: "Calibrate", 
+                  desc: "Configure your mental archetype and health goals in your secure sanctuary.", 
+                  icon: <User />,
+                  delay: 0.1
+                },
+                { 
+                  step: "02", 
+                  title: "Reflect", 
+                  desc: "Sync your thoughts, moods, and vitals through our context-aware journal.", 
+                  icon: <BookOpen />,
+                  delay: 0.2
+                },
+                { 
+                  step: "03", 
+                  title: "Synthesize", 
+                  desc: "Our AI Pipeline identifies deep patterns between your habits and emotions.", 
+                  icon: <Brain />,
+                  delay: 0.3
+                },
+                { 
+                  step: "04", 
+                  title: "Evolve", 
+                  desc: "Receive personalized manifestations and actionable growth insights.", 
+                  icon: <Zap />,
+                  delay: 0.4
+                }
+              ].map((item, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: item.delay, duration: 0.8 }}
+                  className="relative z-10 flex flex-col items-center text-center group"
+                >
+                  <div className="w-20 h-20 sm:w-28 sm:h-28 rounded-[2.5rem] bg-white border border-[#f3f3f3] flex items-center justify-center text-[#1b0c53] mb-8 group-hover:bg-[#1b0c53] group-hover:text-white group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-xl shadow-[#2C2A4A]/5">
+                    {React.cloneElement(item.icon as React.ReactElement<any>, { size: 36 })}
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <span className="text-4xl font-['Outfit'] font-black text-[#bdb2ff]/20 mb-2">{item.step}</span>
+                    <h4 className="text-2xl font-black text-[#1b0c53] mb-4 tracking-tight">{item.title}</h4>
+                    <p className="text-[#5f559a] font-medium leading-relaxed px-4">{item.desc}</p>
                   </div>
                 </motion.div>
               ))}
@@ -298,9 +431,9 @@ export function MindCareLanding() {
 
           <div className="max-w-7xl mx-auto relative z-10 text-center mb-12 sm:mb-20">
             <h2 className="font-['Outfit'] text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter mb-4 sm:mb-6">
-              The Intelligence Pipeline
+              How the Intelligence Works
             </h2>
-            <p className="text-lg sm:text-xl text-white/60 font-medium italic">How MindCare understands the context of your life.</p>
+            <p className="text-lg sm:text-xl text-white/60 font-medium italic">A deep dive into our multi-step reasoning pipeline.</p>
           </div>
 
           <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-5 gap-6 sm:gap-4 relative z-10">
