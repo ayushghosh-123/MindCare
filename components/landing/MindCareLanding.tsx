@@ -2,15 +2,9 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
-import {
-  Brain, Activity, LineChart, MessageSquare,
-  ShieldCheck, Heart, User, Sparkles,
-  ArrowRight, Check, X, Zap,
-  Database, Shield, Cpu, RefreshCw,
-  Search, BookOpen, Layers, Target,
-  Phone, Mic, Clock, Globe
-} from 'lucide-react';
+import { Brain, Activity, MessageSquare, ShieldCheck, Heart, User, Sparkles, ArrowRight, Check, X, Zap, Cpu, RefreshCw, Search, BookOpen, Target } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { LandingNavbar } from './LandingNavbar';
 
@@ -45,10 +39,10 @@ export function MindCareLanding() {
 
   const letterVariant = {
     hidden: { opacity: 0, x: -2 },
-    visible: { 
-      opacity: 1, 
+    visible: {
+      opacity: 1,
       x: 0,
-      transition: { duration: 0.1 } 
+      transition: { duration: 0.1 }
     }
   };
 
@@ -62,9 +56,9 @@ export function MindCareLanding() {
         <section className="relative pt-32 sm:pt-48 pb-16 sm:pb-24 px-4 sm:px-6 overflow-hidden">
           {/* Hero Background Image with Blur */}
           <div className="absolute inset-0 z-0">
-            <img 
-              src="/Image/Hero_back_image.jpeg" 
-              alt="Hero Background" 
+            <img
+              src="/Image/Hero_back_image.jpeg"
+              alt="Hero Background"
               className="w-full h-full object-cover blur-[6px] opacity-25 scale-105"
             />
             {/* Soft overlay to ensure readability */}
@@ -131,7 +125,7 @@ export function MindCareLanding() {
               </Link>
               <Link href="#features">
                 <Button variant="outline" className="w-full sm:w-auto px-8 sm:px-10 py-6 sm:py-8 rounded-[1.5rem] sm:rounded-[2rem] border-[#c9c4d1]/40 font-bold text-lg sm:text-xl text-[#1b0c53] hover:bg-white transition-all shadow-sm">
-                  Try Demo
+                   Demo Video
                 </Button>
               </Link>
             </motion.div>
@@ -141,28 +135,14 @@ export function MindCareLanding() {
               initial={{ opacity: 0, y: 100 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1.2, delay: 0.8, ease: "easeOut" }}
-              className="mt-16 sm:mt-24 w-full max-w-6xl relative px-2 sm:px-0"
+              className="mt-16 sm:mt-24 w-full max-w-5xl mx-auto relative px-2 sm:px-0"
             >
-              <div className="relative rounded-[1.5rem] sm:rounded-[2.5rem] p-1.5 sm:p-2 bg-gradient-to-b from-[#1b0c53]/20 to-[#bdb2ff]/20 shadow-[0px_30px_60px_-10px_rgba(44,42,74,0.3)] border border-white/20">
-                <div className="bg-[#f3f3f3] rounded-[1rem] sm:rounded-[2rem] overflow-hidden border border-white/60 aspect-video sm:aspect-[16/10] relative group">
-                  <img
-                    src="/Image/hero_image.png"
-                    alt="MindCare Interface Preview"
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#1b0c53]/40 via-transparent to-transparent" />
-
-                  {/* Floating Cards (Hidden or simplified on mobile) */}
-                  <div className="hidden md:block absolute top-1/4 right-10 w-64 p-6 bg-white/80 backdrop-blur-xl rounded-[2rem] shadow-2xl border border-white/60 animate-bounce duration-[5000ms]">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="p-2 bg-[#bdb2ff]/20 rounded-xl text-[#5f559a]">
-                        <Sparkles size={20} />
-                      </div>
-                      <span className="font-bold text-[#1b0c53]">AI Insight</span>
-                    </div>
-                    <p className="text-xs text-[#5f559a] leading-relaxed">"Your focus has improved by 24% this week. Your evening reflections show deep emotional clarity."</p>
-                  </div>
-                </div>
+              <div className="bg-white rounded-[1.5rem] sm:rounded-[2.5rem] overflow-hidden aspect-video sm:aspect-[16/10] relative w-full shadow-[0px_30px_60px_-10px_rgba(44,42,74,0.15)] border border-white/60">
+                <img
+                  src="/Image/hero_image.jpeg"
+                  alt="MindCare Interface Preview"
+                  className="w-full h-full object-contain"
+                />
               </div>
             </motion.div>
           </div>
@@ -221,12 +201,20 @@ export function MindCareLanding() {
               </div>
               <div className="w-full lg:w-1/2 grid grid-cols-2 gap-3 sm:gap-4">
                 <div className="space-y-3 sm:space-y-4 pt-8 sm:pt-12">
-                  <div className="h-40 sm:h-64 bg-[#bdb2ff]/20 rounded-[1.5rem] sm:rounded-[2.5rem] flex items-center justify-center"><Heart className="text-[#bdb2ff] w-8 h-8 sm:w-12 sm:h-12" /></div>
-                  <div className="h-32 sm:h-48 bg-[#1b0c53] rounded-[1.5rem] sm:rounded-[2.5rem] flex items-center justify-center"><ShieldCheck className="text-white w-8 h-8 sm:w-12 sm:h-12" /></div>
+                  <div className="h-40 sm:h-64 bg-[#bdb2ff]/20 rounded-[1.5rem] sm:rounded-[2.5rem] overflow-hidden relative group shadow-xl">
+                    <Image src="/Image2/Image_1.jpeg" alt="MindCare Highlight 1" fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
+                  </div>
+                  <div className="h-32 sm:h-48 bg-[#1b0c53] rounded-[1.5rem] sm:rounded-[2.5rem] overflow-hidden relative group shadow-xl">
+                    <Image src="/Image2/Image_2.jpeg" alt="MindCare Highlight 2" fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
+                  </div>
                 </div>
                 <div className="space-y-3 sm:space-y-4">
-                  <div className="h-32 sm:h-48 bg-[#5f559a] rounded-[1.5rem] sm:rounded-[2.5rem] flex items-center justify-center"><Brain className="text-white w-8 h-8 sm:w-12 sm:h-12" /></div>
-                  <div className="h-40 sm:h-64 bg-[#e5deff] rounded-[1.5rem] sm:rounded-[2.5rem] flex items-center justify-center"><Activity className="text-[#5f559a] w-8 h-8 sm:w-12 sm:h-12" /></div>
+                  <div className="h-32 sm:h-48 bg-[#5f559a] rounded-[1.5rem] sm:rounded-[2.5rem] overflow-hidden relative group shadow-xl">
+                    <Image src="/Image2/Image_3.jpeg" alt="MindCare Highlight 3" fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
+                  </div>
+                  <div className="h-40 sm:h-64 bg-[#e5deff] rounded-[1.5rem] sm:rounded-[2.5rem] overflow-hidden relative group shadow-xl">
+                    <Image src="/Image2/Image_4.jpeg" alt="MindCare Highlight 4" fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
+                  </div>
                 </div>
               </div>
             </div>
@@ -249,7 +237,7 @@ export function MindCareLanding() {
                 <div className="w-12 h-12 sm:w-16 sm:h-16 bg-red-100 rounded-2xl flex items-center justify-center text-red-500 mb-6 sm:mb-8">
                   <X className="w-6 h-6 sm:w-8 sm:h-8" />
                 </div>
-                <h3 className="text-2xl sm:text-3xl font-black text-[#1b0c53] mb-6 sm:mb-8 tracking-tight">The Old Way Is Broken</h3>
+                <h3 className="text-2xl sm:text-3xl font-black text-[#1b0c53] mb-6 sm:mb-8 tracking-tight">The Traditional Way</h3>
                 <ul className="space-y-4 sm:space-y-6">
                   {[
                     "You log data… but gain no real clarity",
@@ -324,8 +312,8 @@ export function MindCareLanding() {
                 >
                   {/* Image Header */}
                   <div className="relative h-64 w-full rounded-[2rem] overflow-hidden mb-6">
-                    <img 
-                      src={feature.image} 
+                    <img
+                      src={feature.image}
                       alt={feature.title}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     />
@@ -349,7 +337,7 @@ export function MindCareLanding() {
           {/* Decorative Elements */}
           <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#bdb2ff]/5 blur-[120px] rounded-full translate-x-1/3 -translate-y-1/3" />
           <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#5f559a]/5 blur-[100px] rounded-full -translate-x-1/3 translate-y-1/3" />
-          
+
           <div className="max-w-7xl mx-auto relative z-10">
             <div className="text-center mb-16 sm:mb-24">
               <motion.div
@@ -374,31 +362,31 @@ export function MindCareLanding() {
               <div className="hidden md:block absolute top-24 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#bdb2ff]/40 to-transparent z-0" />
 
               {[
-                { 
-                  step: "01", 
-                  title: "Calibrate", 
-                  desc: "Configure your mental archetype and health goals in your secure sanctuary.", 
+                {
+                  step: "01",
+                  title: "Calibrate",
+                  desc: "Configure your mental archetype and health goals in your secure sanctuary.",
                   icon: <User />,
                   delay: 0.1
                 },
-                { 
-                  step: "02", 
-                  title: "Reflect", 
-                  desc: "Sync your thoughts, moods, and vitals through our context-aware journal.", 
+                {
+                  step: "02",
+                  title: "Reflect",
+                  desc: "Sync your thoughts, moods, and vitals through our context-aware journal.",
                   icon: <BookOpen />,
                   delay: 0.2
                 },
-                { 
-                  step: "03", 
-                  title: "Synthesize", 
-                  desc: "Our AI Pipeline identifies deep patterns between your habits and emotions.", 
+                {
+                  step: "03",
+                  title: "Synthesize",
+                  desc: "Our AI Pipeline identifies deep patterns between your habits and emotions.",
                   icon: <Brain />,
                   delay: 0.3
                 },
-                { 
-                  step: "04", 
-                  title: "Evolve", 
-                  desc: "Receive personalized manifestations and actionable growth insights.", 
+                {
+                  step: "04",
+                  title: "Evolve",
+                  desc: "Receive personalized manifestations and actionable growth insights.",
                   icon: <Zap />,
                   delay: 0.4
                 }
