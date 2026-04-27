@@ -146,12 +146,6 @@ export function ChatWindow({
             </div>
           ) : messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-[50dvh] gap-8 text-center animate-in fade-in zoom-in duration-1000">
-              <div className="relative group">
-                <div className="absolute inset-0 bg-gradient-to-tr from-[#bdb2ff]/40 to-[#d0ccff]/40 blur-3xl rounded-full group-hover:scale-150 transition-transform duration-1000" />
-                <div className="relative w-28 h-28 sm:w-36 sm:h-36 bg-white rounded-full shadow-2xl flex items-center justify-center border border-white">
-                  <span className="text-4xl sm:text-6xl animate-bounce duration-[3000ms]">🕊️</span>
-                </div>
-              </div>
               <div className="px-4 space-y-4">
                 <h3 className="text-4xl sm:text-6xl font-black text-[#1b0c53] tracking-tighter font-['Outfit'] leading-none">
                   MindCare <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#1b0c53] to-[#5f559a]/60">Sanctuary</span>
